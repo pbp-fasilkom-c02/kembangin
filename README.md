@@ -1,4 +1,4 @@
-s## Kembangin
+## Kembangin
 Sebuah aplikasi yang berguna bagi pengguna untuk mendapatkan informasi dan kebutuhan kesehatan seakurat mungkin.
 
 ## Situs Aplikasi
