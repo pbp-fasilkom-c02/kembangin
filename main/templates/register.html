@@ -8,16 +8,23 @@
             <p>Register Akun</p>
         </div>
         <div>
-            <input type="text" name="username" placeholder="Username" class="form-control">
+            <input style="text-align:center;" type="text" name="username" placeholder="Username" class="form-control" required>
         </div>
         <div>
-            <input type="text" name="email" placeholder="Email" class="form-control">
+            <input style="text-align:center;" type="text" name="email" placeholder="Email" class="form-control" required>
         </div>
         <div>
-            <input type="password" name="password" placeholder="Password" class="form-control">
+            <input style="text-align:center;" type="password" name="password" placeholder="Password" class="form-control" required>
         </div>
         <div>
-            <input type="password" name="repeat_password" placeholder="Repeat password" class="form-control">
+            <input style="text-align:center;" type="password" name="repeat_password" placeholder="Repeat password" class="form-control" required>
+        </div>
+        <div>
+            <p>Are you a doctor?</p>
+            <input type="radio" id="yes" name="doctor_choice" value="no" required>
+            <label for="no">No</label>
+            <input type="radio" id="no" name="doctor_choice" value="yes" required>
+            <label for="yes">Yes</label> 
         </div>
         <div>
             <input type="submit" value="Register">

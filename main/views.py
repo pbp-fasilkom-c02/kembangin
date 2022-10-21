@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.contrib import messages
+from main.models import Doctor
 
 def show_landing(request):
     return render(request,"main.html")
@@ -30,6 +31,9 @@ def register_user(request):
         elif (password == repeat_password):
             user = User.objects.create_user(username=username, email=email, password=password)
             user.save()
+            if (request.POST.get("doctor_choice") == "yes"):
+                doctor = Doctor.objects.create(user = user)
+                doctor.save()
             return redirect("main:login")
         else:
             messages.info(request, "Password and repeat password is different")
