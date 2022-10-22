@@ -1,0 +1,43 @@
+{% extends "base.html" %} {% block content %}
+<div class="text-center font-bold">
+  <form method="POST" action="">
+    {% csrf_token %}
+    <div>
+      <p>Register Akun</p>
+    </div>
+    <div>
+      <input style="text-align: center" type="text" name="username" placeholder="Username" class="form-control"
+        required />
+    </div>
+    <div>
+      <input style="text-align: center" type="text" name="email" placeholder="Email" class="form-control" required />
+    </div>
+    <div>
+      <input style="text-align: center" type="password" name="password" placeholder="Password" class="form-control"
+        required />
+    </div>
+    <div>
+      <input style="text-align: center" type="password" name="repeat_password" placeholder="Repeat password"
+        class="form-control" required />
+    </div>
+    <div>
+      <p>Are you a doctor?</p>
+
+      <input type="radio" id="no" name="doctor_choice" value="yes" required />
+      <label for="yes">Yes</label>
+      <input type="radio" id="yes" name="doctor_choice" value="no" required />
+      <label for="no">No</label>
+    </div>
+    <div>
+      <input type="submit" value="Register" />
+    </div>
+  </form>
+</div>
+
+{% if messages %}
+<ul class="text-center font-bold text-red-400">
+  {% for message in messages %}
+  <li>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% endblock content %}
