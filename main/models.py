@@ -1,5 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
-class Doctor(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class User(AbstractUser):
+    is_doctor = models.BooleanField(default=False)
+
+
