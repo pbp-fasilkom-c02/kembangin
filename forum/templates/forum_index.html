@@ -5,60 +5,108 @@
 
 <head>
     <script>
+
+        const forumPost = (post) => `<div id='${post.pk}-post'>
+            <div class="flex justify-between">
+
+                <div class="text-xl text-red-500 capitalize underline cursor-pointer" onclick="location.href='google.com'">
+                    ${post.question}
+                </div>
+                <div class="cursor-pointer" id='${post.pk}'>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+</svg>
+</div>
+                </div>
+                <div>
+                    ${post.description}
+                </div>
+                <div>
+                    ${post.created_at.split('T')[0]}  
+                </div>
+                <hr size="10" class="mt-5">
+            </div>`
+
+        const addPost = (post) => {
+            return $('#forum').prepend(forumPost(post))
+        }
+
+        const deletePost = (post) => {
+            $(`#${post.pk}`).click(function () {
+
+                $.ajax({
+                    url: `/forum/delete/${post.pk}`,
+                    type: 'DELETE',
+                    success: function (response) {
+                        $(`#${post.pk}-post`).remove()
+                    },
+                })
+            })
+        }
+
         $(document).ready(function () {
             $.get('/forum/json', function (data) {
-                console.log(data)
+
+                data.map((post) => {
+                    addPost(post)
+                    deletePost(post)
+                }
+
+                )
             })
 
             $("#btn-submit").click(function () {
-                console.log("sdsd")
+                const forum = {
+                    question: $(".question-input").val(),
+                    description: $(".description-input").val()
+                }
+
+                $.post('/forum/add', forum, function (res) {
+
+                    addPost(res)
+                    deletePost(res)
+
+                    $(".question-input").val('')
+                    $(".description-input").val('')
+                })
             })
         })
     </script>
 </head>
-<div>
+<div class="">
     <div class="ml-24 text-2xl font-bold mt-10">
         Forum Konsultasi
     </div>
 
     <div class="mx-[22%] mt-5  flex flex-col gap-5">
-        <div class="flex flex-col">
+        <form method="">
+            <div class="flex flex-col">
 
-            <div>
-                Pertanyaan
+
+
+                <div>
+                    Pertanyaan
+                </div>
+                {{ form.question|addclass:"bg-red-100 rounded-lg h-10 pl-4 mt-1 question-input" }}
+
+
+                <div class="mt-2">
+                    Deskripsi
+                </div>
+                {{ form.description|addclass:"bg-red-100 rounded-lg h-28 pl-4 pt-2 mt-1 description-input" }}
+
+
             </div>
-            {{ form.question|addclass:"bg-red-100 rounded-lg h-10 pl-4" }}
-
-
-            <div>
-                Deskripsi
-            </div>
-            {{ form.description|addclass:"bg-red-100 rounded-lg h-28 pl-4 pt-2" }}
-
-
-        </div>
+        </form>
         <div class="flex justify-end">
             <button id="btn-submit" class="p-2 bg-red-300 rounded-lg">Submit</button>
         </div>
 
-        <div class="flex flex-col justify-center ">
-            <div class="text-xl text-red-500 capitalize">
-                Ini contoh judul
-            </div>
-            <div>
-                ini contoh deskripsi lala lailaoaiaialalal
-            </div>
+        <div class="flex flex-col justify-center gap-5" id="forum">
+
         </div>
-        <hr size="10">
-        <div class="flex flex-col justify-center ">
-            <div class="text-xl text-red-500 capitalize">
-                Ini contoh judul
-            </div>
-            <div>
-                ini contoh deskripsi lala lailaoaiaialalal
-            </div>
-        </div>
-        <hr size="10">
+
+
     </div>
 </div>
 
