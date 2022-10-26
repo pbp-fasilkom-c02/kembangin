@@ -5,7 +5,7 @@ app_name = 'main'
 
 urlpatterns = [
     path('', show_landing, name='show_landing'),
-    path('login/', login_user, name='login' ),
+    path('login', login_user, name='login' ),
     path('register', register_user, name='register'),
-    path('logout/', logout_user, name='logout')
+    path('logout', logout_user, name='logout')
 ]
