@@ -4,8 +4,8 @@
 
 <head>
     <script>
-        const useToast = (toastTrigger) => {
-            const toast = new bootstrap.Toast($('#liveToast')[0])
+        const useToast = (toastTrigger, komentar) => {
+            const toast = komentar ? new bootstrap.Toast($('#liveToastKomentar')[0]) : new bootstrap.Toast($('#liveToast')[0])
             toast.show()
         }
 
@@ -75,7 +75,7 @@
                     success: function (response) {
 
                         if (response.status == "error") {
-                            useToast(true)
+                            useToast(true, true)
                         }
                         else {
                             $(`#${reply.pk}-reply`).addClass("animate-slide-out-blurred-right")
@@ -132,9 +132,9 @@
 
             $("#btn-submit").click(function () {
                 $.post(`/forum/${pk}/add-comment`, { comment: $(".comment-input").val() }, function (res) {
-                    console.log(res)
+
                     if (res.status == "error") {
-                        useToast(true)
+                        useToast(true, false)
                     }
                     else {
                         addComment(res)
@@ -165,6 +165,19 @@
             </div>
             <div class="toast-body">
                 Kamu bukan dokter sehingga tidak bisa memberi komentar
+            </div>
+        </div>
+    </div>
+    <div class="toast-container position-fixed top-10 end-0 p-3">
+        <div id="liveToastKomentar" class="toast bg-red-100" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-red-100">
+
+                <strong class="me-auto text-red-500">Warning!</strong>
+
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Kamu tidak bisa menghapus komentar orang lain!
             </div>
         </div>
     </div>

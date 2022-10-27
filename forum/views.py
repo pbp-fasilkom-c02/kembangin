@@ -96,7 +96,8 @@ def add_forum(request):
             'is_doctor': forum.author.is_doctor,
             "created_at": forum.created_at,
             'upvote': forum.upvote,
-            'downvote': forum.downvote
+            'downvote': forum.downvote,
+            'replies': []
             }
             
 
