@@ -7,6 +7,7 @@ from forum.forms import ForumForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import datetime
+from django.contrib import messages
 
 
 
@@ -36,7 +37,6 @@ def get_forums_json(request):
             'created_at' : forum.created_at,
             'pk': forum.pk,
             'replies': replies,
-            
         })
 
 
@@ -70,8 +70,18 @@ def add_forum(request):
 @login_required(login_url='/login')
 @csrf_exempt
 def delete_forum(request,id):
+
+    
+
     if request.method == "DELETE":
         task = get_object_or_404(Forum, id = id)
+        
+        if task.author.username != request.user.username:
+            response = {
+                'status': 'error',
+                'message': 'Kamu tidak bisa menghapus post orang lain!'
+            }
+            return JsonResponse(response)
         task.delete()
 
     return HttpResponse(status=202)

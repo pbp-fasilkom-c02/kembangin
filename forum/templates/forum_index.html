@@ -5,24 +5,31 @@
 
 <head>
     <script>
+        const useToast = (toastTrigger) => {
+            const toast = new bootstrap.Toast($('#liveToast')[0])
+            toast.show()
+        }
+        const forumPost = (post) => `<div id='${post.pk}-post' class="animate-slide-in-fwd-center">
+            <div class="flex justify-between ">
 
-        const forumPost = (post) => `<div id='${post.pk}-post'>
-            <div class="flex justify-between">
-
-                <div class="text-xl text-red-500 capitalize underline cursor-pointer" onclick="location.href='google.com'">
+                <div class="text-xl text-red-500 capitalize underline cursor-pointer" >
                     ${post.question}
                 </div>
-                <div class="cursor-pointer" id='${post.pk}'>
+                <button class="cursor-pointer" id='${post.pk}'>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
   <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
 </svg>
-</div>
+</button>
                 </div>
+               
                 <div>
                     ${post.description}
                 </div>
-                <div>
+                <div class="text-sm">
                     ${post.created_at.split('T')[0]}  
+                </div>
+                <div class="text-sm">
+                    Dibuat oleh <span class="font-bold">${post.author}</span>
                 </div>
                 <hr size="10" class="mt-5">
             </div>`
@@ -33,12 +40,19 @@
 
         const deletePost = (post) => {
             $(`#${post.pk}`).click(function () {
-
                 $.ajax({
                     url: `/forum/delete/${post.pk}`,
                     type: 'DELETE',
                     success: function (response) {
-                        $(`#${post.pk}-post`).remove()
+
+                        if (response.status == "error") {
+
+                            useToast(true)
+                        }
+                        else {
+                            $(`#${post.pk}-post`).addClass("animate-slide-out-blurred-right")
+                            setTimeout(function () { $(`#${post.pk}-post`).remove(); }, 1000);
+                        }
                     },
                 })
             })
@@ -77,11 +91,22 @@
     <div class="ml-24 text-2xl font-bold mt-10">
         Forum Konsultasi
     </div>
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="liveToast" class="toast bg-red-100" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-red-100">
 
+                <strong class="me-auto text-red-500">Warning!</strong>
+
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Kamu tidak bisa menghapus post orang lain!
+            </div>
+        </div>
+    </div>
     <div class="mx-[22%] mt-5  flex flex-col gap-5">
         <form method="">
             <div class="flex flex-col">
-
 
 
                 <div>
