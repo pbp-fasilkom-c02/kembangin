@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.http import HttpResponse,HttpResponseBadRequest
 from django.shortcuts import render,get_object_or_404
 from forum.models import Forum, ForumReply
-from forum.forms import ForumForm
+from forum.forms import ForumForm, ReplyForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import datetime
@@ -15,11 +15,38 @@ def show_forum_index(request):
     form = ForumForm()
     return render(request, "forum_index.html",{'form':form})
 
+@login_required(login_url='/login')
+def show_forum_detail(request,pk):
+    
+    form = ReplyForm()
+    return render(request, "forum_detail.html",{'form':form, 'pk':pk})
+
+def get_forum_by_pk(request,pk):
+    replies = []
+    forum = Forum.objects.filter(pk=pk)[0]
+
+    for reply in forum.forumreply_set.all():
+            replies.append({
+                'comment': reply.comment,
+                'author': reply.author.username,
+                'created_at': reply.created_at,
+                'pk':reply.pk
+            })
+    
+    data = {
+            'question': forum.question,
+            'author': forum.author.username,
+            'description': forum.description,
+            'created_at' : forum.created_at,
+            'is_doctor': forum.author.is_doctor,
+            'pk': forum.pk,
+            'replies': replies,
+        }
+    
+    return JsonResponse(data)
 
 
 def get_forums_json(request):
-
-
     list_of_forums = []
     forums = Forum.objects.all()
     replies = []
@@ -28,25 +55,27 @@ def get_forums_json(request):
             replies.append({
                 'comment': reply.comment,
                 'author': reply.author.username,
-                'created_at': reply.created_at
+                'created_at': reply.created_at,
+                'pk':reply.pk
             })
         list_of_forums.append({
             'question': forum.question,
             'author': forum.author.username,
             'description': forum.description,
             'created_at' : forum.created_at,
+            'is_doctor': forum.author.is_doctor,
             'pk': forum.pk,
             'replies': replies,
         })
-
-
     return JsonResponse(list_of_forums,safe=False)
+
+
 
     
 @login_required(login_url='/login')
 @csrf_exempt
 def add_forum(request):
-    print("dsaasdas")
+
     if request.method == "POST":
         form = ForumForm(request.POST)
         if form.is_valid():
@@ -59,6 +88,7 @@ def add_forum(request):
             "question": forum.question,
             "description": forum.description,
             "author": forum.author.username,
+            'is_doctor': forum.author.is_doctor,
             "created_at": forum.created_at
             }
             
@@ -69,24 +99,67 @@ def add_forum(request):
 
 @login_required(login_url='/login')
 @csrf_exempt
+def add_comment(request,pk):
+
+    if request.method == "POST":
+        form = ReplyForm(request.POST)
+        if form.is_valid():
+            if request.user.is_doctor:
+                forum = Forum.objects.filter(pk=pk)[0]
+                comment = form.cleaned_data["comment"]
+                
+                reply = ForumReply.objects.create(comment=comment,forum=forum, created_at=datetime.datetime.now(), author=request.user)
+                
+                data = {
+                "pk": reply.pk,
+                "comment": reply.comment,
+                "author": reply.author.username,
+                "created_at": reply.created_at
+                }
+                return JsonResponse(data)
+            else:
+                response = {
+                    'status': 'error',
+                    'message': 'Kamu bukan dokter sehingga tidak bisa memberi komentar'
+                }
+                return JsonResponse(response)
+
+    return HttpResponseBadRequest()
+
+@login_required(login_url='/login')
+@csrf_exempt
 def delete_forum(request,id):
 
     
 
     if request.method == "DELETE":
-        task = get_object_or_404(Forum, id = id)
+        post = get_object_or_404(Forum, id = id)
         
-        if task.author.username != request.user.username:
+        if post.author.username != request.user.username:
             response = {
                 'status': 'error',
                 'message': 'Kamu tidak bisa menghapus post orang lain!'
             }
             return JsonResponse(response)
-        task.delete()
+        post.delete()
 
     return HttpResponse(status=202)
 
-def show_forum_detail(request):
 
-    return HttpResponse()
-    # return render(request, "profile.html", context)
+@login_required(login_url='/login')
+@csrf_exempt
+def delete_comment(request,pk):
+
+    if request.method == "DELETE":
+        reply = get_object_or_404(ForumReply, id = pk)
+        
+        if reply.author.username != request.user.username:
+            response = {
+                'status': 'error',
+                'message': 'Kamu tidak bisa menghapus komentar orang lain!'
+            }
+            return JsonResponse(response)
+        reply.delete()
+
+    return HttpResponse(status=202)
+

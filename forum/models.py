@@ -1,9 +1,6 @@
-from ast import For
-from email.policy import default
-from pyexpat import model
 from django.db import models
 from main.models import User
-from django.contrib.postgres.fields import ArrayField
+
 
 # User can create many forums, forum can have many reply
 
