@@ -18,7 +18,7 @@ def login_user(request):
         if user is not None:
             login(request, user)
             return redirect('main:show_landing')
-        messages.info(request, "Wrong username or password")
+        messages.info(request, "Wrong username or password!")
     return render(request, "login.html")
 
 def register_user(request):
@@ -27,8 +27,8 @@ def register_user(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
         repeat_password = request.POST.get("repeat_password")
-        if (User.objects.filter(username=username, email=email)):
-            messages.info(request, "Username or email already taken")
+        if (User.objects.filter(username=username) or User.objects.filter(email=email)):
+            messages.info(request, "Username or email already taken!")
         elif (password == repeat_password):
             user = User.objects.create_user(username=username, email=email, password=password)
             
@@ -37,7 +37,7 @@ def register_user(request):
             user.save()
             return redirect("main:login")
         else:
-            messages.info(request, "Password and repeat password is different")
+            messages.info(request, "Password and repeat password is different!")
     return render(request, "register.html")
 
 def logout_user(request):
