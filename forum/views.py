@@ -7,7 +7,7 @@ from forum.forms import ForumForm, ReplyForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import datetime
-from django.contrib import messages
+
 
 
 
@@ -41,6 +41,8 @@ def get_forum_by_pk(request,pk):
             'is_doctor': forum.author.is_doctor,
             'pk': forum.pk,
             'replies': replies,
+            'upvote': forum.upvote,
+            'downvote': forum.downvote
         }
     
     return JsonResponse(data)
@@ -49,8 +51,9 @@ def get_forum_by_pk(request,pk):
 def get_forums_json(request):
     list_of_forums = []
     forums = Forum.objects.all()
-    replies = []
+ 
     for forum in forums:
+        replies = []
         for reply in forum.forumreply_set.all():
             replies.append({
                 'comment': reply.comment,
@@ -66,6 +69,8 @@ def get_forums_json(request):
             'is_doctor': forum.author.is_doctor,
             'pk': forum.pk,
             'replies': replies,
+            'upvote': forum.upvote,
+            'downvote': forum.downvote
         })
     return JsonResponse(list_of_forums,safe=False)
 
@@ -89,7 +94,9 @@ def add_forum(request):
             "description": forum.description,
             "author": forum.author.username,
             'is_doctor': forum.author.is_doctor,
-            "created_at": forum.created_at
+            "created_at": forum.created_at,
+            'upvote': forum.upvote,
+            'downvote': forum.downvote
             }
             
 
@@ -163,3 +170,41 @@ def delete_comment(request,pk):
 
     return HttpResponse(status=202)
 
+@login_required(login_url='/login')
+@csrf_exempt
+def handle_vote(request,pk,action):
+    replies=[]
+    forum = Forum.objects.filter(pk=pk)[0]
+
+    if request.method == "PUT":
+        forum = get_object_or_404(Forum, id = pk)
+        if action == "up":
+            forum.upvote +=1
+        elif action == "down":
+            forum.downvote +=1
+
+        forum.save()
+        for reply in forum.forumreply_set.all():
+            replies.append({
+                'comment': reply.comment,
+                'author': reply.author.username,
+                'created_at': reply.created_at,
+                'pk':reply.pk
+            }) 
+        data = {
+            'question': forum.question,
+            'author': forum.author.username,
+            'description': forum.description,
+            'created_at' : forum.created_at,
+            'is_doctor': forum.author.is_doctor,
+            'pk': forum.pk,
+            'replies': replies,
+            'upvote': forum.upvote,
+            'downvote': forum.downvote
+        }
+        print(data)
+        return JsonResponse(data)
+    
+    return HttpResponseBadRequest()
+
+   

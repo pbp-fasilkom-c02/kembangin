@@ -28,19 +28,38 @@
         <div class="text-center sm:text-left  text-xl sm:text-2xl font-bold">
             Forum Konsultasi
         </div>
-        <div>${post.created_at.split('T')[0]}</div>
+        <div class="text-center sm:text-left">${post.created_at.split('T')[0]}</div>
         
 
     </div>
     <div class="mx-8 sm:mx-[22%] mt-2 sm:mt-5">
         <div>
-            <div class="text-3xl text-red-500 capitalize">
+            <div class="sm:text-left text-center text-xl sm:text-3xl text-red-500 capitalize">
                 ${post.question}
             </div>
-            <div class="mt-1">Dibuat oleh <span class="font-bold">${post.author}</span></div>
-            <div class="mt-4">${post.description}</div>
+            <div class="mt-1 sm:text-left text-center">Dibuat oleh <span class="font-bold">${post.is_doctor ? "dr. " : ""}${post.author}</span></div>
+            <div class="mt-4 sm:text-lg text-sm sm:text-left text-justify">${post.description}</div>
         </div>
-        
+        <div class="flex gap-5 mt-4">
+
+<div class="flex gap-2">
+    <div>${post.upvote}</div>
+    <button id="upvote">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l-3-3m0 0l-3 3m3-3v7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </button>
+  </svg>
+
+
+</div>
+<div class="flex gap-2">
+    <div>${post.downvote}</div>
+    <button id="downvote">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+</button>
+            </div>
 
     </div>`
 
@@ -67,35 +86,62 @@
             })
         }
 
+        const upVote = (pk) => {
+            $("#upvote").click(function () {
+                $.ajax({
+                    url: `/forum/${pk}/vote/up`,
+                    type: 'PUT',
+                    success: function (response) {
+                        $('.get-id').empty()
+                        $('#comment-section').empty()
+                        createForum(response, pk)
 
+                    }
+                });
+            })
+        }
+        const downVote = (pk) => {
+            $("#downvote").click(function () {
+                $.ajax({
+                    url: `/forum/${pk}/vote/down`,
+                    type: 'PUT',
+                    success: function (response) {
+                        $('.get-id').empty()
+                        $('#comment-section').empty()
+                        createForum(response, pk)
+                    }
+                });
+            })
+        }
 
+        const createForum = (data, pk) => {
+            $('.get-id').prepend(forumPost(data))
+            upVote(pk)
+            downVote(pk)
+            data.replies.map((reply) => {
+                addComment(reply)
+                deleteReply(reply)
+            })
+        }
 
         $(document).ready(function () {
             const pk = $(".get-id").attr("id")
             $.get(`/forum/json/${pk}`, function (data) {
-                $('.get-id').prepend(forumPost(data))
-                data.replies.map((reply) => {
-                    console.log(reply)
-                    addComment(reply)
-                    deleteReply(reply)
-                })
+                createForum(data, pk)
             })
 
-            // $.get('/forum/json', function (data) {
-            //     data.map((post) => {
-            //         addPost(post)
-            //         deletePost(post)
-            //     })
-            // })
-
             $("#btn-submit").click(function () {
-
-
-
-
                 $.post(`/forum/${pk}/add-comment`, { comment: $(".comment-input").val() }, function (res) {
-                    addComment(res)
-                    deleteReply(res)
+                    console.log(res)
+                    if (res.status == "error") {
+                        useToast(true)
+                    }
+                    else {
+                        addComment(res)
+                        deleteReply(res)
+
+                    }
+
                     $(".comment-input").val('')
 
                 })
@@ -104,21 +150,37 @@
     </script>
 </head>
 
+
 <div id={{pk}} class="get-id">
-    <div class="mt-10 mx-8 sm:mx-[22%] mt-10">
-        <div class="text-xl font-bold">Berikan Komentarmu </div>
-        <div class="mt-4">
-            <form method="">
-                {{ form.comment|addclass:"bg-red-100 rounded-lg h-10 pl-4 mt-1 comment-input w-full" }}
-            </form>
-            <div class="flex justify-end mt-4">
-                <button id="btn-submit" class="p-2 bg-red-300 rounded-lg">Submit</button>
+</div>
+
+<div class="mt-10 mx-8 sm:mx-[22%] mt-5">
+    <div class="toast-container position-fixed top-10 end-0 p-3">
+        <div id="liveToast" class="toast bg-red-100" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-red-100">
+
+                <strong class="me-auto text-red-500">Warning!</strong>
+
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Kamu bukan dokter sehingga tidak bisa memberi komentar
             </div>
         </div>
-        <div class="mt-4" id="comment-section">
-
+    </div>
+    <div class="text-xl font-bold">Berikan Komentarmu </div>
+    <div class="mt-4">
+        <form method="">
+            {{ form.comment|addclass:"bg-red-100 rounded-lg h-10 px-4 pt-2 mt-1 comment-input w-full" }}
+        </form>
+        <div class="flex justify-end mt-4">
+            <button id="btn-submit" class="p-2 bg-red-300 rounded-lg">Submit</button>
         </div>
     </div>
+    <div class="mt-4" id="comment-section">
+
+    </div>
+</div>
 
 
 

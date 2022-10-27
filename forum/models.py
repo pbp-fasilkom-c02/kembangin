@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from main.models import User
 
@@ -9,6 +10,8 @@ class Forum(models.Model):
     description = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    upvote = models.IntegerField(default=0)
+    downvote = models.IntegerField(default=0)
 
 class ForumReply(models.Model):
     comment = models.CharField(max_length=100)
