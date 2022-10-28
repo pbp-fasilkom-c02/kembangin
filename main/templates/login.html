@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block meta %}
+<style>
+    body {
+        position: relative;
+
+    }
+
+    #content {
+        padding-bottom: 5rem;
+    }
+
+    @media (max-width: 500px) {
+        #login-form {
+            margin-left: 5%;
+            margin-right: 5%;
+        }
+    }
+
+    @media (max-width: 350px) {
+        #login-form {
+            margin-left: 1%;
+            margin-right: 1%;
+        }
+    }
+</style>
+{% endblock meta %}
+
+{% block content %}
+<div class="text-center font-bold flex h-screen" id="content">
+    <form method="POST" action="" id="login-form"
+        class="grid grid-cols-1 gap-5 bg-red-200 rounded border-4 border-neutral-500 p-5 m-auto">
+        {% csrf_token %}
+        <div>
+            <p style="font-size: 3em;">LOGIN</p>
+        </div>
+        <div>
+            <input style="text-align:center; font-size: 1.2em;" type="text" name="username" placeholder="Username"
+                class="form-control rounded border-2 border-black-500 hover:border-neutral-900">
+        </div>
+        <div>
+            <input style="text-align:center; font-size: 1.2em;" type="password" name="password" placeholder="Password"
+                class="form-control rounded border-2 border-black-500 hover:border-neutral-900">
+        </div>
+        <div>
+            <button
+                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded border-2 border-neutral-500"
+                type="submit" style="font-size: 1.5em;">Login</button>
+        </div>
+        {% if messages %}
+        <ul class="text-center font-bold text-black-400">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </form>
+
+
+</div>
+
+{% endblock content %}
