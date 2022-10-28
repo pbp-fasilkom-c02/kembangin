@@ -9,15 +9,12 @@ from django.views.decorators.csrf import csrf_exempt
 import datetime
 
 
-
-
 def show_forum_index(request):
     form = ForumForm()
     return render(request, "forum_index.html",{'form':form})
 
 @login_required(login_url='/login')
 def show_forum_detail(request,pk):
-    
     form = ReplyForm()
     return render(request, "forum_detail.html",{'form':form, 'pk':pk})
 
@@ -77,31 +74,37 @@ def get_forums_json(request):
 
 
     
-@login_required(login_url='/login')
+
 @csrf_exempt
 def add_forum(request):
 
     if request.method == "POST":
         form = ForumForm(request.POST)
         if form.is_valid():
-            question = form.cleaned_data["question"]
-            description = form.cleaned_data["description"]
-            forum = Forum.objects.create(question=question,description=description,created_at=datetime.datetime.now(),author=request.user)
 
-            data = {
-            "pk": forum.pk,
-            "question": forum.question,
-            "description": forum.description,
-            "author": forum.author.username,
-            'is_doctor': forum.author.is_doctor,
-            "created_at": forum.created_at,
-            'upvote': forum.upvote,
-            'downvote': forum.downvote,
-            'replies': []
-            }
-            
+            if request.user.username != "":
 
-        return JsonResponse(data)
+                question = form.cleaned_data["question"]
+                description = form.cleaned_data["description"]
+                forum = Forum.objects.create(question=question,description=description,created_at=datetime.datetime.now(),author=request.user)
+
+                data = {
+                "pk": forum.pk,
+                "question": forum.question,
+                "description": forum.description,
+                "author": forum.author.username,
+                'is_doctor': forum.author.is_doctor,
+                "created_at": forum.created_at,
+                'upvote': forum.upvote,
+                'downvote': forum.downvote,
+                'replies': []
+                }
+                
+
+                return JsonResponse(data)
+            else:
+                return JsonResponse({'status':"error", 'message':'Anda harus login terlebih dahulu'})
+
 
     return HttpResponseBadRequest()
 
@@ -134,7 +137,6 @@ def add_comment(request,pk):
 
     return HttpResponseBadRequest()
 
-@login_required(login_url='/login')
 @csrf_exempt
 def delete_forum(request,id):
 
@@ -203,7 +205,7 @@ def handle_vote(request,pk,action):
             'upvote': forum.upvote,
             'downvote': forum.downvote
         }
-        print(data)
+
         return JsonResponse(data)
     
     return HttpResponseBadRequest()
