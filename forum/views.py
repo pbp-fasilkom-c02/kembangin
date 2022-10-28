@@ -9,15 +9,12 @@ from django.views.decorators.csrf import csrf_exempt
 import datetime
 
 
-
-
 def show_forum_index(request):
     form = ForumForm()
     return render(request, "forum_index.html",{'form':form})
 
 @login_required(login_url='/login')
 def show_forum_detail(request,pk):
-    
     form = ReplyForm()
     return render(request, "forum_detail.html",{'form':form, 'pk':pk})
 
