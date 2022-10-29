@@ -1,4 +1,3 @@
-from random import choices
 from django.db import models
 from main.models import User
 from django.utils import timezone

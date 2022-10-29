@@ -1,12 +1,19 @@
-.card:hover{
-    transform: scale(1.05);
-    box-shadow: 0 10px 20px rgb(0 0 0 / 12%), 0 4px 8px rgb(0 0 0 / 6%);
-}
-
 @media (min-width: 320px) {
     .card-col {
         flex: 0 0 auto;
         width:100%
+    }
+}
+
+@media (max-width: 345px) {
+    .card {
+        width:18rem;
+    }
+}
+
+@media (min-width: 345px) {
+    .card {
+        width:20rem;
     }
 }
 

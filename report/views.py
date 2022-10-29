@@ -1,24 +1,23 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from report.forms import ReportForm
 from report.models import Report
 from django.core import serializers
 import datetime
 
-@login_required(login_url='/login/')
 def show_reports(request):
-    data_report = Report.objects.filter(user=request.user).all()
+    form = ReportForm()
+    return render(request, "report-progress.html", {'form':form})
 
-    context = {
-    'reports': data_report,
-    }
-    return render(request, "report-progress.html", context)
-
+@login_required(login_url='/login/')
 def show_json(request):
     data = Report.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
+@login_required(login_url='/login/')
+@csrf_exempt
 def add_report(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -44,6 +43,7 @@ def add_report(request):
         }
         return JsonResponse(reports)
 
+@login_required(login_url='/login/')
 def delete_report(request, id):
     if request.method == 'DELETE':
         report = Report.objects.get(pk=id)

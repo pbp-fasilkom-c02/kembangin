@@ -1,121 +1,15 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block meta %}
 <title>Catatan Perkembangan Anak</title>
-<style>
-  .card:hover{
-    transform: scale(1.05);
-    box-shadow: 0 10px 20px rgb(0 0 0 / 12%), 0 4px 8px rgb(0 0 0 / 6%);
-  }
-
-  @media (min-width: 320px) {
-    .card-col {
-      flex: 0 0 auto;
-      width:100%
-    }
-  }
-
-  @media (min-width: 768px) {
-    .card-col {
-      flex:0 0 auto;
-      width:50%;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .card-col {
-      flex: 0 0 auto;
-      width:33.33%;
-    }
-  }
-</style>
-<script>
-  $(document).ready(function(){
-    $.get("/report-progress/json", function(data) {
-      for (i=0; i < data.length; i++){
-        $("#card-row").append(`
-        <div class="card-col col">
-          <div class="card shadow-xl m-auto h-100" style="width: 20rem;" id="report-${data[i].pk}">
-            <div class="card-body">
-              <div class="grid grid-cols-6 gap-7 content-start">
-                <div class="col-span-5"><h1 class="card-title font-bold text-red-500 text-xl">${data[i].fields.name} (${data[i].fields.age})</h1></div>
-              <div>
-                <button onclick="deleteReport(${data[i].pk})" class="button"  style="float:right;">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                  </svg>
-                </button>                
-              </div>
-              </div>                
-              <h6 class="card-subtitle mb-2 text-gray-400">Dibuat pada ${data[i].fields.date}</h6>
-              <p class="card-text font-normal">‣ Tinggi badan: ${data[i].fields.height}</p>
-              <p class="card-text font-normal">‣ Berat badan: ${data[i].fields.weight}</p>
-              <p class="card-text font-normal">‣ Tingkat makan: ${data[i].fields.eat}</p>
-              <p class="card-text font-normal">‣ Tingkat minum: ${data[i].fields.drink}</p>
-              <p class="card-text font-normal">‣ Perkembangan: ${data[i].fields.progress}</p>                        
-            </div> 
-          </div>
-        </div>
-      `)
-      }
-    });
-
-    $("#add-button").click(function(){
-      const name = $("#report-name").val()
-      const age = $("#report-age").val()
-      const height = $("#report-height").val()
-      const weight = $("#report-weight").val()
-      const eat = $("#report-eat").val()
-      const drink = $("#report-drink").val()
-      const progress = $("#report-progress").val()
-      const report = {name:name, age:age, height:height, weight:weight, eat:eat, drink:drink, progress:progress,csrfmiddlewaretoken:'{{ csrf_token }}'}
-      $.ajax({url:"/report-progress/add-report/", data:report, method:"POST"}).done(function (add) {
-        $("#card-row").append(`
-        <div class="card-col col">
-          <div class="card shadow-xl m-auto h-100" style="width: 20rem;" id="report-${add.pk}">
-            <div class="card-body">
-              <div class="grid grid-cols-6 gap-7 content-start">
-                <div class="col-span-5"><h1 class="card-title font-bold text-red-500 text-xl">${add.fields.name} (${add.fields.age})</h1></div>
-              <div>
-                <button onclick="deleteReport(${add.pk})" class="button" style="float:right;">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                  </svg>
-                </button>                
-              </div>
-              </div>                
-              <h6 class="card-subtitle mb-2 text-gray-400">Dibuat pada ${add.fields.date}</h6>
-              <p class="card-text font-normal">‣ Tinggi badan: ${add.fields.height}</p>
-              <p class="card-text font-normal">‣ Berat badan: ${add.fields.weight}</p>
-              <p class="card-text font-normal">‣ Tingkat makan: ${add.fields.eat}</p>
-              <p class="card-text font-normal">‣ Tingkat minum: ${add.fields.drink}</p>
-              <p class="card-text font-normal">‣ Perkembangan: ${add.fields.progress}</p>                        
-            </div> 
-          </div>
-        </div>
-        `)
-      })
-      $('#reportModal').on('hidden.bs.modal', function () {
-        $('#reportModal form')[0].reset();
-      });
-    });
-  });
-  var deleteReport = function(pk) {
-    $.ajax({
-      type: "DELETE",
-      headers: { "X-CSRFToken": document.getElementsByName("csrfmiddlewaretoken")[0].value},
-      url: "{% url 'report:delete_report' 1 %}".replace(1, pk),
-      encode: true,
-    }).done(function (data) {
-      document.getElementById(`report-${pk}`).remove();
-    })
-  };   
- </script>
+<link rel="stylesheet" href="/static/css/show_reports.css">
+<script src="{% static 'js/show_reports.js' %}"></script>
 {% endblock meta %}
 
 {% block content %}
-<div class="relative h-55 bg-gray-800 pt-7">
-  <div class="container relative z-30 md:py-10 md:w-1/2 text-center">
+<div class="relative h-55 bg-gray-800 pt-7 z-0">
+  <div class="container relative z-10 md:py-10 md:w-1/2 text-center">
     <h1 class="text-2xl font-bold mb-4 text-white">Catatan Perkembangan Anak</h1>
     <div class="d-none d-md-flex flex-row gap-6 justify-content-center align-items-center">
         <button type="button" class="text-red-500 hover:text-white border border-red-500 hover:bg-red-500 focus:outline-none font-bold rounded-md px-5 py-2.5 text-center mr-2 mb-2" data-bs-toggle="modal" data-bs-target="#reportModal">Tambah Catatan Baru</button>
@@ -132,63 +26,50 @@
   </div>
 </div>
 
-<div class="container mx-auto w-100 pt-7 mb-10">
-    <div class="row row-cols-1 g-4" id="card-row">
-    </div>
+<div class="container mx-auto w-100 pt-7">
+    <div class="row row-cols-1 g-4" id="card-row"></div>
     <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title fs-5 fw-bold text-red-500" id="reportModalLabel">Tambah Catatan Baru</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                <svg></svg>
-              </button>
             </div>
+            {% if user.is_authenticated %}
             <div class="modal-body">
               <form>
                 {% csrf_token %}
                 <div class="container-fluid">
-                  <div class="row">
+                  <div class="row mb-2">
                     <div class="col-md-6">
-                      <label for="report-name" class="col-form-label font-semibold">Nama Anak</label>
-                      <input type="text" class="form-control bg-red-100" required id="report-name" placeholder="Contoh: Yasmin">
+                      <h1><label class="col-form-label font-semibold">Nama Anak</label></h1>
+                      {{form.name}}
                     </div>
                     <div class="col-md-6">
-                      <label for="report-age" class="col-form-label font-semibold">Umur Anak</label>
-                      <input type="text" class="form-control bg-red-100" required id="report-age" placeholder="Contoh: 2 Tahun">
+                      <h1><label class="col-form-label font-semibold">Umur Anak</label></h1>
+                      {{form.age}}
                     </div>                                        
                   </div>
-                  <div class="row mb-5">
+                  <div class="row mb-2">
                     <div class="col-md-6">
-                      <label for="report-height" class="col-form-label font-semibold">Tinggi Badan Anak</label>
-                      <input type="text" class="form-control bg-red-100" required id="report-height" placeholder="Contoh: 145 cm">
+                      <h1><label class="col-form-label font-semibold">Tinggi Badan Anak</label></h1>
+                      {{form.height}}
                     </div>
                     <div class="col-md-6">
-                      <label for="report-weight" class="col-form-label font-semibold">Berat Badan Anak</label>
-                      <input type="text" class="form-control bg-red-100" required id="report-weight" placeholder="Contoh: 35 kg">
+                      <h1><label class="col-form-label font-semibold">Berat Badan Anak</label></h1>
+                      {{form.weight}}
                     </div>                    
                   </div>
-                  <div class="mb-5">
-                    <label for="report-eat" class="block font-semibold mb-2">Tingkat Makan Anak</label>
-                    <select id="report-eat" class="bg-red-100 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2" required>
-                      <option value="Tidak Baik">Tidak baik</option>                      
-                      <option value="Kurang Baik">Kurang baik</option>
-                      <option value="Cukup Baik">Cukup baik</option>
-                      <option value="Sangat Baik">Sangat baik</option>
-                    </select>
+                  <div class="mb-2">
+                    <h1><label class="col-form-label font-semibold">Tingkat Makan Anak</label></h1>
+                    {{form.eat}}
+                  </div>
+                  <div class="mb-2">
+                    <h1><label class="col-form-label font-semibold">Tingkat Minum Anak</label></h1>
+                    {{form.drink}}
                   </div>
                   <div class="mb-3">
-                    <label for="report-drink" class="block font-semibold mb-2">Tingkat Minum Anak</label>
-                    <select id="report-drink" class="bg-red-100 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2" required>
-                      <option value="Tidak Baik">Tidak baik</option>                      
-                      <option value="Kurang Baik">Kurang baik</option>
-                      <option value="Cukup Baik">Cukup baik</option>
-                      <option value="Sangat Baik">Sangat baik</option>
-                    </select>
-                  </div>
-                  <div class="mb-3">
-                    <label for="report-progress" class="col-form-label font-semibold">Perkembangan Pada Anak</label>
-                    <textarea class="form-control bg-red-100" id="report-progress" placeholder="Contoh: Sudah bisa menghitung, Belajar sepeda"></textarea>
+                    <h1><label class="col-form-label font-semibold">Perkembangan Pada Anak</label></h1>
+                    {{form.progress}}
                   </div>
                 </div>
               </form>
@@ -197,6 +78,14 @@
               <button type="button" class="text-red-500 hover:text-red-700 rounded-md font-medium px-5 py-2.5 mr-2 mb-2" data-bs-dismiss="modal">Kembali</button>
               <button type="button" class="text-white bg-red-500 hover:bg-red-700 rounded-md font-medium px-5 py-2.5 mr-2 mb-2" data-bs-dismiss="modal" id="add-button">Tambah</button>
             </div>
+            {% else %}
+            <div class="modal-body text-center">
+              <h1 class="font-bold text-lg text-red-500">Anda belum login!</h1>
+              <h1 class="text-lg mb-4">Silakan login atau sign up untuk menambahkan catatan baru.</h1>
+              <button type="button" class="text-white bg-red-500 hover:bg-red-700 rounded-md font-medium px-5 py-2.5 mr-2 mb-2" onclick="location.href='/login'">Login</button>
+              <button type="button" class="text-red-500 hover:text-white border border-red-500 hover:bg-red-700 focus:outline-none font-medium rounded-md px-5 py-2.5 text-center mr-2 mb-2" onclick="location.href='/register'">Sign Up</button>                        
+            </div>
+            {% endif %}            
           </div>
         </div>
       </div>
