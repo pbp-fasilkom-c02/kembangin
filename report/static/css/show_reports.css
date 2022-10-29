@@ -1,0 +1,32 @@
+@media (min-width: 320px) {
+    .card-col {
+        flex: 0 0 auto;
+        width:100%
+    }
+}
+
+@media (max-width: 345px) {
+    .card {
+        width:18rem;
+    }
+}
+
+@media (min-width: 345px) {
+    .card {
+        width:20rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .card-col {
+        flex:0 0 auto;
+        width:50%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .card-col {
+        flex: 0 0 auto;
+        width:33.33%;
+    }
+}
