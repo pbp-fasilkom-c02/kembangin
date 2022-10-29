@@ -84,5 +84,10 @@
             {% endfor %}
         </div>
     </div>
+
+    {% if list_rekomendasi is None %}
+        <h5>Maaf rekomendasi produk oleh dokter belum tersedia</h5>
+    {% endif %}
+
 </body>
 {% endblock content %}
