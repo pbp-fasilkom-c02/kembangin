@@ -9,7 +9,7 @@ $(document).ready(function () {
         console.log("clicked");
 
         var data = JSON.stringify($("#tambahRekomendasi").serializeJSON())
-        data = JSON.parse(data)
+        // data = JSON.parse(data)
         console.log("data", data)
 
         $.ajax({
@@ -27,8 +27,8 @@ $(document).ready(function () {
                 });
 
                 console.log("sukses")
-                loadTask();
-                $('#authentication-modal').modal('toggle');
+                loadRekomendasi();
+                // $('#authentication-modal').modal('hide');
             },
 
             error: function (xhr, resp, text) {
@@ -45,12 +45,10 @@ $(document).ready(function () {
 
 // GET
 var row1 = document.createElement("div")
-row1.classList.add("container", "my-12", "mx-auto", "px-5", "md:px-12")
+row1.classList.add("container", "my-12", "mx-auto", "px-5", "md:px-1")
 
 var row2 = document.createElement("div")
 row2.classList.add("flex", "flex-wrap", "-mx-1", "lg:-mx-4")
-
-
 
 function loadRekomendasi() {
     row1.innerHTML = ""
@@ -63,16 +61,19 @@ function loadRekomendasi() {
 
             var row3 = document.createElement("div")
             row3.classList.add("max-w-sm", "rounded", "overflow-hidden", "shadow-lg")
+            row2.appendChild(row3)
 
             // Gambar
             var img = document.createElement("img")
             img.src = field.gambar
             img.alt = field.nama_barang
-            img.classList.add("max-w-sm", "rounded", "overflow-hidden", "shadow-lg")
+            img.classList.add("w-full")
+            row3.appendChild(img)
 
             // Nama + Deskripsi
             var nama_deskripsi = document.createElement("div")
             nama_deskripsi.classList.add("px-6", "py-4")
+            row3.appendChild(nama_deskripsi)
 
             var nama = document.createElement("div")
             nama.classList.add("font-bold", "text-xl", "mb-2")
@@ -87,6 +88,7 @@ function loadRekomendasi() {
             // Harga + Button beli
             var harga_beli = document.createElement("div")
             harga_beli.classList.add("px-6", "pt-4", "pb-2")
+            row3.appendChild(harga_beli)
 
             var harga = document.createElement("span")
             harga.classList.add("inline-block", "bg-gray-200", "rounded-full", "px-3", "py-1", "text-sm", "font-semibold", "text-gray-700", "mr-2", "mb-2")
@@ -105,11 +107,6 @@ function loadRekomendasi() {
 
             harga_beli.appendChild(div_btn)
 
-            row3.appendChild(img)
-            row3.appendChild(nama_deskripsi)
-            row3.appendChild(harga_beli)
-
-            row2.appendChild(row3)
             row1.appendChild(row2)
         })
 
