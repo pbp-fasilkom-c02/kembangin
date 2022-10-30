@@ -1,0 +1,245 @@
+{% extends 'base.html' %} {% block content %}  {% load bmicalculator_customtags %}
+{% load static %}
+<script src="{% static 'js/bmicalculator.js' %}"></script>   
+{% comment %} <script>
+  $(document).ready(() => {
+    const card = data => `
+      <div
+        class="card flex justify-center ${
+          data.fields.status && "opacity-50"
+        } hover:scale-105 transition-all"
+      >
+        <div
+          class="block rounded-lg shadow-lg hover:shadow-blue-500/30 bg-white max-w-sm text-center w-80"
+        >
+          <div
+            class="py-3 px-6 border-b bg-gray-800 flex gap-4 text-white justify-center form-check items-center rounded-t-lg hover:bg-gradient-to-bl transition-all"
+          >
+            <label for="status inline-block">BMI Metric</label>
+          </div>
+          <div class="p-6"> 
+            <h5 class="text-gray-900 text-xl font-bold mb-2">BMI : ${
+              data.fields.bmi
+            }</h5>
+            <p class="text-gray-700 text-sm mb-4">Weight : ${data.fields.weight} kg</p>
+            <p class="text-gray-700 text-sm mb-4">Height : ${data.fields.height} cm</p>
+            
+            <button
+              id="delete-${data.pk}"
+              type="button"
+              class="inline-block mx-auto hover:shadow-lg hover:shadow-blue-500/50 px-6 pt-2.5 pb-2 transition duration-150 ease-in-out flex align-center gap-2 items-center text-white bg-gradient-to-r from-blue-500 to-red-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 rounded-lg px-5 py-2.5"
+            >
+              Delete
+            </button>
+          </div>
+          <div class="py-3 px-6 border-t border-gray-300 text-gray-600">
+            <p class="text-xs">Created At:</p>
+            <p>${data.fields.date}</p>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const renderTasks = () => {
+      // fetching the tasks
+      $.get("{% url 'bmicalculator:show_json' %}", data => {
+        data.sort((a, b) => {
+          return a.fields.status - b.fields.status;
+        });
+        $.each(data, (i, value) => {
+          $("#bmicalculator").append(card(value)); // append to the div
+
+          // add event listener to the delete button
+          $(`#delete-${value.pk}`).click(() => {
+            deleteTask(value.pk);
+          });
+
+          // add event listener to the checkbox
+          $(`#status-${value.pk}`).change(() => {
+            updateFinished(value.pk);
+          });
+        });
+      });
+    };
+
+    const deleteTask = id => {
+      // get the CSRF Token
+      const csrftoken = document.querySelector(
+        "[name=csrfmiddlewaretoken]"
+      ).value;
+
+      $.ajax({
+        url: "{% url 'bmicalculator:hapus' 0 %}".replace("0", id),
+        type: "DELETE",
+        headers: { "X-CSRFToken": csrftoken }, // give CSRF token to the header
+        mode: "same-origin", // Do not send CSRF token to another domain.
+        success: () => {
+          // remove the card
+          $(`#delete-${id}`).parent().parent().parent().remove();
+        },
+        error: error => {
+          console.log(error);
+        },
+      });
+    };
+
+
+    const openModal = e => {
+      e.preventDefault(); // prevent refresh
+      $("#create-data-modal").removeClass("hidden");
+    };
+
+    const closeModal = e => {
+      // e.preventDefault(); // prevent refresh
+      $("#create-data-modal").addClass("hidden");
+    };
+
+    $("#create-data-form").submit(e => {
+      e.preventDefault();
+
+      // get the CSRF Token
+      const csrftoken = document.querySelector(
+        "[name=csrfmiddlewaretoken]"
+      ).value;
+
+      const weight = $("#weight").val();
+      const height = $("#height").val();
+
+      if (weight && height) {
+        $.ajax({
+          type: "POST",
+          url: "{% url 'bmicalculator:add_calculate' %}",
+          headers: { "X-CSRFToken": csrftoken }, // give CSRF token to the header
+          mode: "same-origin", // Do not send CSRF token to another domain.
+          data: {
+            weight: weight,
+            height: height,
+          },
+          success: response => {
+            $("#create-data-form").trigger("reset");
+            closeModal();
+            $("#bmicalculator").prepend(card(response));
+          },
+          error: error => {
+            console.log(error);
+          },
+        });
+      } else {
+        alert("Please fill all the fields");
+      }
+    });
+
+    $("#create-data").click(openModal);
+    $("#close-modal").click(closeModal);
+
+    renderTasks(); // render the tasks to the page
+});
+</script>    {% endcomment %}
+
+{% comment %} MODAL {% endcomment %}
+<div class="flex flex-col items-center justify-center "> 
+  <p class="text-gray-700 text-sm mb-4">Under Weight : Less than 18.5</p>
+  <p class="text-gray-700 text-sm mb-4">Normal Weight : 18.5 - 24.9</p>
+  <p class="text-gray-700 text-sm mb-4">Over Weight : Greater than 24.9</p>
+  <div class="mb-2 sm:mb-0">
+    <h1 class="text-2xl font-bold">Welcome back, <span class="text-blue-500">{{ nama }}</span>!</h1>
+  </div>
+</div>
+<div
+  id="create-data-modal"
+  class="w-full fixed flex justify-center w-full z-10 min-h-screen items-center bg-black bg-opacity-50 hidden"
+>
+  <div class="mt-7 bg-white rounded-xl shadow-lg">
+    <div class="p-4 sm:p-7">
+      <div class="flex flex-col items-center justify-center gap-5">
+        <h1 class="text-3xl font-bold">Hitung BMI</h1>
+        <form method="post" id="create-data-form">
+          {% csrf_token %}
+          <div class="gap-5 text-left grid grid-cols-3 grid-rows-3">
+            <label for={{form.weight}}>Berat (kg):</label>
+            {% comment %} <div class="mt-4">
+              <form method="post" id="weight"> 
+                {{form.weight|addclass:"col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none weight-input"}}
+              </form>
+            </div>
+            <div class="mt-4" id="weight">
+            </div> {% endcomment %}
+            <input
+              type="text"
+              name="weight"
+              id="weight"
+              placeholder="Isi dalam satuan Kilogram"
+              required
+              class="col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+            /> 
+
+            <label for={{form.height}}>Tinggi (cm):</label>
+            {% comment %} <div class="mt-4">
+              <form method="post" id="height"> 
+                {{form.height|addclass:"col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none weight-input"}}
+              </form>
+            </div>
+            <div class="mt-4" id="height">
+            </div> {% endcomment %}
+            <input
+              type="text"
+              name="height"
+              id="height"
+              placeholder="Isi dalam satuan Meter"
+              required
+              class="col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+            /> 
+
+            <input
+              data-mdb-ripple="true"
+              data-mdb-ripple-color="light"
+              class="col-span-3 text-white hover:shadow-lg hover:shadow-blue-500/50 transition-all bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+              type="submit"
+              value="Calculate"
+            />
+          </div>
+        </form>
+        <a
+          href="{% url 'bmicalculator:show_bmicalculator' %}"
+          class="font-bold text-blue-600 underline hover:no-underline"
+          id="close-modal"
+          >Close</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% comment %} <div
+  class="space-y-5 md:space-y-10 pt-10 max-w-[80%] mx-auto min-h-screen text-center"
+> {% endcomment %}
+
+<div class="space-y-5 md:space-y-10 pt-10 max-w-[80%] mx-auto min-h-screen text-center">
+  <button
+    type="button"
+    class="inline-block mx-auto hover:shadow-lg hover:shadow-blue-500/50 px-6 pt-2.5 pb-2 transition duration-150 ease-in-out flex align-center gap-2 items-center text-white bg-gradient-to-r from-blue-500 to-red-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 rounded-lg px-5 py-2.5"
+    id="create-data"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="w-6 h-6"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+    <p>Hitung BMI</p>
+  </button>
+
+  <div class="flex flex-wrap gap-20 justify-center pb-20" id="bmicalculator"></div>
+</div>
+
+
+{% endblock content %}

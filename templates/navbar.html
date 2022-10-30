@@ -84,7 +84,8 @@
         </li>
         <li>
           <a
-            href="#"
+          {% comment %} href to show_bmicalculator function {% endcomment %}
+            href="{% url 'bmicalculator:show_bmicalculator' %}"
             class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-red-200 md:hover:bg-transparent md:border-0 md:hover:text-red-400 md:p-2"
           >
             BMI
