@@ -16,6 +16,47 @@
       },
     });
 
+    $.ajax({
+      type: "GET",
+      url: "comment/json/",
+      dataType: "json",
+      success: function (data) {
+        for (idx = 0; idx < data.length; idx++) {
+          getExp(data[idx])
+        }
+      },
+    });
+
+    $("#share-exp").submit(function (event) {
+      event.preventDefault();
+      $.post(window.location.href + "share-exp/", {
+        comment: $("#exp").val(),
+      }).done(function (data) {
+        getExp(data);
+        $("#exp").val("");
+        const sectionCards = document.getElementById("posting");
+        sectionCards.insertAdjacentHTML("beforestart", $(`#${data.pk}-posting-exp`));
+      });
+    });
+
+    function getExp(data) {
+      $("#posting").append(
+        `
+        <div id="${data.pk}-posting-exp" class="flex border-solid border-2 mx-auto items-center justify-center shadow-lg mx-8 mb-4 ">
+          <div class="w-full bg-white rounded-lg px-4 pt-2">
+             <div class="flex flex-wrap -mx-3 mb-6">
+                <h2 class="px-4 pt-3 pb-2 text-gray-800 text-lg">Experience</h2>
+                <div class="w-full md:w-full px-3 mb-2 mt-2">
+                   <p>${data.fields.comment}</p>
+                </div>
+             </div>
+          </div>
+        </div>
+        `
+      )
+    }
+
+
     function getData(data) {
       $("#post-comments").submit(function (event) {
         event.preventDefault();
@@ -368,37 +409,34 @@
 
 {% if auth == True %}
 
-<div class="mt-48">
-  <h1 class="text-center underline hover:no-underline font-extrabold text-[30px] mb-20">
-    Share your experience while reading those articles!
-  </h1>
-  <div class="flex border-solid border-2 mx-auto items-center justify-center shadow-lg mx-8 mb-4 ">
-    <form class="w-full bg-white rounded-lg px-4 pt-2">
-       <div class="flex flex-wrap -mx-3 mb-6">
-          <h2 class="px-4 pt-3 pb-2 text-gray-800 text-lg">My experience</h2>
-          <div class="w-full md:w-full px-3 mb-2 mt-2">
-             <textarea class="bg-gray-100 rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 font-medium placeholder-gray-700 focus:outline-none focus:bg-white" name="body" placeholder='Telling your story' required></textarea>
-          </div>
-          <div class="w-full md:w-full flex items-start md:w-full px-3">
-             <div class="-mr-1">
-                <input type='submit' class="bg-white text-gray-700 font-medium py-1 px-4 border border-gray-400 rounded-lg tracking-wide mr-1 hover:bg-gray-100" value='Post Story'>
-             </div>
-          </div>
-       </form>
+<div>
+  <div class="mt-48">
+    <h1 class="text-center underline hover:no-underline font-extrabold text-[30px] mb-20">
+      Share your experience while reading those articles!
+    </h1>
+    <div class="flex border-solid border-2 mx-auto items-center justify-center shadow-lg mx-8 mb-4 ">
+      <form id="share-exp" class="w-full bg-white rounded-lg px-4 pt-2">
+         <div class="flex flex-wrap -mx-3 mb-6">
+            <h2 class="px-4 pt-3 pb-2 text-gray-800 text-lg">My experience</h2>
+            <div class="w-full md:w-full px-3 mb-2 mt-2">
+               <textarea id="exp" class="bg-gray-100 rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 font-medium placeholder-gray-700 focus:outline-none focus:bg-white" name="body" placeholder='Telling your story' required></textarea>
+            </div>
+            <div class="w-full md:w-full flex items-start md:w-full px-3">
+               <div class="-mr-1">
+                  <input type='submit' class="bg-white text-gray-700 font-medium py-1 px-4 border border-gray-400 rounded-lg tracking-wide mr-1 hover:bg-gray-100" value='Post My Story'>
+               </div>
+            </div>
+         </form>
+      </div>
     </div>
+  </div>
+
+  
+  
+  <div id="posting">
   </div>
 </div>
 
-<div class="flex border-solid border-2 mx-auto items-center justify-center shadow-lg mx-8 mb-4 ">
-  <div class="w-full bg-white rounded-lg px-4 pt-2">
-     <div class="flex flex-wrap -mx-3 mb-6">
-        <h2 class="px-4 pt-3 pb-2 text-gray-800 text-lg">My experience</h2>
-        <div class="w-full md:w-full px-3 mb-2 mt-2">
-           <p>Ini cerita</p>
-        </div>
-     </div>
-  </div>
-</div>
 
 {% endif %}
 

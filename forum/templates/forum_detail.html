@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load filters %}
+{% load static %}
+{% block content %}
+
+<head>
+    <script src="{% static 'js/forum_detail_logic.js' %}"></script>
+
+</head>
+
+
+<div id={{pk}} class="get-id">
+</div>
+
+<div class="mt-10 mx-8 sm:mx-[22%] mt-5">
+    <div class="toast-container position-fixed top-10 end-0 p-3">
+        <div id="liveToast" class="toast bg-red-100" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-red-100">
+
+                <strong class="me-auto text-red-500">Warning!</strong>
+
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Kamu bukan dokter sehingga tidak bisa memberi komentar
+            </div>
+        </div>
+    </div>
+    <div class="toast-container position-fixed top-10 end-0 p-3">
+        <div id="liveToastKomentar" class="toast bg-red-100" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-red-100">
+
+                <strong class="me-auto text-red-500">Warning!</strong>
+
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Kamu tidak bisa menghapus komentar orang lain!
+            </div>
+        </div>
+    </div>
+    <div class="text-xl font-bold">Berikan Komentarmu </div>
+    <div class="mt-4">
+        <form method="">
+            {{ form.comment|addclass:"bg-red-100 rounded-lg h-10 px-4 pt-2 mt-1 comment-input w-full" }}
+        </form>
+        <div class="flex justify-end mt-4">
+            <button id="btn-submit" class="p-2 bg-red-300 rounded-lg">Submit</button>
+        </div>
+    </div>
+    <div class="mt-4" id="comment-section">
+
+    </div>
+</div>
+
+
+
+</div>
+
+{% endblock content %}

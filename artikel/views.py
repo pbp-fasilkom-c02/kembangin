@@ -1,57 +1,53 @@
-from datetime import datetime
-import re
-from time import timezone
+import operator
 from django.shortcuts import render
 from artikel.models import Artikel, Comment
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.core import serializers
-from django.views.decorators.csrf import csrf_exempt, csrf_protect, requires_csrf_token
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,get_object_or_404
-from artikel.forms import ReplyThread
 
 # showing article
 # @login_required(login_url='/login')
-# @csrf_exempt
+@csrf_exempt
 def show_artikel(request):
-    artikel = []
-    top3 = []
-    i= 0 
+    artikel = {}
+    top_3 = []
+
     data = Artikel.objects.all()
 
-    # for j in range(0, len(data)):
-    #     artikel.append(0)
-    # print(len(artikel))
-    # for j in range(0,len(data)):
-    #     if (data[j].upvote > artikel[j]):
+    if (len(data) != 0):
+        for i in range(0, len(data)):
+            artikel[data[i]] = data[i].upvote
+        
+        sorted_d = dict( sorted(artikel.items(), key=operator.itemgetter(1),reverse=True))
+        
+        i = 1
+        print(sorted_d)
+        if (len(sorted_d) < 3):
+            for key, value in sorted_d.items():
+                top_3.append(key)
+                     
+        else:
+            for key, value in sorted_d.items():
+                if (i == 4):
+                    break
+                else:
+                    top_3.append(key)
+                    i += 1
             
-    #         artikel[i] = data[j].upvote
-    #         top3.append(j)
-    
-    # fix = []
-    # for i in range(0,3):
-    #     fix.append(data[top3[i]])
-
-    
-
-    for i in range (0,3):
-        artikel.append(data[i])
-
     context = {
-        "data": artikel,
+        "data": top_3,
         "user" : request.user,
         "auth" : request.user.is_authenticated
     } 
 
     context_anonym = {
-        "data": data,
+        "data": top_3,
         "user" : request.user.is_authenticated,
         "auth" : request.user.is_authenticated
     }
-
-    print("auth")
-    print(request.user.is_authenticated)
 
     if (request.user.is_authenticated):
         data = request.user
@@ -65,12 +61,6 @@ def show_artikel(request):
     else:
         return render(request, "artikel_pasien.html", context_anonym)
 
-    # print(request.user)
-    # data = request.user
-    # context = {
-    #         "berita": "dies natalies fasilkom",
-    #         "data": data,
-    # }
     
 
 @csrf_exempt
@@ -97,6 +87,12 @@ def detail_artikel(request):
 @csrf_exempt
 def artikel_json(request):
     data = Artikel.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+@login_required(login_url='/login')
+@csrf_exempt
+def comment_json(request):
+    data = Comment.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 # create new article
@@ -174,67 +170,18 @@ def handle_vote(request,id,action):
 
 @login_required(login_url='/login')
 @csrf_exempt
-def post_comment(request, id):
+def share_exp(request):
+    # if (request.user.username == "halo"):
+    #     print("ada")
+    # else:
+    #     print("gaada")
+    #     print(type(request.user))
+    #     print("gaada")
     if request.method == "POST":
-        print("bisa yey")
-        form = ReplyThread(request.POST)
-        if form.is_valid():
-            print("hehe")
-            # print(len(Comment.objects.all()), " besaran")
-            artikel = Artikel.objects.filter(pk=id)[0]
-            comment = form.cleaned_data["comment"]
-            
-            reply = Comment.objects.create(comment=comment, artikel=artikel, created_at=datetime.now(), author=request.user)
-            reply.save()
-
-            data = {
-            "pk": reply.pk,
-            "comment": reply.comment,
-            "author": reply.author.username,
-            "created_at": reply.created_at
-            }
-            print("risa")
-            print(data)
-            return JsonResponse(data)
-    return HttpResponseBadRequest()
-
-# @login_required(login_url='/login')
-# @csrf_exempt
-# def post_comment(request):
-#     print("masukk")
-#     if request.method == "POST":
-#         comment = request.POST.get("comment")
-#         # create_new_comment = get_object_or_404(Artikel, pk=id)
-#         create_new_comment = Artikel(comment=comment)
-#         create_new_comment.save()
-
-#         return JsonResponse({"fields": {
-#             "comment": create_new_comment.comment,
-#         }})
-
-# def add_comment(request, id):
-#     if request.method == "POST":
-#         form = ReplyForm(request.POST)
-#         if form.is_valid():
-#             if request.user.is_doctor:
-#                 forum = Artikel.objects.filter(pk=id)[0]
-#                 comment = form.cleaned_data["comment"]
-
-#                 reply = ForumReply.objects.create(
-#                     comment=comment, forum=forum, created_at=datetime.datetime.now(), author=request.user)
-
-#                 data = {
-#                     "pk": reply.pk,
-#                     "comment": reply.comment,
-#                     "author": reply.author.username,
-#                     "created_at": reply.created_at
-#                 }
-#                 return JsonResponse(data)
-#             else:
-#                 response = {
-#                     'status': 'error',
-#                     'message': 'Kamu bukan dokter sehingga tidak bisa memberi komentar'
-#                 }
-#                 return JsonResponse(response)
-
-#     return HttpResponseBadRequest()
+        comment = request.POST.get("comment")
+        create_new_comment = Comment(comment=comment, author=request.user)
+        create_new_comment.save()
+        print("berhasil")
+        return JsonResponse({"pk": create_new_comment.pk, "fields": {
+            "comment": create_new_comment.comment,
+        }})
