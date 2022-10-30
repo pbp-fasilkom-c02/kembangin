@@ -21,7 +21,8 @@ urlpatterns = [
     path('',include('main.urls')),
     path('user_profile/', include('user_profile.urls')),
     path('report-progress/', include('report.urls')),
-    path('forum/', include('forum.urls'))
+    path('forum/', include('forum.urls')),
+    path('rekomendasi/', include('rekomendasi.urls')),
 ]
 
 # TODO: Implement Routings Here
