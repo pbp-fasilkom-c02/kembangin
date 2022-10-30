@@ -20,63 +20,40 @@
     })
   })
 </script>
-<nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 md:py-0 shadow-lg">
+<nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 md:py-0 shadow-lg z-20">
   <div class="container flex flex-wrap justify-between items-center mx-auto">
     <a href="/" class="flex items-center">
       <span class="self-center text-xl font-semibold whitespace-nowrap">
         Kembangin ❤️
       </span>
     </a>
-    <button
-      data-collapse-toggle="navbar-default"
-      id="toggle-button"
-      type="button"
+    <button data-collapse-toggle="navbar-default" id="toggle-button" type="button"
       class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-gray-200"
-      aria-controls="navbar-default"
-      aria-expanded="false"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-6 h-6"
-        id="hamburgerIcon"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-        />
+      aria-controls="navbar-default" aria-expanded="false">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="w-6 h-6" id="hamburgerIcon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
       </svg>
     </button>
     <div
       class="hidden w-full absolute top-10 left-0 md:static md:block md:w-auto rounded-xl shadow-xl md:rounded-none md:shadow-transparent"
-      id="navbar-default"
-    >
+      id="navbar-default">
       <ul
-        class="flex flex-col px-4 pb-4 pt-0 md:pt-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white"
-      >
+        class="flex flex-col px-4 pb-4 pt-0 md:pt-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white">
         <li>
-          <a
-            href="#"
-            class="block py-2 pr-4 pl-3 rounded md:bg-transparent text-gray-700 hover:text-red-400 md:p-2"
-          >
+          <a href="#" class="block py-2 pr-4 pl-3 rounded md:bg-transparent text-gray-700 hover:text-red-400 md:p-2">
             Artikel
           </a>
         </li>
         <li>
-          <a
-            href="#"
-            class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-red-200 md:hover:bg-transparent md:border-0 md:hover:text-red-400 md:p-2"
-          >
+          <a href="{% url 'forum:show_forum_index' %}"
+            class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-red-200 md:hover:bg-transparent md:border-0 md:hover:text-red-400 md:p-2">
             Forum
           </a>
         </li>
         <li>
           <a
-            href="#"
+            href="{% url 'rekomendasi:show_rekomendasi' %}"
             class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-red-200 md:hover:bg-transparent md:border-0 md:hover:text-red-400 md:p-2"
           >
             Kebutuhan Anak
@@ -85,6 +62,14 @@
         <li>
           <a
           {% comment %} href to show_bmicalculator function {% endcomment %}
+            href="{% url 'report:show_reports' %}"
+            class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-red-200 md:hover:bg-transparent md:border-0 md:hover:text-red-400 md:p-2"
+          >
+            Perkembangan Anak
+          </a>
+        </li>              
+        <li>
+          <a
             href="{% url 'bmicalculator:show_bmicalculator' %}"
             class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-red-200 md:hover:bg-transparent md:border-0 md:hover:text-red-400 md:p-2"
           >
@@ -93,18 +78,14 @@
         </li>
         {% if user.is_authenticated %}
         <li>
-          <a
-            href="{% url 'user_profile:show_profile' %}"
-            class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-red-200 md:hover:bg-transparent md:border-0 md:hover:text-red-400 md:p-2"
-          >
+          <a href="{% url 'user_profile:show_profile' %}"
+            class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-red-200 md:hover:bg-transparent md:border-0 md:hover:text-red-400 md:p-2">
             Account
           </a>
         </li>
         <li>
-          <a
-            href="{% url 'main:logout' %}"
-            class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-red-200 md:hover:bg-transparent md:border-0 md:hover:text-red-400 md:p-2"
-          >
+          <a href="{% url 'main:logout' %}"
+            class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-red-200 md:hover:bg-transparent md:border-0 md:hover:text-red-400 md:p-2">
             Logout
           </a>
         </li>
@@ -114,9 +95,7 @@
             Login
           </a>
         </div>
-        <div
-          class="bg-red-400 text-white rounded-lg pl-3 md:pl-2 p-2 text-center"
-        >
+        <div class="bg-red-400 text-white rounded-lg pl-3 md:pl-2 p-2 text-center">
           <a href="{% url 'main:register' %}">
             Sign up
           </a>

@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'main',
     'user_profile',
     'bmicalculator',
-
+    'report',
+    'forum',
+    'rekomendasi'
 ]
 
 MIDDLEWARE = [
