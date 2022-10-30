@@ -1,19 +1,216 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class="text-center font-bold">
-    {% if is_doctor %}
-    <p>
-        Dr. {{user.username}}
-    </p>
-    {% else %}
-    <p>
-        {{user.username}}
-    </p>
-    {% endif %}
-    <p>
-        {{user.email}}
-    </p>
-</div>
+{% block meta %}
+<title>Profile</title>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "{% url 'user_profile:get_user' id%}",
+        type: 'GET',
+        dataType: 'json',
+    }).done(function(response) {
+        var profile = `
+            <div class="text-center font-bold">
+                <p>
+                    ${response.is_doctor ? "dr. " : ""}${response.username}
+                </p>
+                <p>Email: ${response.email}</p>
+                <p>Has posted ${response.post_amount} questions in the forum</p>
+                <p>Has received ${response.upvote_amount} points in the forum</p>
+            </div>
+        `
+        var bio_part = `
+        <p>Bio</p>
+        <p id="bio-content">${response.bio}</p>
+        `
+        $("#profile").append(profile)
+        $("#bio").append(bio_part)
+        if (response.is_logged_user){
+            var change_button = `
+            <button class="text-white bg-red-500 hover:bg-red-700 rounded-md font-bold px-5 py-2.5 mr-2 mb-2" data-bs-toggle="modal" data-bs-target="#change-profile-modal">Change Profile</button>
+            `
+            $("#change-button-container").append(change_button)
+        }
+        if (response.is_doctor){
+            var reply_amount = `
+                <div id="comment_amount">
+                    <p>Has made ${response.comment_amount} replies in the forum</p>
+                </div>
+            `
+            $("#profile").append(reply_amount)
+            var rating_average = `<p id="average">Ratings: ${response.rating_average}</p>`
+            $("#rating-average").append(rating_average)
+            for (var i in response.ratings){
+                var rating_item = response.ratings[i]
+                var rating_content = `
+                <div id="rating${rating_item.id}">
+                    <div>
+                        <button onclick="location.href='/user_profile/${rating_item.author_pk}'"
+                        class="block py-2 pr-4 pl-3 text-black-700 font-bold rounded hover:bg-red-200 md:hover:bg-transparent md:border-0 md:hover:text-red-400 md:p-2">
+                        ${rating_item.author_is_doctor ? "dr. " : ""}${rating_item.author_username}
+                        </button>
+                    </div>
+                    <div>
+                        <p>${rating_item.date.split('T')[0]}</p>
+                    </div>
+                    <div>
+                        <p>${rating_item.rating}/5</p>
+                    </div>
+                    <div>
+                        <p>${rating_item.comment}</p>
+                    </div>
+                </div>
+                `
+                $("#rating-content").append(rating_content)
+                                
+            }
+            
+        }        
+    })
+})
 
+$(document).ready(function() {
+    $('#change-profile-form').submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: "{% url 'user_profile:change_profile' id%}",
+            type: 'POST',
+            data: {
+                bio: $("#id_bio").val(),
+                csrfmiddlewaretoken: "{{csrf_token}}",
+            },
+            
+        }).done(function(response) {
+            var bio = response.new_bio
+            $("#bio-content").text(bio);
+        })
+        $(this).trigger('reset')
+    })
+})
+
+$(document).ready(function() {
+    $('#create-rating-form').submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: "{% url 'user_profile:create_rating' id%}",
+            type: 'POST',
+            data: {
+                rating: $("#id_rating").val(),
+                comment: $("#id_comment").val(),
+                csrfmiddlewaretoken: "{{csrf_token}}",
+            },
+            
+        }).done(function(response) {
+            if (Object. keys(response).length === 8){
+                $(`#rating` + response.old_id).remove()
+            }
+            var rating_object = `
+            <div id="rating${response.new_id}">
+                <div>
+                    <p class="font-bold">${response.is_doctor ? "dr. " : ""}${response.author}</p>
+                </div>
+                <div>
+                    <p>${response.date.split('T')[0]}</p>
+                </div>
+                <div>
+                    <p>${response.rating}/5</p>
+                </div>
+                <div>
+                    <p>${response.comment}</p>
+                </div>
+            </div>
+            `
+            $("#rating-content").append(rating_object)
+            $("#average").text("Ratings: " + response.rating_average)
+        })
+        $(this).trigger('reset')
+    })
+})
+
+function delete_rating(id){
+    $.ajax({
+        type :"DELETE",
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+        url :`delete_rating/${id}`,
+        success: function (){
+            $(`#rating` + id).remove()
+            $("#average").text("Ratings: " + response.rating_average)
+        },
+    })
+}
+
+function redirect_profile(id){
+    $.ajax({
+        type :"GET",
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+        url :`{%url "user_profile:show_profile" id%}`,
+    })
+}
+
+</script>
+{% endblock meta %}
+
+{% block content %}
+<div id="content">
+    <div id="profile">
+        
+    </div>
+    <div id="bio">
+        
+    </div>
+    <div id="change-button-container"></div>
+{% if is_doctor %}
+    <div id="rating">
+        <div id="rating-average"></div>
+        <div id="rating-form">
+            <form method="POST" id="create-rating-form">
+            {% csrf_token %}
+                <table class="table table-borderless align-middle">
+                    <tr>
+                        <th>Rating: </th>
+                    </tr>
+                    <tr> 
+                        <td>{{rating_form.rating}}</td>
+                    </tr>
+                    <tr>
+                        <th>Comment: </th>
+                    </tr>
+                    <tr> 
+                        <td>{{rating_form.comment}}</td>
+                    </tr>
+                    <tr>
+                        <td><button type="submit" id="rate-button" class="text-white bg-red-500 hover:bg-red-700 rounded-md font-bold px-5 py-2.5 mr-2 mb-2">Rate</button></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="rating-content"></div>
+    </div>
+    <div class="modal fade" id="change-profile-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-red-500">
+                    <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Change Profile</h1>
+                </div>
+                <div class="modal-body text-center">
+                    <form method="POST" id="change-profile-form">
+                        {% csrf_token %}
+                        <table class="table table-borderless align-middle">
+                            <tr>
+                                <th>Bio: </th>
+                            </tr>
+                            <tr> 
+                                <td>{{change_profile_form.bio}}</td>
+                            </tr>
+                            <tr>
+                                <td><button type="submit" id="change-button" class="text-white bg-red-500 hover:bg-red-700 rounded-md font-bold px-5 py-2.5 mr-2 mb-2" data-bs-dismiss="modal">Ganti</button></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+</div>
 {% endblock content %}
