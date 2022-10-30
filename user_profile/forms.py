@@ -4,11 +4,11 @@ class ChangeProfile(forms.Form):
     bio = forms.CharField(label="bio",widget=forms.Textarea(attrs={"rows":"5"}))
 
 ratings = (
-    (1, "1 Worst"),
-    (2, "2 Bad"),
-    (3, "3 Good"),
-    (4, "4 Great"),
-    (5, "5 Amazing")
+    (1, "1 Sangat Buruk"),
+    (2, "2 Buruk"),
+    (3, "3 Cukup"),
+    (4, "4 Baik"),
+    (5, "5 Sangat Baik")
 )
 
 class RatingForm(forms.Form):

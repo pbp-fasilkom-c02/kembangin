@@ -87,6 +87,7 @@ def create_rating(request, pk):
             "new_id" : rating_object.id,
             "is_doctor" : author.is_doctor,
             "rating_average" : doctor.rating_average,
+            "author_pk" : author.pk,
         })
         return JsonResponse(response)
 

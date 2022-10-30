@@ -15,8 +15,8 @@ $(document).ready(function() {
                     ${response.is_doctor ? "dr. " : ""}${response.username}
                 </p>
                 <p>Email: ${response.email}</p>
-                <p>Has posted ${response.post_amount} questions in the forum</p>
-                <p>Has received ${response.upvote_amount} points in the forum</p>
+                <p>Telah membuat ${response.post_amount} pertanyaan di forum</p>
+                <p>Telah mendapatkan ${response.upvote_amount} poin di forum</p>
             </div>
         `
         var bio_part = `
@@ -27,18 +27,18 @@ $(document).ready(function() {
         $("#bio").append(bio_part)
         if (response.is_logged_user){
             var change_button = `
-            <button class="text-white bg-red-500 hover:bg-red-700 rounded-md font-bold px-5 py-2.5 mr-2 mb-2" data-bs-toggle="modal" data-bs-target="#change-profile-modal">Change Profile</button>
+            <button class="text-white bg-red-500 hover:bg-red-700 rounded-md font-bold px-5 py-2.5 mr-2 mb-2" data-bs-toggle="modal" data-bs-target="#change-profile-modal">Ubah Profile</button>
             `
             $("#change-button-container").append(change_button)
         }
         if (response.is_doctor){
             var reply_amount = `
                 <div id="comment_amount">
-                    <p>Has made ${response.comment_amount} replies in the forum</p>
+                    <p>Telah membuat ${response.comment_amount} balasan di forum</p>
                 </div>
             `
             $("#profile").append(reply_amount)
-            var rating_average = `<p id="average">Ratings: ${response.rating_average}</p>`
+            var rating_average = `<p id="average">Rating rata-rata: ${response.rating_average}</p>`
             $("#rating-average").append(rating_average)
             for (var i in response.ratings){
                 var rating_item = response.ratings[i]
@@ -54,7 +54,10 @@ $(document).ready(function() {
                         <p>${rating_item.date.split('T')[0]}</p>
                     </div>
                     <div>
-                        <p>${rating_item.rating}/5</p>
+                        <p>Rating: ${rating_item.rating}/5</p>
+                    </div>
+                    <div>
+                        <p>Komentar:</p>
                     </div>
                     <div>
                         <p>${rating_item.comment}</p>
@@ -101,19 +104,25 @@ $(document).ready(function() {
             },
             
         }).done(function(response) {
-            if (Object. keys(response).length === 8){
+            if (Object. keys(response).length === 9){
                 $(`#rating` + response.old_id).remove()
             }
             var rating_object = `
             <div id="rating${response.new_id}">
                 <div>
-                    <p class="font-bold">${response.is_doctor ? "dr. " : ""}${response.author}</p>
+                    <button onclick="location.href='/user_profile/${response.author_pk}'"
+                    class="block py-2 pr-4 pl-3 text-black-700 font-bold rounded hover:bg-red-200 md:hover:bg-transparent md:border-0 md:hover:text-red-400 md:p-2">
+                    ${response.is_doctor ? "dr. " : ""}${response.author}
+                    </button>
                 </div>
                 <div>
                     <p>${response.date.split('T')[0]}</p>
                 </div>
                 <div>
-                    <p>${response.rating}/5</p>
+                    <p>Rating: ${response.rating}/5</p>
+                </div>
+                <div>
+                    <p>Komentar:</p>
                 </div>
                 <div>
                     <p>${response.comment}</p>
@@ -173,7 +182,7 @@ function redirect_profile(id){
                         <td>{{rating_form.rating}}</td>
                     </tr>
                     <tr>
-                        <th>Comment: </th>
+                        <th>Komentar: </th>
                     </tr>
                     <tr> 
                         <td>{{rating_form.comment}}</td>
@@ -190,7 +199,7 @@ function redirect_profile(id){
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-red-500">
-                    <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Change Profile</h1>
+                    <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Ubah Profile</h1>
                 </div>
                 <div class="modal-body text-center">
                     <form method="POST" id="change-profile-form">
@@ -203,7 +212,7 @@ function redirect_profile(id){
                                 <td>{{change_profile_form.bio}}</td>
                             </tr>
                             <tr>
-                                <td><button type="submit" id="change-button" class="text-white bg-red-500 hover:bg-red-700 rounded-md font-bold px-5 py-2.5 mr-2 mb-2" data-bs-dismiss="modal">Ganti</button></td>
+                                <td><button type="submit" id="change-button" class="text-white bg-red-500 hover:bg-red-700 rounded-md font-bold px-5 py-2.5 mr-2 mb-2" data-bs-dismiss="modal">Ubah</button></td>
                             </tr>
                         </table>
                     </form>
