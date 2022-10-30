@@ -26,13 +26,14 @@ def show_rekomendasi(request):
     }
     return render(request, "rekomendasi.html", context)
 
-@login_required(login_url='login/')
+# @login_required(login_url='login/')
+@csrf_exempt
 def add_rekomendasi(request):
     if request.method == "POST":
         data = json.loads(request.POST['data'])
 
         new_rekomendasi = Rekomendasi(nama_barang=data["nama_barang"], harga_barang=data["harga_barang"], deskripsi=data["deskripsi"], url=data["url"], gambar=data["gambar"])
-        new_task.save()
+        new_rekomendasi.save()
 
         return HttpResponse(serializers.serialize("json", [new_rekomendasi]), content_type="application/json")
 

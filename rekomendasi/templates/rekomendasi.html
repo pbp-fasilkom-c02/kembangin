@@ -6,7 +6,7 @@
     <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{% static 'js/jquery.serializejson.min.js' %}"></script>
-    <script src="{% static 'js/rekomendasi.js' %}"></script>
+    
 </head>
 
 <body>
@@ -61,7 +61,9 @@
         </div>
     </div>
 
-    <div class="container my-12 mx-auto px-5 md:px-12">
+    <script src="{% static 'js/rekomendasi.js' %}"></script>
+
+    <!-- <div class="container my-12 mx-auto px-5 md:px-1">
         <div class="flex flex-wrap -mx-1 lg:-mx-4">
             {% for rekomendasi in list_rekomendasi %}
             <div class="max-w-sm rounded overflow-hidden shadow-lg">
@@ -71,19 +73,18 @@
                     <p class="text-gray-700 text-base">{{rekomendasi.deskripsi}}</p>
                 </div>
                 <div class="px-6 pt-4 pb-2">
-                    <span
-                        class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Rp{{rekomendasi.harga_barang}}</span>
+                    <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Rp{{rekomendasi.harga_barang}}</span>
                     <div class="bg-red-400 text-white rounded-lg pl-3 md:pl-2 p-2 text-center">
                         <a href={{rekomendasi.url}}>Beli</a>
                     </div>
-                    <!-- <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#travel</span>
-            <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#winter</span> -->
+                    <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#travel</span>
+            <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#winter</span>
                 </div>
 
             </div>
             {% endfor %}
         </div>
-    </div>
+    </div> -->
 
     {% if list_rekomendasi is None %}
         <h5>Maaf rekomendasi produk oleh dokter belum tersedia</h5>
