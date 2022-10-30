@@ -210,4 +210,3 @@ def handle_vote(request,pk,action):
     
     return HttpResponseBadRequest()
 
-   
