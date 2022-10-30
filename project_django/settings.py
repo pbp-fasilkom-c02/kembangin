@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'user_profile',
     'report',
     'forum',
+    'rekomendasi'
 ]
 
 MIDDLEWARE = [
