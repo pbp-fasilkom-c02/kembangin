@@ -1,24 +1,56 @@
-{% extends "base.html" %} {% block content %}
-<div class="text-center font-bold">
-  <form method="POST" action="">
+{% extends "base.html" %}
+
+{% block meta %}
+<style>
+  body {
+    position: relative;
+    min-height: 100vh;
+  }
+
+  #content {
+    padding-bottom: 5rem;
+  }
+
+  @media (max-width: 500px) {
+    #register-form {
+      margin-left: 5%;
+      margin-right: 5%;
+    }
+  }
+
+  @media (max-width: 350px) {
+    #register-form {
+      margin-left: 1%;
+      margin-right: 1%;
+    }
+  }
+</style>
+{% endblock meta %}
+
+{% block content %}
+<div class="text-center font-bold h-screen flex" id="content">
+  <form method="POST" action="" id="register-form"
+    class="grid grid-cols-1 gap-5 bg-red-200 rounded border-4 border-neutral-500 p-5 m-auto">
     {% csrf_token %}
     <div>
-      <p>Register Akun</p>
+      <p style="font-size: 2.6em;">Register Account</p>
     </div>
     <div>
-      <input style="text-align: center" type="text" name="username" placeholder="Username" class="form-control"
+      <input style="text-align:center; font-size: 1.2em;" type="text" name="username" placeholder="Username"
+        class="form-control rounded border-2 border-black-500 hover:border-neutral-900" required />
+    </div>
+    <div>
+      <input style="text-align:center; font-size: 1.2em;" type="text" name="email" placeholder="Email"
+        class="form-control rounded border-2 border-black-500 hover:border-neutral-900" required />
+    </div>
+    <div>
+      <input style="text-align:center; font-size: 1.2em;" type="password" name="password" placeholder="Password"
+        class="form-control rounded border-2 border-black-500 hover:border-neutral-900" required />
+    </div>
+    <div>
+      <input style="text-align:center; font-size: 1.2em;" type="password" name="repeat_password"
+        placeholder="Repeat password" class="form-control rounded border-2 border-black-500 hover:border-neutral-900"
         required />
-    </div>
-    <div>
-      <input style="text-align: center" type="text" name="email" placeholder="Email" class="form-control" required />
-    </div>
-    <div>
-      <input style="text-align: center" type="password" name="password" placeholder="Password" class="form-control"
-        required />
-    </div>
-    <div>
-      <input style="text-align: center" type="password" name="repeat_password" placeholder="Repeat password"
-        class="form-control" required />
     </div>
     <div>
       <p>Are you a doctor?</p>
@@ -29,15 +61,16 @@
       <label for="no">No</label>
     </div>
     <div>
-      <input type="submit" value="Register" />
+      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded border-2 border-neutral-500"
+        type="submit" style="font-size: 1.5em;">Register</button>
     </div>
+    {% if messages %}
+    <ul class="text-center font-bold text-black-400">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
   </form>
 </div>
-
-{% if messages %}
-<ul class="text-center font-bold text-red-400">
-  {% for message in messages %}
-  <li>{{ message }}</li>
-  {% endfor %}
-</ul>
-{% endif %} {% endblock content %}
+{% endblock content %}

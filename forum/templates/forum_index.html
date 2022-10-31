@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+{% load filters %}
+{% block content %}
+
+<head>
+    <script src="{% static 'js/forum_logic.js' %}"></script>
+</head>
+<div class="">
+    <div class="text-center sm:text-left sm:ml-24 text-xl sm:text-2xl font-bold mt-10">
+        Forum Konsultasi
+    </div>
+    <div class="toast-container position-fixed top-10 end-0 p-3">
+        <div id="liveToast" class="toast bg-red-100" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-red-100">
+
+                <strong class="me-auto text-red-500">Warning!</strong>
+
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Kamu tidak bisa menghapus post orang lain!
+            </div>
+        </div>
+    </div>
+    <div class="toast-container position-fixed top-10 end-0 p-3">
+        <div id="liveToastLoginReq" class="toast bg-red-100" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-red-100">
+
+                <strong class="me-auto text-red-500">Warning!</strong>
+
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Kamu harus login terlebih dahulu!
+            </div>
+        </div>
+    </div>
+    <div class="mx-8 sm:mx-[22%] mt-2 sm:mt-5  flex flex-col gap-5 ">
+        <form method="">
+            <div class="flex flex-col">
+
+
+                <div>
+                    Pertanyaan
+                </div>
+                {{ form.question|addclass:"bg-red-100 rounded-lg h-10 pl-4 mt-1 question-input" }}
+
+
+                <div class="mt-2">
+                    Deskripsi
+                </div>
+                {{ form.description|addclass:"bg-red-100 rounded-lg h-28 px-4 pt-2 mt-1 description-input" }}
+
+
+            </div>
+        </form>
+        <div class="flex justify-end">
+            <button id="btn-submit" class="p-2 bg-red-300 rounded-lg">Submit</button>
+        </div>
+
+        <div class="flex flex-col justify-center gap-5" id="forum">
+
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+
+{% endblock content %}
