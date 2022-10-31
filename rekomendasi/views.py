@@ -17,7 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 from user_profile.views import show_profile
 
 # Create your views here.
-# @login_required(login_url='login/')
+# @login_required(login_url='/login')
 def show_rekomendasi(request):
     list_rekomendasi = Rekomendasi.objects.filter()
     context = {
@@ -26,7 +26,7 @@ def show_rekomendasi(request):
     }
     return render(request, "rekomendasi.html", context)
 
-# @login_required(login_url='login/')
+@login_required(login_url='/login')
 @csrf_exempt
 def add_rekomendasi(request):
     if request.method == "POST":
@@ -39,7 +39,7 @@ def add_rekomendasi(request):
 
     return HttpResponse()
 
-# @login_required(login_url='login/')
+@login_required(login_url='/login')
 def show_json(request):
     rekomendasi = Rekomendasi.objects.filter()
     data = serializers.serialize('json', rekomendasi)
