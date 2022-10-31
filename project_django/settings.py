@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'user_profile',
+    'bmicalculator',
     'report',
     'forum',
     'rekomendasi'
