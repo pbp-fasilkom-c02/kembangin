@@ -1,5 +1,6 @@
 from datetime import datetime
 from multiprocessing import context
+from urllib import request
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
@@ -7,6 +8,8 @@ from bmicalculator.models import BmiCalculator
 from bmicalculator.forms import BmiCalculatorForm
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
+from django.urls import reverse
+
 
 
 # Create your views here.
@@ -30,24 +33,14 @@ def show_json(request):
         return HttpResponse(serializers.serialize("json", bmicalculator_data), content_type='application/json')
 
 
-# @login_required(login_url='/login/')
-def hapus_input(request, pk):
-    if request.method == "DELETE":
-        data = BmiCalculator.objects.get(pk=pk)
-        data.delete()
-        return JsonResponse({
-            "pk" : data.pk,
-            "fields" : {
-                "weight" : data.weight,
-                "height" : data.height,
-                "bmi" : data.bmi,
-                "date" : data.date,
-                "status" : data.status,
-            },
-        },
-        status=200
-        )
-        
+
+def delete_task(reuest, pk):
+    data = BmiCalculator.objects.get(pk=pk)
+    data.delete()
+    response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
+    return response
+        # redirect to bmi calculator page
+        # return redirect('bmicalculator:show_bmicalculator')
 
 
 # @login_required(login_url='/login/')
