@@ -34,13 +34,17 @@ def show_json(request):
 
 
 
-def delete_task(reuest, pk):
-    data = BmiCalculator.objects.get(pk=pk)
-    data.delete()
-    response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
-    return response
-        # redirect to bmi calculator page
-        # return redirect('bmicalculator:show_bmicalculator')
+def delete_task(request, pk):
+    if request.user.is_authenticated:
+        data = BmiCalculator.objects.get(pk=pk)
+        data.delete()
+        response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
+        return response
+    else:
+        data = BmiCalculator.objects.filter(user__isnull=True, pk=pk)
+        data.delete()
+        response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
+        return response
 
 
 # @login_required(login_url='/login/')
