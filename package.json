@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "jquery-serializejson": "^3.2.1"
+  }
+}

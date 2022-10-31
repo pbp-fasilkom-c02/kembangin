@@ -1,0 +1,68 @@
+[
+    {
+        "model": "rekomendasi.Rekomendasi",
+        "pk": 1,
+        "fields": {
+            "nama_barang": "Sakatonik Abc Antariksa untuk Kebutuhan Multivitamin Anak (30 Tablet)",
+            "harga_barang": "16.500",
+            "deskripsi": "Sakatonik ABC Antariksa adalah suplemen yang mengandung vitamin A, B kompleks, C, D, dan E, nikotinamid, serta kalsium pantotenat. Berfungsi untuk membantu memenuhi kebutuhan vitamin pada anak-anak. EXP 08 2023.",
+            "url": "https://tokopedia.link/aVlMjusyrub",
+            "gambar": "https://lzd-img-global.slatic.net/g/p/449c30d24f4fb3e74cb11d7731c4d822.jpg_720x720q80.jpg_.webp"
+        }
+    },
+    {
+        "model": "rekomendasi.Rekomendasi",
+        "pk": 2,
+        "fields": {
+            "nama_barang": "Pediasure Vanila 400 g (1-10 tahun) Susu Formula",
+            "harga_barang": "163.000",
+            "deskripsi": "Pediasure merupakan dukungan nutrisi yang diformulasikan untuk membantu memenuhi kebutuhan nutrisi harian si Kecil. Dengan terpenuhinya kebutuhan nutrisi harian si Kecil, tumbuh kembang si Kecil menjadi semakin optimal.",
+            "url": "https://tokopedia.link/Y5Ae9VhPrub",
+            "gambar": "https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//95/MTA-11963282/pediasure_pediasure_vanila_400_g_-1-10_tahun-_susu_formula_pertumbuhan_anak_-_kids_formula_full01_ce7jyc5h.jpg"
+        }
+    },
+    {
+        "model": "rekomendasi.Rekomendasi",
+        "pk": 3,
+        "fields": {
+            "nama_barang": "Sakatonik Abc Antariksa untuk Kebutuhan Multivitamin Anak (30 Tablet)",
+            "harga_barang": "16.500",
+            "deskripsi": "Sakatonik ABC Antariksa adalah suplemen yang mengandung vitamin A, B kompleks, C, D, dan E, nikotinamid, serta kalsium pantotenat. Berfungsi untuk membantu memenuhi kebutuhan vitamin pada anak-anak. EXP 08 2023.",
+            "url": "https://tokopedia.link/aVlMjusyrub",
+            "gambar": "https://lzd-img-global.slatic.net/g/p/449c30d24f4fb3e74cb11d7731c4d822.jpg_720x720q80.jpg_.webp"
+        }
+    },
+    {
+        "model": "rekomendasi.Rekomendasi",
+        "pk": 4,
+        "fields": {
+            "nama_barang": "Pediasure Vanila 400 g (1-10 tahun) Susu Formula",
+            "harga_barang": "163.000",
+            "deskripsi": "Pediasure merupakan dukungan nutrisi yang diformulasikan untuk membantu memenuhi kebutuhan nutrisi harian si Kecil. Dengan terpenuhinya kebutuhan nutrisi harian si Kecil, tumbuh kembang si Kecil menjadi semakin optimal.",
+            "url": "https://tokopedia.link/Y5Ae9VhPrub",
+            "gambar": "https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//95/MTA-11963282/pediasure_pediasure_vanila_400_g_-1-10_tahun-_susu_formula_pertumbuhan_anak_-_kids_formula_full01_ce7jyc5h.jpg"
+        }
+    },
+    {
+        "model": "rekomendasi.Rekomendasi",
+        "pk": 5,
+        "fields": {
+            "nama_barang": "Sakatonik Abc Antariksa untuk Kebutuhan Multivitamin Anak (30 Tablet)",
+            "harga_barang": "16.500",
+            "deskripsi": "Sakatonik ABC Antariksa adalah suplemen yang mengandung vitamin A, B kompleks, C, D, dan E, nikotinamid, serta kalsium pantotenat. Berfungsi untuk membantu memenuhi kebutuhan vitamin pada anak-anak. EXP 08 2023.",
+            "url": "https://tokopedia.link/aVlMjusyrub",
+            "gambar": "https://lzd-img-global.slatic.net/g/p/449c30d24f4fb3e74cb11d7731c4d822.jpg_720x720q80.jpg_.webp"
+        }
+    },
+    {
+        "model": "rekomendasi.Rekomendasi",
+        "pk": 6,
+        "fields": {
+            "nama_barang": "Pediasure Vanila 400 g (1-10 tahun) Susu Formula",
+            "harga_barang": "163.000",
+            "deskripsi": "Pediasure merupakan dukungan nutrisi yang diformulasikan untuk membantu memenuhi kebutuhan nutrisi harian si Kecil. Dengan terpenuhinya kebutuhan nutrisi harian si Kecil, tumbuh kembang si Kecil menjadi semakin optimal.",
+            "url": "https://tokopedia.link/Y5Ae9VhPrub",
+            "gambar": "https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//95/MTA-11963282/pediasure_pediasure_vanila_400_g_-1-10_tahun-_susu_formula_pertumbuhan_anak_-_kids_formula_full01_ce7jyc5h.jpg"
+        }
+    }
+]
