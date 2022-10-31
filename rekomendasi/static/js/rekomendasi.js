@@ -116,7 +116,7 @@ function loadRekomendasi() {
             row1.appendChild(row2)
         })
 
-        document.body.append(row1)
+        document.getElementById("the-content").appendChild(row1)
     })
 
 }
