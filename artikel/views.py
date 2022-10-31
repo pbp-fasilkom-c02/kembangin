@@ -61,25 +61,6 @@ def show_artikel(request):
     else:
         return render(request, "artikel_pasien.html", context_anonym)
 
-    
-
-@csrf_exempt
-def show_detail(request):
-    context = {
-        "berita": "dies natalies fasilkom",
-    }
-    return render(request, "detail_artikel.html", context)
-    
-    
-
-@csrf_exempt
-def detail_artikel(request):
-    # data = Artikel.objects.filter(pk=id)
-    context = {
-        "berita": "dies natalies fasilkom",
-        # "data" : data,
-    }
-    return render(request, "detail_artikel.html", context)
 
 # data json
 
@@ -104,12 +85,6 @@ def artikel_by_id_json(request, id):
 @login_required(login_url='/login')
 @csrf_exempt
 def create_new_artikel(request):
-    # if (request.user.username == "halo"):
-    #     print("ada")
-    # else:
-    #     print("gaada")
-    #     print(type(request.user))
-    #     print("gaada")
     if request.method == "POST":
         image = request.POST.get("image")
         title = request.POST.get("title")
@@ -171,12 +146,6 @@ def handle_vote(request,id,action):
 @login_required(login_url='/login')
 @csrf_exempt
 def share_exp(request):
-    # if (request.user.username == "halo"):
-    #     print("ada")
-    # else:
-    #     print("gaada")
-    #     print(type(request.user))
-    #     print("gaada")
     if request.method == "POST":
         comment = request.POST.get("comment")
         create_new_comment = Comment(comment=comment, author=request.user)
