@@ -1,188 +1,106 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block meta %}
 <title>Profile</title>
-<script>
-$(document).ready(function() {
-    $.ajax({
-        url: "{% url 'user_profile:get_user' id%}",
-        type: 'GET',
-        dataType: 'json',
-    }).done(function(response) {
-        var profile = `
-            <div class="text-center font-bold">
-                <p>
-                    ${response.is_doctor ? "dr. " : ""}${response.username}
-                </p>
-                <p>Email: ${response.email}</p>
-                <p>Telah membuat ${response.post_amount} pertanyaan di forum</p>
-                <p>Telah mendapatkan ${response.upvote_amount} poin di forum</p>
-            </div>
-        `
-        var bio_part = `
-        <p>Bio</p>
-        <p id="bio-content">${response.bio}</p>
-        `
-        $("#profile").append(profile)
-        $("#bio").append(bio_part)
-        if (response.is_logged_user){
-            var change_button = `
-            <button class="text-white bg-red-500 hover:bg-red-700 rounded-md font-bold px-5 py-2.5 mr-2 mb-2" data-bs-toggle="modal" data-bs-target="#change-profile-modal">Ubah Profile</button>
-            `
-            $("#change-button-container").append(change_button)
-        }
-        if (response.is_doctor){
-            var reply_amount = `
-                <div id="comment_amount">
-                    <p>Telah membuat ${response.comment_amount} balasan di forum</p>
-                </div>
-            `
-            $("#profile").append(reply_amount)
-            var rating_average = `<p id="average">Rating rata-rata: ${response.rating_average}</p>`
-            $("#rating-average").append(rating_average)
-            for (var i in response.ratings){
-                var rating_item = response.ratings[i]
-                var rating_content = `
-                <div id="rating${rating_item.id}">
-                    <div>
-                        <button onclick="location.href='/user_profile/${rating_item.author_pk}'"
-                        class="block py-2 pr-4 pl-3 text-black-700 font-bold rounded hover:bg-red-200 md:hover:bg-transparent md:border-0 md:hover:text-red-400 md:p-2">
-                        ${rating_item.author_is_doctor ? "dr. " : ""}${rating_item.author_username}
-                        </button>
-                    </div>
-                    <div>
-                        <p>${rating_item.date.split('T')[0]}</p>
-                    </div>
-                    <div>
-                        <p>Rating: ${rating_item.rating}/5</p>
-                    </div>
-                    <div>
-                        <p>Komentar:</p>
-                    </div>
-                    <div>
-                        <p>${rating_item.comment}</p>
-                    </div>
-                </div>
-                `
-                $("#rating-content").append(rating_content)
-                                
-            }
-            
-        }        
-    })
-})
-
-$(document).ready(function() {
-    $('#change-profile-form').submit(function(e) {
-        e.preventDefault();
-        $.ajax({
-            url: "{% url 'user_profile:change_profile' id%}",
-            type: 'POST',
-            data: {
-                bio: $("#id_bio").val(),
-                csrfmiddlewaretoken: "{{csrf_token}}",
-            },
-            
-        }).done(function(response) {
-            var bio = response.new_bio
-            $("#bio-content").text(bio);
-        })
-        $(this).trigger('reset')
-    })
-})
-
-$(document).ready(function() {
-    $('#create-rating-form').submit(function(e) {
-        e.preventDefault();
-        $.ajax({
-            url: "{% url 'user_profile:create_rating' id%}",
-            type: 'POST',
-            data: {
-                rating: $("#id_rating").val(),
-                comment: $("#id_comment").val(),
-                csrfmiddlewaretoken: "{{csrf_token}}",
-            },
-            
-        }).done(function(response) {
-            if (Object. keys(response).length === 9){
-                $(`#rating` + response.old_id).remove()
-            }
-            var rating_object = `
-            <div id="rating${response.new_id}">
-                <div>
-                    <button onclick="location.href='/user_profile/${response.author_pk}'"
-                    class="block py-2 pr-4 pl-3 text-black-700 font-bold rounded hover:bg-red-200 md:hover:bg-transparent md:border-0 md:hover:text-red-400 md:p-2">
-                    ${response.is_doctor ? "dr. " : ""}${response.author}
-                    </button>
-                </div>
-                <div>
-                    <p>${response.date.split('T')[0]}</p>
-                </div>
-                <div>
-                    <p>Rating: ${response.rating}/5</p>
-                </div>
-                <div>
-                    <p>Komentar:</p>
-                </div>
-                <div>
-                    <p>${response.comment}</p>
-                </div>
-            </div>
-            `
-            $("#rating-content").append(rating_object)
-            $("#average").text("Ratings: " + response.rating_average)
-        })
-        $(this).trigger('reset')
-    })
-})
-
-function delete_rating(id){
-    $.ajax({
-        type :"DELETE",
-        csrfmiddlewaretoken: "{{ csrf_token }}",
-        url :`delete_rating/${id}`,
-        success: function (){
-            $(`#rating` + id).remove()
-            $("#average").text("Ratings: " + response.rating_average)
-        },
-    })
-}
-
-function redirect_profile(id){
-    $.ajax({
-        type :"GET",
-        csrfmiddlewaretoken: "{{ csrf_token }}",
-        url :`{%url "user_profile:show_profile" id%}`,
-    })
-}
-
-</script>
+<link rel="stylesheet" href="/static/css/user_profile.css">
+<script src="{% static 'js/user_profile.js' %}"></script>
 {% endblock meta %}
 
 {% block content %}
-<div id="content">
-    <div id="profile">
-        
+<body onload="get_profile(`{{id}}`)">
+
+<div id="content" class="text-center">
+    <div class="text-center mt-10 font-bold text-3xl">User Profile</div>
+    <div id="details"></div>
+    <div id="messages">
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="success_create_rating" class="toast bg-blue-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Rating anda berhasil dibuat!
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="success_change_rating" class="toast bg-blue-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Rating anda berhasil diubah!
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="error_same_user" class="toast bg-red-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Anda tidak bisa memberikan rating pada diri sendiri!
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="error_login" class="toast bg-red-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Anda harus login terlebih dahulu!
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="error_general" class="toast bg-red-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Terjadi Error!
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="success_delete_rating" class="toast bg-blue-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Rating anda berhasil dihapus!
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="error_delete_rating" class="toast bg-red-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Anda tidak bisa menghapus rating orang lain!
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="success_change_profile" class="toast bg-blue-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Bio anda berhasil diubah!
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="bio">
-        
+    <div class="text-center mt-10 font-bold text-3xl">Statistik Forum</div>
+    <div id="profile" class="rounded bg-red-200 border-2 border-neutral-500 py-2 px-2 responsive">   
+    </div>
+    <p class="text-center mt-10 font-bold text-3xl">Bio</p>
+    <div id="bio">      
     </div>
     <div id="change-button-container"></div>
 {% if is_doctor %}
-    <div id="rating">
-        <div id="rating-average"></div>
-        <div id="rating-form">
+    <div id="rating" >
+        <div id="rating-average">
+            <p class="font-bold text-3xl mt-6">Rating</p>
+        </div>
+        <div id="rating-form" class="flex flex-col w-screen">
             <form method="POST" id="create-rating-form">
             {% csrf_token %}
-                <table class="table table-borderless align-middle">
+                <table class="table table-borderless">
                     <tr>
-                        <th>Rating: </th>
+                        <th class="text-xl">Rating: </th>
                     </tr>
                     <tr> 
                         <td>{{rating_form.rating}}</td>
                     </tr>
                     <tr>
-                        <th>Komentar: </th>
+                        <th class="text-xl">Komentar: </th>
                     </tr>
                     <tr> 
                         <td>{{rating_form.comment}}</td>
@@ -193,8 +111,11 @@ function redirect_profile(id){
                 </table>
             </form>
         </div>
-        <div id="rating-content"></div>
+        <div id="rating-message"></div>
+        <div id="rating-content" class="responsive"></div>
     </div>
+{% endif %}
+{% if login_pk == id %}
     <div class="modal fade" id="change-profile-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -202,11 +123,11 @@ function redirect_profile(id){
                     <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Ubah Profile</h1>
                 </div>
                 <div class="modal-body text-center">
-                    <form method="POST" id="change-profile-form">
+                    <form method="POST" id="change-profile-form" >
                         {% csrf_token %}
                         <table class="table table-borderless align-middle">
                             <tr>
-                                <th>Bio: </th>
+                                <th class="text-xl">Bio: </th>
                             </tr>
                             <tr> 
                                 <td>{{change_profile_form.bio}}</td>
@@ -222,4 +143,9 @@ function redirect_profile(id){
     </div>
 {% endif %}
 </div>
+<div class="user-info">
+    <span class="login-user-id" id="{{login_pk}}"></span>
+    <span class="profile-id" id="{{id}}"></span>
+</div>
+</body>
 {% endblock content %}

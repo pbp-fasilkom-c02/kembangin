@@ -4,13 +4,15 @@ from user_profile.models import DoctorProfile, UserProfile, Rating
 from user_profile.forms import ChangeProfile, RatingForm
 from forum.models import Forum, ForumReply
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import HttpResponseBadRequest, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 def show_profile(request, pk):
     context = {
         "id" : pk,
+        "login_pk": request.user.pk,
         "is_doctor" : User.objects.get(pk=pk).is_doctor,
-        "change_profile_form" : ChangeProfile(use_required_attribute=False),
+        "change_profile_form" : ChangeProfile(),
         "rating_form" : RatingForm(),
     }
     return render(request, "profile.html", context)
@@ -57,48 +59,71 @@ def get_user(request, pk):
 @login_required(login_url="/main/login/")
 def change_profile(request, pk):
     if request.method == "POST":
-        user = request.user
-        profile = UserProfile.objects.get(user = user)
-        new_bio = request.POST.get("bio")
-        profile.bio = new_bio
-        profile.save()
-        return JsonResponse({"new_bio" : new_bio})
+        form = ChangeProfile(request.POST)
+        if form.is_valid():
+            user = request.user
+            profile = UserProfile.objects.get(user = user)
+            new_bio = form.cleaned_data["bio"]
+            profile.bio = new_bio
+            profile.save()
+            return JsonResponse({"new_bio" : new_bio})
+        return HttpResponseBadRequest()
 
 def create_rating(request, pk):
     if request.method == "POST":
-        author = request.user
-        doctor = DoctorProfile.objects.get(profile = UserProfile.objects.get(user = User.objects.get(pk = pk)))
-        rating = request.POST.get("rating")
-        comment = request.POST.get("comment")
-        response = {}
-        if (Rating.objects.filter(author=author, doctor=doctor)):
-            rating_object = Rating.objects.get(author=author, doctor=doctor)
-            response.update({"old_id" : rating_object.id})
-            rating_object.delete()
-        rating_object = Rating.objects.create(author=author, doctor=doctor, rating=rating, comment=comment)
-        rating_object.save()
-        doctor.rating_average = count_average_rating(doctor)
-        doctor.save()
-        response.update({
-            "author" : author.username,
-            "rating" : rating,
-            "comment" : comment,
-            "date" : rating_object.date,
-            "new_id" : rating_object.id,
-            "is_doctor" : author.is_doctor,
-            "rating_average" : doctor.rating_average,
-            "author_pk" : author.pk,
-        })
-        return JsonResponse(response)
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            author = request.user
+            response = {}
+            if (author.is_anonymous):
+                return JsonResponse({"status" : "error_login"})
+            elif (author.is_authenticated and author.pk != pk):
+                doctor = DoctorProfile.objects.get(profile = UserProfile.objects.get(user = User.objects.get(pk = pk)))               
+                rating =  form.cleaned_data["rating"]
+                comment = form.cleaned_data["comment"]
+                response.update({"status": "success_create"})
+                if (Rating.objects.filter(author=author, doctor=doctor)):
+                    rating_object = Rating.objects.get(author=author, doctor=doctor)
+                    response.update({"old_id" : rating_object.id})
+                    rating_object.delete()
+                    response["status"] = "success_edit"
+                rating_object = Rating.objects.create(author=author, doctor=doctor, rating=rating, comment=comment)
+                rating_object.save()
+                doctor.rating_average = count_average_rating(doctor)
+                doctor.save()
+                response.update({
+                    "author" : author.username,
+                    "rating" : rating,
+                    "comment" : comment,
+                    "date" : rating_object.date,
+                    "new_id" : rating_object.id,
+                    "is_doctor" : author.is_doctor,
+                    "rating_average" : doctor.rating_average,
+                    "author_pk" : author.pk,
+                })
+            elif (author.pk == pk):
+                response.update({"status" : "error_same_user"})
+            else:
+                response.update({"status" : "error_general"})
+            return JsonResponse(response)
+        return HttpResponseBadRequest()
 
+@csrf_exempt
 def delete_rating(request, id):
     if request.method == "DELETE":
+        response = {}
         rating = Rating.objects.get(id = id)
-        doctor = rating.doctor
-        rating.delete()
-        doctor.rating_average = count_average_rating(doctor)
-        doctor.save()
-        return JsonResponse({"rating_average" : doctor.rating_average})
+        author_id = rating.author.pk
+        logged_id = request.user.pk
+        if(author_id == logged_id):
+            doctor = rating.doctor
+            rating.delete()
+            doctor.rating_average = count_average_rating(doctor)
+            doctor.save()
+            response.update({"rating_average" : doctor.rating_average, "status" : "success"})
+            return JsonResponse(response)
+        response.update({"status" : "error_different_user"})
+        return JsonResponse(response)
 
 # Utility
 def count_questions(user):
@@ -109,7 +134,7 @@ def count_points(user):
     point = 0
     for question in questions:
         point += question.upvote
-        point += question.downvote 
+        point -= question.downvote 
     return point
     
 def count_replies(user):
@@ -118,7 +143,7 @@ def count_replies(user):
 def count_average_rating(doctor):
     ratings = Rating.objects.filter(doctor = doctor)
     if ratings.count() == 0:
-        return 5.0
+        return 0
     average_rating = 0
     for rating in ratings:
         average_rating += rating.rating

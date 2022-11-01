@@ -10,7 +10,7 @@ class UserProfile(models.Model):
 class DoctorProfile(models.Model):
     profile = models.OneToOneField(UserProfile, on_delete = models.CASCADE)
     comment_amount = models.IntegerField(default=0)
-    rating_average = models.FloatField(default=5)
+    rating_average = models.FloatField(default=0)
 
 class Rating(models.Model):
     doctor = models.ForeignKey(DoctorProfile, on_delete = models.CASCADE)

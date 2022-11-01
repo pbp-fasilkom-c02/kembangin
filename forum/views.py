@@ -27,7 +27,8 @@ def get_forum_by_pk(request,pk):
                 'comment': reply.comment,
                 'author': reply.author.username,
                 'created_at': reply.created_at,
-                'pk':reply.pk
+                'pk':reply.pk,
+                'author_pk': reply.author.pk
             })
     
     data = {
@@ -39,7 +40,8 @@ def get_forum_by_pk(request,pk):
             'pk': forum.pk,
             'replies': replies,
             'upvote': forum.upvote,
-            'downvote': forum.downvote
+            'downvote': forum.downvote,
+            'author_pk': forum.author.pk
         }
     
     return JsonResponse(data)
@@ -56,7 +58,8 @@ def get_forums_json(request):
                 'comment': reply.comment,
                 'author': reply.author.username,
                 'created_at': reply.created_at,
-                'pk':reply.pk
+                'pk':reply.pk,
+                'author_pk': reply.author.pk
             })
         list_of_forums.append({
             'question': forum.question,
@@ -67,7 +70,8 @@ def get_forums_json(request):
             'pk': forum.pk,
             'replies': replies,
             'upvote': forum.upvote,
-            'downvote': forum.downvote
+            'downvote': forum.downvote,
+            'author_pk': forum.author.pk
         })
     return JsonResponse(list_of_forums,safe=False)
 
@@ -97,7 +101,8 @@ def add_forum(request):
                 "created_at": forum.created_at,
                 'upvote': forum.upvote,
                 'downvote': forum.downvote,
-                'replies': []
+                'replies': [],
+                'author_pk': forum.author.pk
                 }
                 
 
@@ -125,7 +130,8 @@ def add_comment(request,pk):
                 "pk": reply.pk,
                 "comment": reply.comment,
                 "author": reply.author.username,
-                "created_at": reply.created_at
+                "created_at": reply.created_at,
+                "author_pk": reply.author.pk
                 }
                 return JsonResponse(data)
             else:
@@ -192,7 +198,8 @@ def handle_vote(request,pk,action):
                 'comment': reply.comment,
                 'author': reply.author.username,
                 'created_at': reply.created_at,
-                'pk':reply.pk
+                'pk':reply.pk,
+                'author_pk': reply.author.pk
             }) 
         data = {
             'question': forum.question,
@@ -203,7 +210,8 @@ def handle_vote(request,pk,action):
             'pk': forum.pk,
             'replies': replies,
             'upvote': forum.upvote,
-            'downvote': forum.downvote
+            'downvote': forum.downvote,
+            'author_pk': forum.author.pk
         }
 
         return JsonResponse(data)
