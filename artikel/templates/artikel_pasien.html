@@ -40,14 +40,14 @@
 </h1>
 
 
-<div class="flex flex-wrap">
+<div class="flex flex-wrap items-center justify-items-center">
     {% for item in data %}
 <div class="flex flex-wrap items-center justify-center">
 
   <div class="">
     
   <div class="group relative m-10 rounded-lg cursor-pointer items-center justify-center overflow-hidden transition-shadow hover:shadow-xl hover:shadow-black/30">
-    <div class="h-96 w-[600px]">
+    <div class="lg:h-96 lg:w-[600px] h-72 w-[300px]">
         <img class="h-96 w-[600px] object-cover transition-transform duration-500 group-hover:rotate-3 group-hover:scale-125" src="{{ item.photo }}"
             alt="" />
     </div>

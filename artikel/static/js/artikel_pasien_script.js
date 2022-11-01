@@ -107,7 +107,7 @@ $(document).ready(() => {
             `
              <div>
                 <div id="${data.pk}-card" class="group relative rounded-lg cursor-pointer items-center justify-center overflow-hidden transition-shadow hover:shadow-xl hover:shadow-black/30">
-                    <div class="h-96 w-[600px]">
+                    <div class="lg:h-96 lg:w-[600px]">
                         <img class="h-full w-full object-cover transition-transform duration-500 group-hover:rotate-3 group-hover:scale-125" src="${data.fields.photo}"
                             alt="" />
                     </div>
