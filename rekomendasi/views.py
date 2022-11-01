@@ -32,7 +32,7 @@ def add_rekomendasi(request):
         data = json.loads(request.POST['data'])
 
         new_rekomendasi = Rekomendasi(nama_barang=data["nama_barang"], harga_barang=data["harga_barang"], deskripsi=data["deskripsi"], url=data["url"], gambar=data["gambar"])
-        new_task.save()
+        new_rekomendasi.save()
 
         return HttpResponse(serializers.serialize("json", [new_rekomendasi]), content_type="application/json")
 
