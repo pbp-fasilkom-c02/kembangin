@@ -22,7 +22,7 @@ const forumPost = (post) => `<div id='${post.pk}-post' class="animate-slide-in-f
             ${post.created_at.split('T')[0]}  
         </div>
         <div class="text-sm">
-            Dibuat oleh <span class="font-bold">${post.is_doctor ? "dr. " : ""}${post.author}</span>
+            Dibuat oleh <a class="font-bold" href="/user_profile/${post.author_pk}">${post.is_doctor ? "dr. " : ""}${post.author}</a>
         </div>
         <div class="flex gap-4 mt-2">
             <div class="flex gap-2">
