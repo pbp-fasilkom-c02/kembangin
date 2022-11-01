@@ -9,18 +9,41 @@ $(document).ready(() => {
 
     $("#create-new-artikel").submit(function(event) {
         event.preventDefault();
-        $.post(window.location.href + "create-new-artikel/", {
-            image: $("#image").val(),
-            title: $("#title").val(),
-            description: $("#description").val(),
-            thread: $("#thread").val(),
-        }).done(function(data) {
-            getData(data);
-            $("#title").val(""), $("#description").val(""), $("#image").val("");
-            const sectionCards = document.getElementById("artikel");
-            sectionCards.insertAdjacentHTML("beforestart", $(`#${data.pk}-card`));
+        console.log("masuk")
+        const form = $("#create-new-artikel")
+
+        $.ajax({
+            type: "POST",
+            url: "create-new-artikel/",
+            data: form.serialize(),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                console.log("hore")
+                getData(data);
+                $("#title").val(""), $("#description").val(""), $("#photo").val("");
+                const sectionCards = document.getElementById("artikel");
+                console.log("berhaisl")
+                sectionCards.insertAdjacentHTML("beforestart", $(`#${data.pk}-card`));
+            },
         });
+
     });
+
+    // $("#create-new-artikel").submit(function(event) {
+    //     event.preventDefault();
+    //     $.post(window.location.href + "create-new-artikel/", {
+    //         image: $("#image").val(),
+    //         title: $("#title").val(),
+    //         description: $("#description").val(),
+    //     }).done(function(data) {
+    //         getData(data);
+    //         $("#title").val(""), $("#description").val(""), $("#image").val("");
+    //         const sectionCards = document.getElementById("artikel");
+    //         sectionCards.insertAdjacentHTML("beforestart", $(`#${data.pk}-card`));
+    //     });
+    // });
 
     function getData(data) {
         $("#artikel").append(
@@ -69,9 +92,6 @@ $(document).ready(() => {
               <h1 class="font-dmserif text-3xl font-bold text-white">${data.fields.title}</h1>
               <p class="mb-3 text-lg italic text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">${data.fields.description}</p>
               <button id="${data.pk}-delete" class="rounded-full bg-neutral-900 py-2 px-3.5 font-com text-sm capitalize text-white shadow shadow-black/60">Delete</button>
-              
-
-              
           </div>
         
         </div>

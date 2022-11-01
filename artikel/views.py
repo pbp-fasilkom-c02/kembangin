@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,get_object_or_404
+from artikel.forms import CreateArtikel, ShareExp
 
 # showing article
 # @login_required(login_url='/login')
@@ -14,7 +15,8 @@ from django.shortcuts import render,get_object_or_404
 def show_artikel(request):
     artikel = {}
     top_3 = []
-
+    formArtikel = CreateArtikel()
+    formExp = ShareExp()
     data = Artikel.objects.all()
 
     if (len(data) != 0):
@@ -40,7 +42,9 @@ def show_artikel(request):
     context = {
         "data": top_3,
         "user" : request.user,
-        "auth" : request.user.is_authenticated
+        "auth" : request.user.is_authenticated,
+        "form" : formArtikel,
+        "exp" : formExp,
     } 
 
     context_anonym = {
@@ -85,15 +89,16 @@ def artikel_by_id_json(request, id):
 @login_required(login_url='/login')
 @csrf_exempt
 def create_new_artikel(request):
-    if request.method == "POST":
-        image = request.POST.get("image")
+    if request.method == "POST" and CreateArtikel(request.POST).is_valid():
+        photo = request.POST.get("photo")
         title = request.POST.get("title")
         description = request.POST.get("description")
-        create_new_artikel = Artikel(photo=image,title=title, description=description, author=request.user)
+        create_new_artikel = Artikel(photo=photo,title=title, description=description, author=request.user)
         create_new_artikel.save()
      
         return JsonResponse({"pk": create_new_artikel.pk, "fields": {
-            "image" :create_new_artikel.photo,
+            # "author" : create_new_artikel.author.username,
+            "photo" :create_new_artikel.photo,
             "title": create_new_artikel.title,
             "description": create_new_artikel.description,
         }})
@@ -146,7 +151,7 @@ def handle_vote(request,id,action):
 @login_required(login_url='/login')
 @csrf_exempt
 def share_exp(request):
-    if request.method == "POST":
+    if request.method == "POST" and ShareExp(request.POST).is_valid():
         comment = request.POST.get("comment")
         create_new_comment = Comment(comment=comment, author=request.user)
         create_new_comment.save()

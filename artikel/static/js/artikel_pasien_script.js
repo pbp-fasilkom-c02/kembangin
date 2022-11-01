@@ -27,15 +27,38 @@ $(document).ready(() => {
 
     $("#share-exp").submit(function(event) {
         event.preventDefault();
-        $.post(window.location.href + "share-exp/", {
-            comment: $("#exp").val(),
-        }).done(function(data) {
-            getExp(data);
-            $("#exp").val("");
-            const sectionCards = document.getElementById("posting");
-            sectionCards.insertAdjacentHTML("beforestart", $(`#${data.pk}-posting-exp`));
+        console.log("masuk")
+        const form = $("#share-exp")
+
+        $.ajax({
+            type: "POST",
+            url: "share-exp/",
+            data: form.serialize(),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                console.log("hore")
+                getExp(data);
+                const sectionCards = document.getElementById("posting");
+                console.log("berhaisl")
+                sectionCards.insertAdjacentHTML("beforestart", $(`#${data.pk}-posting-exp`));
+            },
         });
+
     });
+
+    // $("#share-exp").submit(function(event) {
+    //     event.preventDefault();
+    //     $.post(window.location.href + "share-exp/", {
+    //         comment: $("#exp").val(),
+    //     }).done(function(data) {
+    //         getExp(data);
+    //         $("#exp").val("");
+    //         const sectionCards = document.getElementById("posting");
+    //         sectionCards.insertAdjacentHTML("beforestart", $(`#${data.pk}-posting-exp`));
+    //     });
+    // });
 
     function getExp(data) {
         $("#posting").append(
