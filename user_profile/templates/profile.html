@@ -1,19 +1,151 @@
 {% extends "base.html" %}
+{% load static %}
+{% block meta %}
+<title>Profile</title>
+<link rel="stylesheet" href="/static/css/user_profile.css">
+<script src="{% static 'js/user_profile.js' %}"></script>
+{% endblock meta %}
 
 {% block content %}
-<div class="text-center font-bold">
-    {% if is_doctor %}
-    <p>
-        Dr. {{user.username}}
-    </p>
-    {% else %}
-    <p>
-        {{user.username}}
-    </p>
-    {% endif %}
-    <p>
-        {{user.email}}
-    </p>
-</div>
+<body onload="get_profile(`{{id}}`)">
 
+<div id="content" class="text-center">
+    <div class="text-center mt-10 font-bold text-3xl">User Profile</div>
+    <div id="details"></div>
+    <div id="messages">
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="success_create_rating" class="toast bg-blue-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Rating anda berhasil dibuat!
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="success_change_rating" class="toast bg-blue-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Rating anda berhasil diubah!
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="error_same_user" class="toast bg-red-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Anda tidak bisa memberikan rating pada diri sendiri!
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="error_login" class="toast bg-red-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Anda harus login terlebih dahulu!
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="error_general" class="toast bg-red-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Terjadi Error!
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="success_delete_rating" class="toast bg-blue-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Rating anda berhasil dihapus!
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="error_delete_rating" class="toast bg-red-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Anda tidak bisa menghapus rating orang lain!
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed top-10 end-0 p-3">
+            <div id="success_change_profile" class="toast bg-blue-200" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body text-lg">
+                    Bio anda berhasil diubah!
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-10 font-bold text-3xl">Statistik Forum</div>
+    <div id="profile" class="rounded bg-red-200 border-2 border-neutral-500 py-2 px-2 responsive">   
+    </div>
+    <p class="text-center mt-10 font-bold text-3xl">Bio</p>
+    <div id="bio">      
+    </div>
+    <div id="change-button-container"></div>
+{% if is_doctor %}
+    <div id="rating" >
+        <div id="rating-average">
+            <p class="font-bold text-3xl mt-6">Rating</p>
+        </div>
+        <div id="rating-form" class="flex flex-col w-screen">
+            <form method="POST" id="create-rating-form">
+            {% csrf_token %}
+                <table class="table table-borderless">
+                    <tr>
+                        <th class="text-xl">Rating: </th>
+                    </tr>
+                    <tr> 
+                        <td>{{rating_form.rating}}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-xl">Komentar: </th>
+                    </tr>
+                    <tr> 
+                        <td>{{rating_form.comment}}</td>
+                    </tr>
+                    <tr>
+                        <td><button type="submit" id="rate-button" class="text-white bg-red-500 hover:bg-red-700 rounded-md font-bold px-5 py-2.5 mr-2 mb-2">Rate</button></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="rating-message"></div>
+        <div id="rating-content" class="responsive"></div>
+    </div>
+{% endif %}
+{% if login_pk == id %}
+    <div class="modal fade" id="change-profile-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-red-500">
+                    <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Ubah Profile</h1>
+                </div>
+                <div class="modal-body text-center">
+                    <form method="POST" id="change-profile-form" >
+                        {% csrf_token %}
+                        <table class="table table-borderless align-middle">
+                            <tr>
+                                <th class="text-xl">Bio: </th>
+                            </tr>
+                            <tr> 
+                                <td>{{change_profile_form.bio}}</td>
+                            </tr>
+                            <tr>
+                                <td><button type="submit" id="change-button" class="text-white bg-red-500 hover:bg-red-700 rounded-md font-bold px-5 py-2.5 mr-2 mb-2" data-bs-dismiss="modal">Ubah</button></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+</div>
+<div class="user-info">
+    <span class="login-user-id" id="{{login_pk}}"></span>
+    <span class="profile-id" id="{{id}}"></span>
+</div>
+</body>
 {% endblock content %}

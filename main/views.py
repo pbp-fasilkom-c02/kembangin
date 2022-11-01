@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from .models import User
+from user_profile.models import UserProfile, DoctorProfile
 from django.contrib import messages
 
 
@@ -31,10 +32,13 @@ def register_user(request):
             messages.info(request, "Username or email already taken!")
         elif (password == repeat_password):
             user = User.objects.create_user(username=username, email=email, password=password)
-            
+            user_profile = UserProfile.objects.create(user=user)
             if (request.POST.get("doctor_choice") == "yes"):
                 user.is_doctor = True
+                doctor_profile = DoctorProfile.objects.create(profile = user_profile)
+                doctor_profile.save()
             user.save()
+            user_profile.save()
             return redirect("main:login")
         else:
             messages.info(request, "Password and repeat password is different!")

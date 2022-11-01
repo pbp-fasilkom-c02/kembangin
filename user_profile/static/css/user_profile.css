@@ -1,0 +1,25 @@
+.responsive { margin-left: 28rem; margin-right: 28rem; }
+
+@media (max-width: 1280px) {
+    .responsive { margin-left: 20rem; margin-right: 20rem; }
+}
+@media (max-width: 1024px) {
+    .responsive { margin-left: 15rem; margin-right: 15rem; }
+}
+@media (max-width: 768px) {
+    .responsive { margin-left: 10rem; margin-right: 10rem; }
+} 
+@media (max-width: 640px) {
+    .responsive { margin-left: 6rem; margin-right: 6rem; }
+} 
+@media (max-width: 426px) {
+    .responsive { margin-left: 2rem; margin-right: 2rem; }
+} 
+
+@media (max-width: 426px) {
+    .responsive { margin-left: 2rem; margin-right: 2rem; }
+} 
+
+@media (max-width: 375px) {
+    #id_comment {max-width:275px;}
+} 
