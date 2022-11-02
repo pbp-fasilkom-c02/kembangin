@@ -22,6 +22,7 @@ $(document).ready(() => {
             success: function(data) {
                 console.log("hore")
                 getData(data);
+                form.trigger("reset");
                 $("#title").val(""), $("#description").val(""), $("#photo").val("");
                 const sectionCards = document.getElementById("artikel");
                 console.log("berhaisl")

@@ -73,6 +73,7 @@ $(document).ready(() => {
                 url: `post-comment/${data.pk}`,
                 data: form.serialize(),
                 success: function(data) {
+                    form.trigger("reset");
                     getComment(data);
                     $("#comment-area").val("");
                     const sectionCards = document.getElementById("comment");
@@ -143,22 +144,19 @@ $(document).ready(() => {
             $.get(window.location.href + `json/${data.pk}`, {}).done((res) => {
                 $("#detail-artikel").html(
                     `
-            
-            <div id="${res[0].pk}-card" class="relative flex-auto"></div>
-              <div class="group relative rounded-lg cursor-pointer items-center justify-center overflow-hidden transition-shadow hover:shadow-xl hover:shadow-black/30">
-                <div class="h-96 w-[600px]">
-                  <img class="h-full w-full object-cover transition-transform duration-500 group-hover:rotate-3 group-hover:scale-125" src="https://images.unsplash.com/photo-1494145904049-0dca59b4bbad?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
-                      alt="" />
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black group-hover:from-black/70 group-hover:via-black/60 group-hover:to-black/70"></div>
-              <div class="absolute inset-0 flex translate-y-[20%] flex-col items-center justify-center px-9 text-center transition-all duration-500 group-hover:translate-y-0">
-                  <h1 class="font-dmserif text-3xl font-bold text-black ">${res[0].fields.title}</h1>
-                  <p class="mb-3 text-lg italic text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">${res[0].fields.description}</p>
-              </div>                    
-              </div>
-              </div>
-
-            </div>
+                        <div id="${res[0].pk}-card" class="relative flex-auto"></div>
+                            <div class="group relative rounded-lg cursor-pointer items-center justify-center overflow-hidden transition-shadow hover:shadow-xl hover:shadow-black/30">
+                                <div class="h-96 w-[700px]">
+                                <img class="h-full w-full object-cover" src="${res[0].fields.photo}"
+                                    alt="" />
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black"></div>
+                                               
+                            </div>
+                            </div>
+                            <h1 class="text-center font-dmserif text-3xl font-bold text-black ">${res[0].fields.title}</h1>
+                            <p class="text-center mb-3 text-lg italic text-black transition-opacity duration-300 group-hover:opacity-100">${res[0].fields.description}</p>
+                        </div>
             `
                 );
             });
