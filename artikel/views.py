@@ -39,20 +39,17 @@ def show_artikel(request):
 
     if (request.user.is_authenticated):
         context = {
-            "data": top_3,
-            "user" : request.user.username,
-            "auth" : request.user.is_authenticated,
-            "form" : formArtikel,
-            "exp" : formExp,
-        } 
+                "data": top_3,
+                "user" : request.user,
+                "auth" : request.user.is_authenticated,
+                "form" : formArtikel,
+                "exp" : formExp,
+            } 
         
         data = request.user
         if (data.is_doctor):
-            print("Doctor login")
             return render(request, "artikel.html", context)
-
         else:
-            print("Pasien login")
             return render(request, "artikel_pasien.html", context)
     else:
         context_anonym = {
