@@ -12,22 +12,23 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Forum',
+            name='Artikel',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('question', models.CharField(max_length=250)),
+                ('title', models.CharField(max_length=100)),
                 ('description', models.TextField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('upvote', models.IntegerField(default=0)),
                 ('downvote', models.IntegerField(default=0)),
+                ('photo', models.CharField(max_length=300)),
             ],
         ),
         migrations.CreateModel(
-            name='ForumReply',
+            name='Comment',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('comment', models.CharField(max_length=100)),
+                ('comment', models.TextField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
             ],
         ),
     ]

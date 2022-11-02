@@ -7,13 +7,13 @@ function get_profile(id) {
         var details = `
         <div>
             <p class="font-bold text-xl">Username:</p>
-            <p class="text-3xl font-bold text-blue-500">
+            <p class="text-5xl font-bold text-blue-500">
                 ${response.is_doctor ? "dr. " : ""}${response.username}
             </p>
         </div>
         <div>
             <p class="font-bold text-xl">Email:</p>
-            <p class="font-bold text-2xl text-blue-500">${response.email}</p>
+            <p class="font-bold text-4xl text-blue-500">${response.email}</p>
         </div>
         `
         var profile = `
