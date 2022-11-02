@@ -31,20 +31,6 @@ $(document).ready(() => {
 
     });
 
-    // $("#create-new-artikel").submit(function(event) {
-    //     event.preventDefault();
-    //     $.post(window.location.href + "create-new-artikel/", {
-    //         image: $("#image").val(),
-    //         title: $("#title").val(),
-    //         description: $("#description").val(),
-    //     }).done(function(data) {
-    //         getData(data);
-    //         $("#title").val(""), $("#description").val(""), $("#image").val("");
-    //         const sectionCards = document.getElementById("artikel");
-    //         sectionCards.insertAdjacentHTML("beforestart", $(`#${data.pk}-card`));
-    //     });
-    // });
-
     function getData(data) {
         $("#artikel").append(
             `
