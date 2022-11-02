@@ -16,7 +16,7 @@ class TestViews(TestCase):
     def test_show_forum_detail_resolved(self):
         client = Client()
         user = User.objects.create_user(username="dummya", email="dummya@dummy.com", password="dummy12345")   
-        client.login(username='dummy',password='dummy12345')
+        client.login(username='dummya',password='dummy12345')
         response = client.get(reverse("forum:show_forum_detail",kwargs={"pk":user.pk}))
         self.assertEquals(response.status_code,200)
         self.assertTemplateUsed(response,'forum_detail.html')
@@ -53,7 +53,7 @@ class TestViews(TestCase):
         user = User.objects.create_user(username="dummyf", email="dummyf@dummy.com", password="dummy12345")
         forum = Forum.objects.create(question="This is test question",description="Lorem ipsum",created_at=datetime.datetime.now(),author=user)
         response = client.get(reverse("forum:add_comment",kwargs={"pk":forum.pk}))
-        self.assertEquals(response.status_code,200)   
+        self.assertEquals(response.status_code,302)   
 
     def test_delete_forum(self):
         client = Client()
@@ -67,11 +67,11 @@ class TestViews(TestCase):
         user = User.objects.create_user(username="dummyh", email="dummyh@dummy.com", password="dummy12345")
         forum = Forum.objects.create(question="This is test question",description="Lorem ipsum",created_at=datetime.datetime.now(),author=user)
         response = client.get(reverse("forum:handle_vote",kwargs={"pk":forum.pk, "action":"up"}))
-        self.assertEquals(response.status_code,200)   
+        self.assertEquals(response.status_code,302)   
     
     def test_handle_downvote_comment(self):
         client = Client()
         user = User.objects.create_user(username="dummyi", email="dummyi@dummy.com", password="dummy12345")
         forum = Forum.objects.create(question="This is test question",description="Lorem ipsum",created_at=datetime.datetime.now(),author=user)
         response = client.get(reverse("forum:handle_vote",kwargs={"pk":forum.pk, "action":"down"}))
-        self.assertEquals(response.status_code,200)  
+        self.assertEquals(response.status_code,302)  
