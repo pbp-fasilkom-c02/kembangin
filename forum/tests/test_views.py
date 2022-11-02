@@ -42,11 +42,11 @@ class TestViews(TestCase):
         response = client.get(reverse("forum:get_forums_json"))
         self.assertEquals(response.status_code,200)   
 
-    def test_add_forum(self):
+    def test_add_empty_forum(self):
         client = Client()
         user = User.objects.create_user(username="dummye", email="dummye@dummy.com", password="dummy12345")
         response = client.get(reverse("forum:add_forum"))
-        self.assertEquals(response.status_code,200)   
+        self.assertEquals(response.status_code,400)   
 
     def test_add_comment(self):
         client = Client()
@@ -59,8 +59,10 @@ class TestViews(TestCase):
         client = Client()
         user = User.objects.create_user(username="dummyg", email="dummyg@dummy.com", password="dummy12345")
         forum = Forum.objects.create(question="This is test question",description="Lorem ipsum",created_at=datetime.datetime.now(),author=user)
-        response = client.get(reverse("forum:delete_comment",kwargs={"id":forum.pk}))
-        self.assertEquals(response.status_code,200)   
+        reply = ForumReply.objects.create(comment="This is test comment",forum=forum, created_at=datetime.datetime.now(), author=user)
+        client.login(username='dummyg',password='dummy12345')
+        response = client.get(reverse("forum:delete_comment",kwargs={"pk":reply.pk}))
+        self.assertEquals(response.status_code,202)   
 
     def test_handle_upvote_comment(self):
         client = Client()
