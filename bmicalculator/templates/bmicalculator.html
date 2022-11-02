@@ -1,6 +1,10 @@
-{% extends 'base.html' %} {% block content %}  {% load bmicalculator_customtags %}
+{% extends 'base.html' %} 
+{% block meta %} 
+<title>Kembangin | BMI Calculator</title>
+{% endblock meta %}
+{% block content %}  {% load bmicalculator_customtags %}
 {% load static %}
-<script src="{% static 'js/bmicalculator_update.js' %}"></script>   
+<script src="{% static 'js/bmicalculator_uptodate.js' %}"></script>   
 
 {% comment %} MODAL {% endcomment %}
 <div class="flex flex-col items-center justify-center pt-4"> 
