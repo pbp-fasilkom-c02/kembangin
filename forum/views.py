@@ -85,7 +85,6 @@ def add_forum(request):
     if request.method == "POST":
         form = ForumForm(request.POST)
         if form.is_valid():
-
             if request.user.username != "":
 
                 question = form.cleaned_data["question"]
@@ -104,11 +103,12 @@ def add_forum(request):
                 'replies': [],
                 'author_pk': forum.author.pk
                 }
-                
-
                 return JsonResponse(data)
             else:
                 return JsonResponse({'status':"error", 'message':'Anda harus login terlebih dahulu'})
+        else:
+            return JsonResponse({'status':"invalid", 'message':"Input tidak valid!"})
+
 
 
     return HttpResponseBadRequest()
@@ -140,7 +140,7 @@ def add_comment(request,pk):
                     'message': 'Kamu bukan dokter sehingga tidak bisa memberi komentar'
                 }
                 return JsonResponse(response)
-
+        return JsonResponse({'status':"invalid", 'message':"Input tidak valid!"})
     return HttpResponseBadRequest()
 
 @csrf_exempt
