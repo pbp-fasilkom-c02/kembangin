@@ -13,4 +13,4 @@ ratings = (
 
 class RatingForm(forms.Form):
     rating = forms.ChoiceField(choices= ratings, widget = forms.Select(attrs={"class": "bg-red-100 rounded h-10 px-4 mt-1"}))
-    comment = forms.CharField(label="comment", max_length=150, widget=forms.Textarea(attrs={"rows":"4", "class": "bg-red-100 rounded px-4 pt-2 mt-1"}))
+    comment = forms.CharField(label="comment", max_length=150, widget=forms.Textarea(attrs={"rows":"4", "class": "bg-red-100 rounded px-4 pt-2 mt-1 w-full"}))
