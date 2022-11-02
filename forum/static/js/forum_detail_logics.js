@@ -1,5 +1,5 @@
-const useToast = (toastTrigger, komentar) => {
-    const toast = komentar ? new bootstrap.Toast($('#liveToastKomentar')[0]) : new bootstrap.Toast($('#liveToast')[0])
+const useToast = (toastTrigger, komentar, invalid) => {
+    const toast = invalid ? new bootstrap.Toast($('#liveToastInvalid')[0]) : komentar ? new bootstrap.Toast($('#liveToastKomentar')[0]) : new bootstrap.Toast($('#liveToast')[0])
     toast.show()
 }
 
@@ -69,7 +69,7 @@ const deleteReply = (reply) => {
             success: function (response) {
 
                 if (response.status == "error") {
-                    useToast(true, true)
+                    useToast(true, true, false)
                 }
                 else {
                     $(`#${reply.pk}-reply`).addClass("animate-slide-out-blurred-right")
@@ -128,7 +128,10 @@ $(document).ready(function () {
         $.post(`/forum/${pk}/add-comment`, { comment: $(".comment-input").val() }, function (res) {
 
             if (res.status == "error") {
-                useToast(true, false)
+                useToast(true, false, false)
+            }
+            if (res.status == "invalid") {
+                useToast(true, false, true)
             }
             else {
                 addComment(res)

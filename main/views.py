@@ -5,11 +5,38 @@ from django.contrib.auth import logout
 from .models import User
 from user_profile.models import UserProfile, DoctorProfile
 from django.contrib import messages
-
-
+from artikel.models import Artikel
+import operator
 
 def show_landing(request):
-    return render(request,"main.html")
+    artikel = {}
+    top_3 = []
+    data = Artikel.objects.all()
+
+    if (len(data) != 0):
+        for i in range(0, len(data)):
+            artikel[data[i]] = data[i].upvote
+        
+        sorted_d = dict( sorted(artikel.items(), key=operator.itemgetter(1),reverse=True))
+        
+        i = 1
+        if (len(sorted_d) < 3):
+            for key, value in sorted_d.items():
+                top_3.append(key)
+                     
+        else:
+            for key, value in sorted_d.items():
+                if (i == 4):
+                    break
+                else:
+                    top_3.append(key)
+                    i += 1
+                    
+    context = {
+        "data" : top_3
+    }
+
+    return render(request,"main.html", context)
 
 def login_user(request):
     if (request.method == "POST"):

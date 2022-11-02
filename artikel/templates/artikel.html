@@ -1,4 +1,8 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %} {% load static %} 
+{% block meta %} 
+<title>Kembangin | Artikel</title>
+{% endblock meta %}
+{% block content %}
 
 <head>
   <link rel="stylesheet" href="{% static 'css/artikel_dokter_style.css' %}" />
@@ -20,8 +24,10 @@
   <div
     class="absolute inset-0 flex translate-y-[20%] flex-col items-center justify-center px-9 text-center"
   >
-    <h1 class="text-center font-extrabold text-[60px] lg:text-[80px]">
-      Hi, Doc!
+    <h1
+      class="text-center text-white font-extrabold text-[60px] lg:text-[80px]"
+    >
+      Hi, Dokter {{ user }}!
     </h1>
     <button
       class="modal-open cursor-pointer text-white bg-transparent border border-gray-500 hover:border-indigo-500 text-gray-500 hover:text-indigo-500 font-bold py-2 px-4 rounded-full"
@@ -67,14 +73,14 @@
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
             >Title</label
           >
-          <div id="title">{{ form.title }}</div>
+          <div id="title" class="border-2">{{ form.title }}</div>
         </div>
         <div class="mb-6">
           <label
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
             >Description</label
           >
-          <div id="description">{{ form.description }}</div>
+          <div id="description" class="border-2">{{ form.description }}</div>
         </div>
 
         <div class="mb-6">
@@ -82,7 +88,7 @@
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
             >Image</label
           >
-          <div id="photo">{{ form.photo }}</div>
+          <div id="photo" class="border-2">{{ form.photo }}</div>
         </div>
 
         <button

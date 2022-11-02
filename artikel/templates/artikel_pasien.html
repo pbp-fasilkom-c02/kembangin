@@ -1,5 +1,8 @@
 {% extends 'base.html' %} 
 {% load static %}
+{% block meta %} 
+<title>Kembangin | Artikel</title>
+{% endblock meta %}
 {% block content %}
 
 <head>
@@ -23,6 +26,13 @@
   <div
     class="absolute inset-0 flex translate-y-[20%] flex-col items-center justify-center px-9 text-center"
   >
+
+  {% if auth == True %}
+  <h1 class="text-center font-extrabold md:text-[50px] text-[30px] lg:text-[50px] my-10">
+    <span class="text-fuchsia-500"> Hi, {{ user }}</span>
+  </h1>
+  {% endif %}
+
     <h1 class="text-center font-extrabold md:text-[50px] text-[30px] lg:text-[50px] my-10">
       <span class="text-fuchsia-500"> Doctor&apos;s 👩‍⚕️ Article Recommendations</span>
     </h1>
@@ -184,8 +194,8 @@
     <div class="flex border-solid border-2 mx-auto items-center justify-center shadow-lg mx-8 mb-4 ">
       <form id="share-exp" class="w-full bg-white rounded-lg px-4 pt-2">
          <div class="flex flex-wrap -mx-3 mb-6">
-            <h2 class="px-4 pt-3 pb-2 text-gray-800 text-lg">Experience</h2>
-            <div class="w-full md:w-full px-3 mb-2 mt-2">
+            <h2 class="px-4 pt-3 pb-2 text-gray-800 text-lg">User Experience</h2>
+            <div class="w-full md:w-full px-3 mb-2 mt-2 border-2">
               {{ exp.comment }}
             </div>
             <div class="w-full md:w-full flex items-start md:w-full px-3">
