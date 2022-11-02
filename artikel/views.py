@@ -36,22 +36,16 @@ def show_artikel(request):
                 else:
                     top_3.append(key)
                     i += 1
-            
-    context = {
-        "data": top_3,
-        "user" : request.user,
-        "auth" : request.user.is_authenticated,
-        "form" : formArtikel,
-        "exp" : formExp,
-    } 
-
-    context_anonym = {
-        "data": top_3,
-        "user" : request.user.is_authenticated,
-        "auth" : request.user.is_authenticated
-    }
 
     if (request.user.is_authenticated):
+        context = {
+            "data": top_3,
+            "user" : request.user.username,
+            "auth" : request.user.is_authenticated,
+            "form" : formArtikel,
+            "exp" : formExp,
+        } 
+        
         data = request.user
         if (data.is_doctor):
             print("Doctor login")
@@ -61,6 +55,10 @@ def show_artikel(request):
             print("Pasien login")
             return render(request, "artikel_pasien.html", context)
     else:
+        context_anonym = {
+            "data": top_3,
+            "auth" : request.user.is_authenticated
+        }
         return render(request, "artikel_pasien.html", context_anonym)
 
 
