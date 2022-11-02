@@ -5,6 +5,7 @@ from artikel.views import artikel_json
 from artikel.views import delete_artikel
 from artikel.views import comment_json
 from artikel.views import handle_vote, share_exp
+from artikel.views import hapus_artikel
 
 app_name = 'artikel'
 
@@ -17,4 +18,5 @@ urlpatterns = [
     path('json/<int:id>', artikel_by_id_json, name='artikel_by_id_json'),
     path('<int:id>/vote/<str:action>',handle_vote,name="handle_vote"),
     path('share-exp/', share_exp, name="share-exp"),
+    path('hapus-artikel/<int:id>/', hapus_artikel, name="hapus-artikel"),
 ]
