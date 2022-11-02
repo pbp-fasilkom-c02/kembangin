@@ -1,0 +1,219 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block meta %} 
+<title>Kembangin | Artikel</title>
+{% endblock meta %}
+{% block content %}
+
+<head>
+  <script src="{% static 'js/artikel_pasien_script.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/artikel_pasien_style.css' %}" />
+</head>
+
+<div
+  class="group relative rounded-lg items-center justify-center overflow-hidden"
+>
+  <div class="h-screen w-full">
+    <img
+      class="h-full w-full object-cover transition-transform duration-500"
+      src="https://images.unsplash.com/photo-1590611936760-eeb9bc598548?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
+      alt=""
+    />
+  </div>
+  <div
+    class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black from-black/50 via-black/60 to-black/70"
+  ></div>
+  <div
+    class="absolute inset-0 flex translate-y-[20%] flex-col items-center justify-center px-9 text-center"
+  >
+
+  {% if auth == True %}
+  <h1 class="text-center font-extrabold md:text-[50px] text-[30px] lg:text-[50px] my-10">
+    <span class="text-fuchsia-500"> Hi, {{ user }}</span>
+  </h1>
+  {% endif %}
+
+    <h1 class="text-center font-extrabold md:text-[50px] text-[30px] lg:text-[50px] my-10">
+      <span class="text-fuchsia-500"> Doctor&apos;s 👩‍⚕️ Article Recommendations</span>
+    </h1>
+  </div>
+</div>
+
+<div class="py-96 bg-gradient-to-t from-transparent via-transparent to-black from-black/0 via-black/30 to-black/70">
+  <p class="text-center p-4 text-lg italic font-bold">"Because children grow up, we think a child's purpose is to grow up. But a child's purpose is to be a child"</p>
+  <p class="text-center text-lg font-bold">-Tom Stoppard</p>
+</div>
+
+
+<h1 class="text-center underline md:text-[50px] text-[30px] lg:text-[50px] hover:no-underline my-20 font-extrabold my-10">
+  Top 3 Articles
+</h1>
+
+
+<div class="flex flex-wrap items-center justify-items-center">
+    {% for item in data %}
+<div class="flex flex-wrap items-center justify-center">
+
+  <div class="">
+    
+  <div class="group relative m-10 rounded-lg cursor-pointer items-center justify-center overflow-hidden transition-shadow hover:shadow-xl hover:shadow-black/30">
+    <div class="lg:h-96 lg:w-[600px] h-72 w-[300px]">
+        <img class="h-96 w-[600px] object-cover transition-transform duration-500 group-hover:rotate-3 group-hover:scale-125" src="{{ item.photo }}"
+            alt="" />
+    </div>
+    <div class="absolute h-96 w-[600px] inset-0 bg-gradient-to-b from-transparent via-transparent to-black group-hover:from-black/70 group-hover:via-black/60 group-hover:to-black/70"></div>
+    <div class="absolute h-96 w-[600px] inset-0 flex translate-y-[20%] flex-col items-center justify-center px-9 text-center transition-all duration-500 group-hover:translate-y-0">
+     
+        <h1 class="font-dmserif text-3xl font-bold text-black text-clip overflow-hidden group-hover:text-white">{{ item.title }}</h1>
+        <p class="mb-3 text-lg italic text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 text-clip overflow-hidden">{{ item.description }}</p>
+    </div>  
+  </div>
+
+  </div>
+</div>
+
+  {% endfor %}   
+             
+</div>
+{% if auth == True %}
+
+<h1 class="text-center md:text-[50px] text-[30px] lg:text-[50px] underline hover:no-underline my-20 font-extrabold my-10">
+  The Latest Articles
+</h1>
+
+{% endif %}
+<!--Modal-->
+<div
+  class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center"
+>
+  <div
+    class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto"
+  >
+    <div class="modal-content py-4 text-left px-6">
+      <div
+        class="modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50"
+      >
+        <svg
+          class="fill-current text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+        >
+          <path
+            d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"
+          ></path>
+        </svg>
+        <span class="text-sm">(Esc)</span>
+      </div>
+
+      <form id="create-new-artikel">
+        {% csrf_token %}
+        <div class="mb-6">
+          <label
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Title</label
+          >
+          <input
+            id="title"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required=""
+          />
+        </div>
+        <div class="mb-6">
+          <label
+            for="password"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Description</label
+          >
+          <input
+            id="description"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required=""
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="flex min-h-screen items-center justify-center p-5">
+  <div
+    id="artikel"
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-20"
+  ></div>
+</div>
+
+<div
+  class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center"
+  id="modal-id"
+>
+  <div class="relative w-auto my-6 mx-auto max-w-3xl">
+    <!--content-->
+    <div
+      class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none"
+    >
+      <!--header-->
+      <div
+        class="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t"
+      >
+        <h3 class="text-3xl font-semibold">Detail Artikel</h3>
+      </div>
+      <!--body-->
+      <div id="detail-artikel" class="relative p-10"></div>
+      <!--footer-->
+      <div
+        class="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b"
+      >
+        <button
+          class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+          type="button"
+          onclick="toggleModal('modal-id')"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if auth == True %}
+
+<div>
+  <div class="mt-48">
+    <h1 class="text-center underline hover:no-underline font-extrabold text-[30px] mb-20">
+      Share your experience while reading those articles!
+    </h1>
+    <div class="flex border-solid border-2 mx-auto items-center justify-center shadow-lg mx-8 mb-4 ">
+      <form id="share-exp" class="w-full bg-white rounded-lg px-4 pt-2">
+         <div class="flex flex-wrap -mx-3 mb-6">
+            <h2 class="px-4 pt-3 pb-2 text-gray-800 text-lg">User Experience</h2>
+            <div class="w-full md:w-full px-3 mb-2 mt-2 border-2">
+              {{ exp.comment }}
+            </div>
+            <div class="w-full md:w-full flex items-start md:w-full px-3">
+               <div class="-mr-1">
+                  <input type='submit' class="bg-white text-gray-700 font-medium py-1 px-4 border border-gray-400 rounded-lg tracking-wide mr-1 hover:bg-gray-100" value='Post My Story'>
+               </div>
+            </div>
+         </form>
+      </div>
+    </div>
+  </div>
+
+  
+  
+  <div id="posting">
+  </div>
+</div>
+
+{% endif %}
+
+{% endblock content %}

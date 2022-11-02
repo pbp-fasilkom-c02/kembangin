@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block meta %}
-<title>Profile</title>
+<title>Kembangin | Profile</title>
 <link rel="stylesheet" href="/static/css/user_profile.css">
 <script src="{% static 'js/user_profile.js' %}"></script>
 {% endblock meta %}
@@ -85,48 +85,34 @@
     </div>
     <div id="change-button-container"></div>
 {% if is_doctor %}
-    
     <div id="rating" >
         <div id="rating-average">
             <p class="font-bold text-3xl mt-6">Rating</p>
         </div>
-        <button class="mt-8 text-white bg-red-500 hover:bg-red-700 rounded-md font-bold px-5 py-2.5 mr-2 mb-2"
-        data-bs-toggle="modal" data-bs-target="#rating-modal">Berikan Rating</button>
+        <div id="rating-form" class="flex flex-col w-screen">
+            <form method="POST" id="create-rating-form">
+            {% csrf_token %}
+                <table class="table table-borderless">
+                    <tr>
+                        <th class="text-xl">Rating: </th>
+                    </tr>
+                    <tr> 
+                        <td>{{rating_form.rating}}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-xl">Komentar: </th>
+                    </tr>
+                    <tr> 
+                        <td>{{rating_form.comment}}</td>
+                    </tr>
+                    <tr>
+                        <td><button type="submit" id="rate-button" class="text-white bg-red-500 hover:bg-red-700 rounded-md font-bold px-5 py-2.5 mr-2 mb-2">Rate</button></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
         <div id="rating-message"></div>
         <div id="rating-content" class="responsive"></div>
-        <div class="modal fade" id="rating-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header bg-red-500">
-                        <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Rating</h1>
-                    </div>
-                    <div class="modal-body text-center">
-                        <div id="rating-form" class="flex flex-col">
-                            <form method="POST" id="create-rating-form">
-                            {% csrf_token %}
-                                <div>
-                                    <div>
-                                        <div class="text-xl">Rating: </div>
-                                    </div>
-                                    <div> 
-                                        <div>{{rating_form.rating}}</div>
-                                    </div>
-                                    <div>
-                                        <div class="text-xl">Komentar: </div>
-                                    </div>
-                                    <div> 
-                                        <div>{{rating_form.comment}}</div>
-                                    </div>
-                                    <div>
-                                        <div><button type="submit" id="rate-button" class="text-white bg-red-500 hover:bg-red-700 rounded-md font-bold px-5 py-2.5 mr-2 mb-2" data-bs-dismiss="modal">Rate</button></div>
-                                    </div>
-                                </table>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 {% endif %}
 {% if login_pk == id %}

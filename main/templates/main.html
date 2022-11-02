@@ -1,14 +1,17 @@
+{% extends 'base.html' %}
 
-{% extends 'base.html' %} {% block meta %}
-<style>
-  .gradient {
-    background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
-  }
-</style>
-{% endblock meta %} {% block content %}
+{% block meta %} 
+<title>Kembangin</title>
+{% endblock meta %}
+
+{% block content%}
+
 <body
   class="leading-normal tracking-normal text-white gradient"
-  style="font-family: 'Source Sans Pro', sans-serif"
+  style="
+    font-family: 'Source Sans Pro', sans-serif;
+    background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
+  "
 >
   <!--Hero-->
   <div class="pt-14">
@@ -17,7 +20,7 @@
     >
       <!--Left Col-->
       <div
-        class="flex flex-col w-full lg:ml-24 md:w-2/5 justify-center items-start text-center md:text-left"
+        class="flex flex-col w-full lg:ml-24 md:w-2/5 justify-center items-start text-center md:text-left text-white"
       >
         <p class="tracking-widest w-full font-bold">Kembangin</p>
         <h1
@@ -162,43 +165,18 @@
           class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"
         ></div>
       </div>
+
+      {% for item in data %}
       <div class="w-full md:w-1/3 p-6 flex flex-col flex-grow flex-shrink">
         <div
           class="flex-1 bg-white rounded-t rounded-b-none overflow-hidden shadow"
         >
           <a href="#" class="flex flex-wrap no-underline hover:no-underline">
             <div class="w-full font-bold text-xl text-gray-800 px-6">
-              Lorem ipsum dolor sit amet.
+              {{ item.title }}
             </div>
             <p class="text-gray-800 text-base px-6 mb-5">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
-              at ipsum eu nunc commodo posuere et sit amet ligula.
-            </p>
-          </a>
-        </div>
-        <div
-          class="flex-none mt-auto bg-white rounded-b rounded-t-none overflow-hidden shadow p-6"
-        >
-          <div class="flex items-center justify-start">
-            <button
-              class="mx-auto lg:mx-0 hover:underline gradient text-white font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-            >
-              Detail
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="w-full md:w-1/3 p-6 flex flex-col flex-grow flex-shrink">
-        <div
-          class="flex-1 bg-white rounded-t rounded-b-none overflow-hidden shadow"
-        >
-          <a href="#" class="flex flex-wrap no-underline hover:no-underline">
-            <div class="w-full font-bold text-xl text-gray-800 px-6">
-              Lorem ipsum dolor sit amet.
-            </div>
-            <p class="text-gray-800 text-base px-6 mb-5">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
-              at ipsum eu nunc commodo posuere et sit amet ligula.
+              {{ item.description }}
             </p>
           </a>
         </div>
@@ -206,40 +184,19 @@
           class="flex-none mt-auto bg-white rounded-b rounded-t-none overflow-hidden shadow p-6"
         >
           <div class="flex items-center justify-center">
-            <button
-              class="mx-auto lg:mx-0 hover:underline gradient text-white font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+            <a
+              href="{% url 'artikel:show_artikel' %}"
+              style="
+                background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
+              "
+              class="mx-auto lg:mx-0 hover:underline gradient text-black font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
             >
               Detail
-            </button>
+            </a>
           </div>
         </div>
       </div>
-      <div class="w-full md:w-1/3 p-6 flex flex-col flex-grow flex-shrink">
-        <div
-          class="flex-1 bg-white rounded-t rounded-b-none overflow-hidden shadow"
-        >
-          <a href="#" class="flex flex-wrap no-underline hover:no-underline">
-            <div class="w-full font-bold text-xl text-gray-800 px-6">
-              Lorem ipsum dolor sit amet.
-            </div>
-            <p class="text-gray-800 text-base px-6 mb-5">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
-              at ipsum eu nunc commodo posuere et sit amet ligula.
-            </p>
-          </a>
-        </div>
-        <div
-          class="flex-none mt-auto bg-white rounded-b rounded-t-none overflow-hidden shadow p-6"
-        >
-          <div class="flex items-center justify-end">
-            <button
-              class="mx-auto lg:mx-0 hover:underline gradient text-white font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-            >
-              Detail
-            </button>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </section>
   <section class="bg-gray-100 py-8">
@@ -382,14 +339,15 @@
         class="h-1 mx-auto bg-white w-1/6 opacity-25 my-0 py-0 rounded-t"
       ></div>
     </div>
-    <h3 class="my-4 text-2xl mx-3 lg:text-3xl leading-tight">
+    <h3 class="my-10 text-2xl mx-3 lg:text-3xl leading-tight">
       A Happy Child is A Healthy Child
     </h3>
-    <button
+    <a
+      href="{% url 'bmicalculator:show_bmicalculator' %}"
       class="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
     >
       Check Now!
-    </button>
+    </a>
   </section>
 </body>
 

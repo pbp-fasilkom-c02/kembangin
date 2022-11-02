@@ -9,20 +9,20 @@ $(document).ready(() => {
           class="block rounded-lg shadow-lg hover:shadow-blue-500/30 bg-white max-w-sm text-center w-80"
         >
           <div
-            class="py-3 px-6 border-b bg-gray-800 flex gap-4 text-white justify-center form-check items-center rounded-t-lg hover:bg-gradient-to-bl transition-all"
+            class="py-3 px-6 border-b bg-red-400 flex gap-4 text-white justify-center form-check items-center rounded-t-lg hover:bg-gradient-to-bl transition-all"
           >
             <label for="status inline-block">BMI Metric</label>
           </div>
           <div class="p-6"> 
             <h5 class="text-gray-900 text-xl font-bold mb-2">BMI : ${
-              data.fields.bmi
+              data.fields.bmi 
             }</h5>
             <p class="text-gray-700 text-sm mb-4">Weight : ${data.fields.weight} kg</p>
             <p class="text-gray-700 text-sm mb-4">Height : ${data.fields.height} cm</p>
             <a href="/bmicalculator/delete/${data.pk}/">
             <button
               type="button"
-              class="inline-block mx-auto hover:shadow-lg hover:shadow-blue-500/50 px-6 pt-2.5 pb-2 transition duration-150 ease-in-out flex align-center gap-2 items-center text-white bg-gradient-to-r from-blue-500 to-red-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 rounded-lg px-5 py-2.5"
+              class="inline-block mx-auto hover:shadow-lg hover:shadow-red-500/50 px-6 pt-2.5 pb-2 transition duration-150 ease-in-out flex align-center gap-2 items-center text-white bg-gradient-to-pink from-pink-500 to-pink-500 hover:bg-gradient-to-pink focus:ring-4 focus:outline-none focus:ring-pink-300 rounded-lg px-5 py-2.5"
             >
               Delete
             </button>
@@ -51,8 +51,7 @@ $(document).ready(() => {
           });
         });
       });
-      // alert('test')
-      console.log("test");
+      
     };
   
     const deleteTask = id => {
@@ -76,7 +75,6 @@ $(document).ready(() => {
       });
     };
   
-    console.log("test");
     const openModal = e => {
       e.preventDefault(); // prevent refresh
       $("#create-data-modal").removeClass("hidden");
