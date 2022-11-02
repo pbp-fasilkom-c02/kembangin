@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% load filters %}
 {% load static %}
+{% block meta %} 
+<title>Kembangin | Forum</title>
+{% endblock meta %}
 {% block content %}
 
 <head>
-    <script src="{% static 'js/forum_detail_logic.js' %}"></script>
+    <script src="{% static 'js/forum_detail_logics.js' %}"></script>
 
 </head>
 
@@ -36,6 +39,19 @@
             </div>
             <div class="toast-body">
                 Kamu tidak bisa menghapus komentar orang lain!
+            </div>
+        </div>
+    </div>
+    <div class="toast-container position-fixed top-10 end-0 p-3">
+        <div id="liveToastInvalid" class="toast bg-red-100" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-red-100">
+
+                <strong class="me-auto text-red-500">Warning!</strong>
+
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Input kamu tidak valid
             </div>
         </div>
     </div>
