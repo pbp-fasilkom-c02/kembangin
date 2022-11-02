@@ -22,7 +22,7 @@ $(document).ready(() => {
             <a href="/bmicalculator/delete/${data.pk}/">
             <button
               type="button"
-              class="inline-block mx-auto hover:shadow-lg hover:shadow-red-500/50 px-6 pt-2.5 pb-2 transition duration-150 ease-in-out flex align-center gap-2 items-center text-white bg-gradient-to-pink from-pink-500 to-pink-500 hover:bg-gradient-to-pink focus:ring-4 focus:outline-none focus:ring-pink-300 rounded-lg px-5 py-2.5"
+              class="inline-block mx-auto  px-6 pt-2.5 pb-2 transition duration-150 ease-in-out flex align-center gap-2 items-center text-white bg-gradient-to-r from-pink-500 to-red-500 hover:bg-gradient-to-r focus:ring-4 focus:outline-none focus:ring-pink-300 rounded-lg px-5 py-2.5"
             >
               Delete
             </button>
