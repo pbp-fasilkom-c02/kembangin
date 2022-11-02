@@ -1,87 +1,88 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
 
 <head>
-    <link rel="stylesheet" href="{% static 'css/artikel_dokter_style.css' %}" />
-    <script src="{% static 'js/artikel_dokter_script.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/artikel_dokter_style.css' %}" />
+  <script src="{% static 'js/artikel_dokter_script.js' %}"></script>
 </head>
-<div class="group relative rounded-lg items-center justify-center overflow-hidden">
-    <div class="h-screen w-full">
-        <img class="h-full w-full object-cover transition-transform duration-500" src="https://images.unsplash.com/photo-1576765608622-067973a79f53?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8a2lkcyUyMGRvY3RvcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60"
-            alt="" />
-    </div>
-    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black from-black/50 via-black/60 to-black/70"></div>
-    <div class="absolute inset-0 flex translate-y-[20%] flex-col items-center justify-center px-9 text-center">
-        <h1 class="text-center font-extrabold text-[60px] lg:text-[80px]">
-            Hi, Doc!
-        </h1>
-        <button class="modal-open cursor-pointer text-white bg-transparent border border-gray-500 hover:border-indigo-500 text-gray-500 hover:text-indigo-500 font-bold py-2 px-4 rounded-full">
+<div
+  class="group relative rounded-lg items-center justify-center overflow-hidden"
+>
+  <div class="h-screen w-full">
+    <img
+      class="h-full w-full object-cover transition-transform duration-500"
+      src="https://images.unsplash.com/photo-1576765608622-067973a79f53?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8a2lkcyUyMGRvY3RvcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60"
+      alt=""
+    />
+  </div>
+  <div
+    class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black from-black/50 via-black/60 to-black/70"
+  ></div>
+  <div
+    class="absolute inset-0 flex translate-y-[20%] flex-col items-center justify-center px-9 text-center"
+  >
+    <h1 class="text-center font-extrabold text-[60px] lg:text-[80px]">
+      Hi, Doc!
+    </h1>
+    <button
+      class="modal-open cursor-pointer text-white bg-transparent border border-gray-500 hover:border-indigo-500 text-gray-500 hover:text-indigo-500 font-bold py-2 px-4 rounded-full"
+    >
       Create new article!
     </button>
-    </div>
+  </div>
 </div>
 
 <!--Modal-->
-<div class="modal z-10 opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
-    <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+<div
+  class="modal z-10 opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center"
+>
+  <div
+    class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"
+  ></div>
 
-    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
-        <div class="modal-content py-4 text-left px-6">
-            <div class="modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50">
-                <svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <div
+    class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto"
+  >
+    <div class="modal-content py-4 text-left px-6">
+      <div
+        class="modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50"
+      >
+        <svg
+          class="fill-current text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+        >
           <path
             d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"
           ></path>
         </svg>
-                <span class="text-sm">(Esc)</span>
-            </div>
-
-            <form id="create-new-artikel">
-                {% csrf_token %}
-                <div class="mb-6">
-                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Title</label
-        >
-        <div id="title">
-         {{ form.title }}
-        </div>
-        <!-- <input
-          id="title"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          required=""
-        /> -->
-      </div>
-      <div class="mb-6">
-        <label
-    
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-          >Description</label
-        >
-        <div id="description">
-          {{ form.description }}
-
-        </div>
-        <!-- <input
-          id="description"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          required=""
-        /> -->
+        <span class="text-sm">(Esc)</span>
       </div>
 
-      <div class="mb-6">
-        <label
-       
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-          >Image</label
-        >
-        <div id="photo">
-          {{ form.photo }}
-
+      <form id="create-new-artikel">
+        {% csrf_token %}
+        <div class="mb-6">
+          <label
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Title</label
+          >
+          <div id="title">{{ form.title }}</div>
         </div>
-        <!-- <input
-          id="image"
-          name="upload"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          required=""
-        /> -->
+        <div class="mb-6">
+          <label
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Description</label
+          >
+          <div id="description">{{ form.description }}</div>
+        </div>
+
+        <div class="mb-6">
+          <label
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Image</label
+          >
+          <div id="photo">{{ form.photo }}</div>
         </div>
 
         <button

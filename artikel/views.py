@@ -10,7 +10,6 @@ from django.shortcuts import render,get_object_or_404
 from artikel.forms import CreateArtikel, ShareExp
 
 # showing article
-# @login_required(login_url='/login')
 @csrf_exempt
 def show_artikel(request):
     artikel = {}
@@ -26,7 +25,6 @@ def show_artikel(request):
         sorted_d = dict( sorted(artikel.items(), key=operator.itemgetter(1),reverse=True))
         
         i = 1
-        print(sorted_d)
         if (len(sorted_d) < 3):
             for key, value in sorted_d.items():
                 top_3.append(key)
@@ -155,7 +153,6 @@ def share_exp(request):
         comment = request.POST.get("comment")
         create_new_comment = Comment(comment=comment, author=request.user)
         create_new_comment.save()
-        print("berhasil")
         return JsonResponse({"pk": create_new_comment.pk, "fields": {
             "comment": create_new_comment.comment,
         }})

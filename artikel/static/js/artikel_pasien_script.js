@@ -27,7 +27,6 @@ $(document).ready(() => {
 
     $("#share-exp").submit(function(event) {
         event.preventDefault();
-        console.log("masuk")
         const form = $("#share-exp")
 
         $.ajax({
@@ -38,27 +37,13 @@ $(document).ready(() => {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(data) {
-                console.log("hore")
                 getExp(data);
                 const sectionCards = document.getElementById("posting");
-                console.log("berhaisl")
                 sectionCards.insertAdjacentHTML("beforestart", $(`#${data.pk}-posting-exp`));
             },
         });
 
     });
-
-    // $("#share-exp").submit(function(event) {
-    //     event.preventDefault();
-    //     $.post(window.location.href + "share-exp/", {
-    //         comment: $("#exp").val(),
-    //     }).done(function(data) {
-    //         getExp(data);
-    //         $("#exp").val("");
-    //         const sectionCards = document.getElementById("posting");
-    //         sectionCards.insertAdjacentHTML("beforestart", $(`#${data.pk}-posting-exp`));
-    //     });
-    // });
 
     function getExp(data) {
         $("#posting").append(
@@ -81,7 +66,6 @@ $(document).ready(() => {
     function getData(data) {
         $("#post-comments").submit(function(event) {
             event.preventDefault();
-            console.log("masuk")
             const form = $("#post-comments")
 
             $.ajax({
@@ -89,8 +73,6 @@ $(document).ready(() => {
                 url: `post-comment/${data.pk}`,
                 data: form.serialize(),
                 success: function(data) {
-                    console.log(data)
-                    console.log("risaaa")
                     getComment(data);
                     $("#comment-area").val("");
                     const sectionCards = document.getElementById("comment");
@@ -159,10 +141,6 @@ $(document).ready(() => {
     function detailArtikel(data) {
         $(`#${data.pk}-detail`).click(function() {
             $.get(window.location.href + `json/${data.pk}`, {}).done((res) => {
-                console.log(res);
-                console.log(res[0].fields.title);
-                console.log(res[0].fields.title);
-
                 $("#detail-artikel").html(
                     `
             
