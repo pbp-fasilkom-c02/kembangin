@@ -1,13 +1,14 @@
 import operator
 from django.shortcuts import render
 from artikel.models import Artikel, Comment
-from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,get_object_or_404
 from artikel.forms import CreateArtikel, ShareExp
+from django.urls import reverse
 
 # showing article
 @csrf_exempt
@@ -102,6 +103,7 @@ def create_new_artikel(request):
 def delete_artikel(request, id):
     artikel = Artikel.objects.get(pk=id)
     artikel.delete()
+    response = HttpResponseRedirect(reverse('artikel:show_artikel'))
     return redirect('artikel:show_artikel')
 
 
