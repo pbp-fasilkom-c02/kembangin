@@ -38,6 +38,7 @@ $(document).ready(() => {
             },
             success: function(data) {
                 getExp(data);
+                form.trigger("reset");
                 const sectionCards = document.getElementById("posting");
                 sectionCards.insertAdjacentHTML("beforestart", $(`#${data.pk}-posting-exp`));
             },
