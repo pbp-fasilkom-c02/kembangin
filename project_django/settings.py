@@ -61,7 +61,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'project_django.urls'
-CSRF_TRUSTED_ORIGINS = ['https://kembangin.up.railway.app/']
+CSRF_TRUSTED_ORIGINS = ['https://kembangin.up.railway.app']
 
 TEMPLATES = [
     {
