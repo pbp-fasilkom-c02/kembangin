@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login as auth_login
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from main.models import User
+from user_profile.models import UserProfile, DoctorProfile
 # Create your views here.
 @csrf_exempt
 def login_user(request):
@@ -30,24 +32,36 @@ def login_user(request):
             "message": "Failed to Login, check your email/password."
             }, status=401)
 
-# def register_user(request):
-#     if (request.method == "POST"):
-#         username = request.POST.get("username")
-#         email = request.POST.get("email")
-#         password = request.POST.get("password")
-#         repeat_password = request.POST.get("repeat_password")
-#         if (User.objects.filter(username=username) or User.objects.filter(email=email)):
-#             messages.info(request, "Username or email already taken!")
-#         elif (password == repeat_password):
-#             user = User.objects.create_user(username=username, email=email, password=password)
-#             user_profile = UserProfile.objects.create(user=user)
-#             if (request.POST.get("doctor_choice") == "yes"):
-#                 user.is_doctor = True
-#                 doctor_profile = DoctorProfile.objects.create(profile = user_profile)
-#                 doctor_profile.save()
-#             user.save()
-#             user_profile.save()
-#             return redirect("main:login")
-#         else:
-#             messages.info(request, "Password and repeat password is different!")
-#     return render(request, "register.html")
+@csrf_exempt
+def register_user(request):
+    if (request.method == "POST"):
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        repeat_password = request.POST.get("repeat_password")
+        if (User.objects.filter(username=username) or User.objects.filter(email=email)):
+            return JsonResponse({
+                "status": False,
+                "message": "Failed to , Account exist!"
+                }, status=401)
+        elif (password == repeat_password):
+            user = User.objects.create_user(username=username, email=email, password=password)
+            user_profile = UserProfile.objects.create(user=user)
+            if (request.POST.get("doctor_choice") == "yes"):
+                user.is_doctor = True
+                doctor_profile = DoctorProfile.objects.create(profile = user_profile)
+                doctor_profile.save()
+            user.save()
+            user_profile.save()
+            return JsonResponse({
+                "status": True,
+                "message": "Successfully create account!"
+                # Insert any extra data if you want to pass data to Flutter
+                }, status=200)
+        else:
+            return JsonResponse({
+            "status": False,
+            "message": "Password and repeat password is different!"
+            }, status=401)
+           
+   
