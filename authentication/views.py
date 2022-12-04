@@ -67,7 +67,8 @@ def register_user(request):
             "status": False,
             "message": "Password dan Repeat Password tidak sama!"
             }, status=401)
-           
+
+@csrf_exempt         
 def logout_user(request):
     logout(request)
     return JsonResponse({
