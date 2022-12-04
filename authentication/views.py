@@ -29,7 +29,7 @@ def login_user(request):
         else:
             return JsonResponse({
             "status": False,
-            "message": "Failed to Login, check your email/password."
+            "message": "Username atau password kamu salah!"
             }, status=401)
 
 @csrf_exempt
@@ -42,7 +42,7 @@ def register_user(request):
         if (User.objects.filter(username=username) or User.objects.filter(email=email)):
             return JsonResponse({
                 "status": False,
-                "message": "Failed to , Account exist!"
+                "message": "Username atau email sudah pernah didaftarkan!"
                 }, status=401)
         elif (password == repeat_password):
             user = User.objects.create_user(username=username, email=email, password=password)
@@ -61,7 +61,7 @@ def register_user(request):
         else:
             return JsonResponse({
             "status": False,
-            "message": "Password and repeat password is different!"
+            "message": "Password dan Repeat Password tidak sama!"
             }, status=401)
            
    
