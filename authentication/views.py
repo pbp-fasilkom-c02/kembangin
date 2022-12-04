@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from main.models import User
@@ -17,7 +17,11 @@ def login_user(request):
                 # Redirect to a success page.
                 return JsonResponse({
                 "status": True,
-                "message": "Successfully Logged In!"
+                "message": "Successfully Logged In!",
+                "user_data": {
+                    "username":user.username,
+                    "is_doctor": user.is_doctor
+                },
                 # Insert any extra data if you want to pass data to Flutter
                 }, status=200)
             else:
@@ -64,4 +68,9 @@ def register_user(request):
             "message": "Password dan Repeat Password tidak sama!"
             }, status=401)
            
-   
+def logout_user(request):
+    logout(request)
+    return JsonResponse({
+            "status": True,
+            "message": "Akun berhasil log out!"
+            }, status=200)
