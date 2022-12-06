@@ -9,6 +9,7 @@ from bmicalculator.forms import BmiCalculatorForm
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.urls import reverse
+import json
 
 
 
@@ -24,7 +25,7 @@ def show_json(request):
     # bmicalculator_data = BmiCalculator.objects.filter(user=request.user) 
     # return HttpResponse(serializers.serialize("json", bmicalculator_data), content_type='application/json')
     # handle for anonymous user
-    if request.user.is_authenticated:
+    if request.user.is_authenticated:   # jika user sudah login
         bmicalculator_data = BmiCalculator.objects.filter(user=request.user) 
         return HttpResponse(serializers.serialize("json", bmicalculator_data), content_type='application/json')
     else:
@@ -76,7 +77,7 @@ def add_calculate_ajax(request):
             data = BmiCalculator.objects.create(weight=weight, height=height, bmi=bmi, date=datetime.today())
             return JsonResponse({
             
-                "pk" : 0,
+                "pk" : data.pk,
                 "fields" : {
                     "weight" : data.weight,
                     "height" : data.height,
@@ -87,6 +88,50 @@ def add_calculate_ajax(request):
             },
             status=200
             )
+
+# add calculate from flutter
+def add_calculate_flutter(request):
+    if request.method == "POST":
+        newCalculate = json.loads(request.body)
+        weight = newCalculate['weight']
+        height = newCalculate['height']
+        bmi = float(weight) / ((float(height))/100 * (float(height))/100)
+        user = request.user
+        
+        # handle for anonymous user
+        if request.user.is_authenticated:
+            newCalculate = BmiCalculator(user=user, weight=weight, height=height, bmi=bmi, date=datetime.today())
+            newCalculate.save()
+            return JsonResponse({
+                "pk" : newCalculate.pk,
+                "fields" : {
+                    "weight" : newCalculate.weight,
+                    "height" : newCalculate.height,
+                    "bmi" : newCalculate.bmi,
+                    "date" : newCalculate.date,
+                    "status" : newCalculate.status,
+                },
+            },
+            status=200
+            )
+        else:
+            newCalculate = BmiCalculator(weight=weight, height=height, bmi=bmi, date=datetime.today())
+            newCalculate.save()
+            return JsonResponse({
+                "pk" : newCalculate.pk,
+                "fields" : {
+                    "weight" : newCalculate.weight,
+                    "height" : newCalculate.height,
+                    "bmi" : newCalculate.bmi,
+                    "date" : newCalculate.date,
+                    "status" : newCalculate.status,
+                },
+            },
+            status=200
+            )
+       
+
+
 
 
 
