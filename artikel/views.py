@@ -108,6 +108,14 @@ def delete_artikel(request, id):
 
 
 @login_required(login_url='/login')
+@csrf_exempt
+def hapus_artikel(request, id):
+    artikel = Artikel.objects.get(pk=id)
+    artikel.delete()
+    response = HttpResponseRedirect(reverse('artikel:show_artikel'))
+    return response
+    
+@login_required(login_url='/login')
 def edit(request, id):
     artikel = Artikel.objects.get(id=id)
     context = {'artikel': artikel}

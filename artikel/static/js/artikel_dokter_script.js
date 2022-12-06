@@ -41,7 +41,7 @@ $(document).ready(() => {
       <div class="absolute inset-0 flex translate-y-[60%] flex-col items-center justify-center px-9 text-center transition-all duration-500 group-hover:translate-y-0">
           <h1 class="font-dmserif text-2xl font-bold text-white">${data.fields.title}</h1>
           <p class="mb-3 text-lg italic text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 text-ellipsis overflow-hidden">${data.fields.description}</p>
-          <a href="/artikel/delete-artikel/${data.pk}/"> 
+          <a href="/artikel/hapus-artikel/${data.pk}/">
           <button class="rounded-full bg-neutral-900 py-2 px-3.5 font-com text-sm capitalize text-white shadow shadow-black/60">Delete</button>
           </a>
       </div>
