@@ -7,6 +7,7 @@ from user_profile.models import UserProfile, DoctorProfile
 from django.contrib import messages
 from artikel.models import Artikel
 import operator
+from django.views.decorators.csrf import csrf_exempt
 
 def show_landing(request):
     artikel = {}
@@ -49,6 +50,7 @@ def login_user(request):
         messages.info(request, "Wrong username or password!")
     return render(request, "login.html")
 
+@csrf_exempt
 def register_user(request):
     if (request.method == "POST"):
         username = request.POST.get("username")

@@ -62,20 +62,20 @@ def show_artikel(request):
 
 # data json
 
-@login_required(login_url='/login')
-@csrf_exempt
+# @login_required(login_url='/login')
+# @csrf_exempt
 def artikel_json(request):
     data = Artikel.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
-@login_required(login_url='/login')
-@csrf_exempt
+# @login_required(login_url='/login')
+# @csrf_exempt
 def comment_json(request):
     data = Comment.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 # create new article
-@csrf_exempt
+# @csrf_exempt
 def artikel_by_id_json(request, id):
     data_artikel = Artikel.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("json", data_artikel), content_type="application/json")
@@ -103,6 +103,7 @@ def create_new_artikel(request):
 def delete_artikel(request, id):
     artikel = Artikel.objects.get(pk=id)
     artikel.delete()
+    response = HttpResponseRedirect(reverse('artikel:show_artikel'))
     return redirect('artikel:show_artikel')
 
 

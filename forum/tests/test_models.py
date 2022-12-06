@@ -6,7 +6,7 @@ from main.models import User
 class TestModels(TestCase):
 
     def setUp(self):
-        user = User.objects.create_user(username="dummy", email="dummy@dummy.com", password="dummy12345")
+        user = User.objects.create_user(username="dummyeee", email="dummyeee@dummy.com", password="dummy12345")
         forum = Forum.objects.create(question="This is test question",description="Lorem ipsum",created_at=datetime.datetime.now(),author=user)
         ForumReply.objects.create(comment="This is test comment",forum=forum, created_at=datetime.datetime.now(), author=user)
 
