@@ -92,6 +92,7 @@ def add_forum(request):
                 forum = Forum.objects.create(question=question,description=description,created_at=datetime.datetime.now(),author=request.user)
 
                 data = {
+                "status":True,
                 "pk": forum.pk,
                 "question": forum.question,
                 "description": forum.description,
@@ -105,9 +106,9 @@ def add_forum(request):
                 }
                 return JsonResponse(data)
             else:
-                return JsonResponse({'status':"error", 'message':'Anda harus login terlebih dahulu'})
+                return JsonResponse({'status':False, 'message':'Anda harus login terlebih dahulu'})
         else:
-            return JsonResponse({'status':"invalid", 'message':"Input tidak valid!"})
+            return JsonResponse({'status':False, 'message':"Input tidak valid!"})
 
 
 
@@ -127,6 +128,7 @@ def add_comment(request,pk):
                 reply = ForumReply.objects.create(comment=comment,forum=forum, created_at=datetime.datetime.now(), author=request.user)
                 
                 data = {
+                "status":True,
                 "pk": reply.pk,
                 "comment": reply.comment,
                 "author": reply.author.username,
@@ -136,11 +138,11 @@ def add_comment(request,pk):
                 return JsonResponse(data)
             else:
                 response = {
-                    'status': 'error',
+                    'status': False,
                     'message': 'Kamu bukan dokter sehingga tidak bisa memberi komentar'
                 }
                 return JsonResponse(response)
-        return JsonResponse({'status':"invalid", 'message':"Input tidak valid!"})
+        return JsonResponse({'status':False, 'message':"Input tidak valid!"})
     return HttpResponseBadRequest()
 
 @csrf_exempt
@@ -153,13 +155,15 @@ def delete_forum(request,id):
         
         if post.author.username != request.user.username:
             response = {
-                'status': 'error',
+                'status': False,
                 'message': 'Kamu tidak bisa menghapus post orang lain!'
             }
             return JsonResponse(response)
-        post.delete()
+        else:
 
-    return HttpResponse(status=202)
+            post.delete()
+
+            return JsonResponse({'status':False,'message':"Forum berhasil dihapus"})
 
 
 @login_required(login_url='/login')
@@ -175,9 +179,10 @@ def delete_comment(request,pk):
                 'message': 'Kamu tidak bisa menghapus komentar orang lain!'
             }
             return JsonResponse(response)
-        reply.delete()
-
-    return HttpResponse(status=202)
+        else:
+            reply.delete()
+            return JsonResponse({'status':False,'message':"Forum berhasil dihapus"})
+  
 
 @login_required(login_url='/login')
 @csrf_exempt
