@@ -11,7 +11,7 @@ from artikel.forms import CreateArtikel, ShareExp
 from django.urls import reverse
 
 # showing article
-@csrf_exempt
+# @csrf_exempt
 def show_artikel(request):
     artikel = {}
     top_3 = []
@@ -80,8 +80,8 @@ def artikel_by_id_json(request, id):
     data_artikel = Artikel.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("json", data_artikel), content_type="application/json")
 
-@login_required(login_url='/login')
-@csrf_exempt
+# @login_required(login_url='/login')
+# @csrf_exempt
 def create_new_artikel(request):
     if request.method == "POST" and CreateArtikel(request.POST).is_valid():
         photo = request.POST.get("photo")
@@ -98,8 +98,8 @@ def create_new_artikel(request):
         }})
 
 
-@login_required(login_url='/login')
-@csrf_exempt
+# @login_required(login_url='/login')
+# @csrf_exempt
 def delete_artikel(request, id):
     artikel = Artikel.objects.get(pk=id)
     artikel.delete()
