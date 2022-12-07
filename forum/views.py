@@ -7,6 +7,7 @@ from forum.forms import ForumForm, ReplyForm
 from main.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+import json
 import datetime
 
 
@@ -149,15 +150,23 @@ def add_comment(request,pk):
 
 @csrf_exempt
 def add_comment_flutter(request,pk, username):
-
+    body_unicode = request.body.decode('utf-8')
+    # body = json.loads(body_unicode)
+    # print(body_unicode)
+    comment = body_unicode.replace("comment=","")
+    comment = comment.replace("+"," ")
+    print(comment)
+    # comment = body['comment']
+    # comment="ha"
     if request.method == "POST":
-        form = ReplyForm(request.POST)
-        current_user = User.objects.filter(username=username)
-        if form.is_valid():
+        # form = ReplyForm(request.POST)
+        current_user = User.objects.filter(username=username)[0]
+        if comment != "":
+        # print(content)
             if current_user.is_doctor:
                 forum = Forum.objects.filter(pk=pk)[0]
-                comment = form.cleaned_data["comment"]
-               
+            
+                
                 reply = ForumReply.objects.create(comment=comment,forum=forum, created_at=datetime.datetime.now(), author=current_user)
                 
                 data = {
@@ -176,7 +185,7 @@ def add_comment_flutter(request,pk, username):
                 }
                 return JsonResponse(response)
         return JsonResponse({'status':False, 'message':"Input tidak valid!"})
-    return HttpResponseBadRequest()
+    # return HttpResponseBadRequest()
 
 @csrf_exempt
 def delete_forum(request,id):
