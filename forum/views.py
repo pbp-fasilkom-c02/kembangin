@@ -175,14 +175,31 @@ def delete_comment(request,pk):
         
         if reply.author.username != request.user.username:
             response = {
-                'status': 'error',
+                'status': False,
                 'message': 'Kamu tidak bisa menghapus komentar orang lain!'
             }
             return JsonResponse(response)
         else:
             reply.delete()
-            return JsonResponse({'status':False,'message':"Forum berhasil dihapus"})
+            return JsonResponse({'status':True,'message':"Forum berhasil dihapus"})
   
+
+@csrf_exempt
+def delete_forum_flutter(request,id, current_username):
+
+      if request.method == "DELETE":
+        post = get_object_or_404(Forum, id = id)
+        
+        if post.author.username != current_username:
+            response = {
+                'status': False,
+                'message': 'Kamu tidak bisa menghapus post orang lain!'
+            }
+            return JsonResponse(response)
+        else:
+            post.delete()
+            return JsonResponse({'status':True,'message':"Forum berhasil dihapus"})
+
 
 @login_required(login_url='/login')
 @csrf_exempt
