@@ -4,6 +4,7 @@ from django.http import HttpResponse,HttpResponseBadRequest
 from django.shortcuts import render,get_object_or_404
 from forum.models import Forum, ForumReply
 from forum.forms import ForumForm, ReplyForm
+from main.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import datetime
@@ -147,16 +148,17 @@ def add_comment(request,pk):
 
 
 @csrf_exempt
-def add_comment_flutter(request,pk):
+def add_comment_flutter(request,pk, username):
 
     if request.method == "POST":
         form = ReplyForm(request.POST)
+        current_user = User.objects.filter(username=username)
         if form.is_valid():
-            if request.user.is_doctor:
+            if current_user.is_doctor:
                 forum = Forum.objects.filter(pk=pk)[0]
                 comment = form.cleaned_data["comment"]
-                
-                reply = ForumReply.objects.create(comment=comment,forum=forum, created_at=datetime.datetime.now(), author=request.user)
+               
+                reply = ForumReply.objects.create(comment=comment,forum=forum, created_at=datetime.datetime.now(), author=current_user)
                 
                 data = {
                 "status":True,
@@ -214,6 +216,23 @@ def delete_comment(request,pk):
             reply.delete()
             return JsonResponse({'status':True,'message':"Forum berhasil dihapus"})
   
+
+@csrf_exempt
+def delete_comment_flutter(request,pk, username):
+
+    if request.method == "DELETE":
+        reply = get_object_or_404(ForumReply, id = pk)
+        
+        if reply.author.username != username:
+            response = {
+                'status': False,
+                'message': 'Kamu tidak bisa menghapus komentar orang lain!'
+            }
+            return JsonResponse(response)
+        else:
+            reply.delete()
+            return JsonResponse({'status':True,'message':"Forum berhasil dihapus"})
+
 
 @csrf_exempt
 def delete_forum_flutter(request,id, current_username):
