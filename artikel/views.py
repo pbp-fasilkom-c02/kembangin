@@ -103,7 +103,7 @@ def create_new_artikel(request):
 def delete_artikel(request, id):
     artikel = Artikel.objects.get(pk=id)
     artikel.delete()
-    response = HttpResponseRedirect(reverse('artikel:show_artikel'))
+    # response = HttpResponseRedirect(reverse('artikel:show_artikel'))
     data = {
         "status" : "berhasil"
     }
