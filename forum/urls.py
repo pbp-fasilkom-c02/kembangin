@@ -14,7 +14,7 @@ urlpatterns = [
     path('<int:pk>',show_forum_detail, name="show_forum_detail"),
     path('<int:pk>/add-comment',add_comment, name="add_comment"),
     path('<int:pk>/add-comment-flutter/<str:username>',add_comment_flutter, name="add_comment_flutter"),
-    path('<int:pk>/delete-comment/<str:current_username>',delete_comment_flutter,name='delete_comment_flutter'),
+    path('<int:pk>/delete-comment/<str:username>',delete_comment_flutter,name='delete_comment_flutter'),
     path('<int:pk>/delete-comment/',delete_comment, name="delete_comment"),
     path('<int:pk>/vote/<str:action>',handle_vote,name="handle_vote")
 ]
