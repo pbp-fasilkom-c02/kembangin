@@ -145,6 +145,37 @@ def add_comment(request,pk):
         return JsonResponse({'status':False, 'message':"Input tidak valid!"})
     return HttpResponseBadRequest()
 
+
+@csrf_exempt
+def add_comment_flutter(request,pk):
+
+    if request.method == "POST":
+        form = ReplyForm(request.POST)
+        if form.is_valid():
+            if request.user.is_doctor:
+                forum = Forum.objects.filter(pk=pk)[0]
+                comment = form.cleaned_data["comment"]
+                
+                reply = ForumReply.objects.create(comment=comment,forum=forum, created_at=datetime.datetime.now(), author=request.user)
+                
+                data = {
+                "status":True,
+                "pk": reply.pk,
+                "comment": reply.comment,
+                "author": reply.author.username,
+                "created_at": reply.created_at,
+                "author_pk": reply.author.pk
+                }
+                return JsonResponse(data)
+            else:
+                response = {
+                    'status': False,
+                    'message': 'Kamu bukan dokter sehingga tidak bisa memberi komentar'
+                }
+                return JsonResponse(response)
+        return JsonResponse({'status':False, 'message':"Input tidak valid!"})
+    return HttpResponseBadRequest()
+
 @csrf_exempt
 def delete_forum(request,id):
 
