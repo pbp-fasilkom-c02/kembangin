@@ -7,4 +7,5 @@ urlpatterns = [
     path('add/', add_calculate_ajax, name='add_calculate'),
     path('json/', show_json, name='show_json'),
     path('add_calculate_flutter/', add_calculate_flutter, name='add_calculate_flutter'),
+    path('delete_flutter/<int:pk>/', delete_task_flutter, name="delete_flutter"),
 ]

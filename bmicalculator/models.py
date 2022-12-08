@@ -7,7 +7,6 @@ class BmiCalculator(models.Model):
     weight = models.IntegerField()
     height = models.IntegerField()
     bmi = models.IntegerField(default=0)
-    status = models.BooleanField(default=False)
     author = models.CharField(max_length=100, default="Anonymous")
    
     
