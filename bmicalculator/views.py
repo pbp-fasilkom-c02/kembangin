@@ -42,11 +42,25 @@ def delete_task(request, pk):
         data.delete()
         response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
         return response
+        
     else:
         data = BmiCalculator.objects.filter(user__isnull=True, pk=pk)
         data.delete()
         response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
         return response
+     
+def delete_task_flutter(request, pk):
+    if request.user.is_authenticated:
+        data = BmiCalculator.objects.get(pk=pk)
+        data.delete()
+        #response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
+        return JsonResponse({"status" : "success"})
+    else:
+        data = BmiCalculator.objects.filter(user__isnull=True, pk=pk)
+        data.delete()
+        #response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
+        return JsonResponse({"status" : "success"})
+    
 
 
 # @login_required(login_url='/login/')
@@ -71,7 +85,6 @@ def add_calculate_ajax(request):
                     "height" : data.height,
                     "bmi" : data.bmi,
                     "date" : data.date,
-                    "status" : data.status,
                     "author" : data.author,
                 },
             },
@@ -87,7 +100,6 @@ def add_calculate_ajax(request):
                     "height" : data.height,
                     "bmi" : data.bmi,
                     "date" : data.date,
-                    "status" : data.status,
                     "author" : data.author,
                 },
             },
@@ -116,7 +128,6 @@ def add_calculate_flutter(request):
                     "height" : newCalculate.height,
                     "bmi" : newCalculate.bmi,
                     "date" : newCalculate.date,
-                    "status" : newCalculate.status,
                     "author" : newCalculate.author,
                 },
             },
@@ -132,7 +143,6 @@ def add_calculate_flutter(request):
                     "height" : newCalculate.height,
                     "bmi" : newCalculate.bmi,
                     "date" : newCalculate.date,
-                    "status" : newCalculate.status,
                     "author" : newCalculate.author,
                 },
             },
