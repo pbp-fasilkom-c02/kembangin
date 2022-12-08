@@ -6,7 +6,7 @@ $(document).ready(function(){
         <div class="card shadow-xl m-auto h-100 duration-300 hover:scale-105" id="report-${data[i].pk}">
           <div class="card-body">
             <div class="grid grid-cols-6 gap-7 content-start">
-              <div class="col-span-5"><h1 class="card-title font-bold text-red-500 text-xl">${data[i].fields.name} (${data[i].fields.age})</h1></div>
+              <div class="col-span-5"><h1 class="card-title font-bold text-red-500 text-xl">${data[i].name} (${data[i].age})</h1></div>
             <div>
               <button onclick="deleteReport(${data[i].pk})" class="button"  style="float:right;">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -15,12 +15,12 @@ $(document).ready(function(){
               </button>                
             </div>
             </div>                
-            <h6 class="card-subtitle mb-2 text-gray-400">Dibuat pada ${data[i].fields.date}</h6>
-            <p class="card-text font-normal">‣ Tinggi badan: ${data[i].fields.height}</p>
-            <p class="card-text font-normal">‣ Berat badan: ${data[i].fields.weight}</p>
-            <p class="card-text font-normal">‣ Tingkat makan: ${data[i].fields.eat}</p>
-            <p class="card-text font-normal">‣ Tingkat minum: ${data[i].fields.drink}</p>
-            <p class="card-text font-normal">‣ Perkembangan: ${data[i].fields.progress}</p>                        
+            <h6 class="card-subtitle mb-2 text-gray-400">Dibuat pada ${data[i].date}</h6>
+            <p class="card-text font-normal">‣ Tinggi badan: ${data[i].height}</p>
+            <p class="card-text font-normal">‣ Berat badan: ${data[i].weight}</p>
+            <p class="card-text font-normal">‣ Tingkat makan: ${data[i].eat}</p>
+            <p class="card-text font-normal">‣ Tingkat minum: ${data[i].drink}</p>
+            <p class="card-text font-normal">‣ Perkembangan: ${data[i].progress}</p>                        
           </div> 
         </div>
       </div>
@@ -43,7 +43,7 @@ $(document).ready(function(){
         <div class="card shadow-xl m-auto h-100 duration-300 hover:scale-105" id="report-${add.pk}">
           <div class="card-body">
             <div class="grid grid-cols-6 gap-7 content-start">
-              <div class="col-span-5"><h1 class="card-title font-bold text-red-500 text-xl">${add.fields.name} (${add.fields.age})</h1></div>
+              <div class="col-span-5"><h1 class="card-title font-bold text-red-500 text-xl">${add.name} (${add.age})</h1></div>
             <div>
               <button onclick="deleteReport(${add.pk})" class="button" style="float:right;">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -52,12 +52,12 @@ $(document).ready(function(){
               </button>                
             </div>
             </div>                
-            <h6 class="card-subtitle mb-2 text-gray-400">Dibuat pada ${add.fields.date}</h6>
-            <p class="card-text font-normal">‣ Tinggi badan: ${add.fields.height}</p>
-            <p class="card-text font-normal">‣ Berat badan: ${add.fields.weight}</p>
-            <p class="card-text font-normal">‣ Tingkat makan: ${add.fields.eat}</p>
-            <p class="card-text font-normal">‣ Tingkat minum: ${add.fields.drink}</p>
-            <p class="card-text font-normal">‣ Perkembangan: ${add.fields.progress}</p>                        
+            <h6 class="card-subtitle mb-2 text-gray-400">Dibuat pada ${add.date}</h6>
+            <p class="card-text font-normal">‣ Tinggi badan: ${add.height}</p>
+            <p class="card-text font-normal">‣ Berat badan: ${add.weight}</p>
+            <p class="card-text font-normal">‣ Tingkat makan: ${add.eat}</p>
+            <p class="card-text font-normal">‣ Tingkat minum: ${add.drink}</p>
+            <p class="card-text font-normal">‣ Perkembangan: ${add.progress}</p>                        
           </div> 
         </div>
       </div>
