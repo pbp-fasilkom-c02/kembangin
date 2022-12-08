@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.urls import reverse
 import json
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -54,12 +55,14 @@ def add_calculate_ajax(request):
         context = {}
         weight = request.POST.get('weight')
         height = request.POST.get('height')
-        bmi = float(weight) / ((float(height))/100 * (float(height))/100)
+        # bmi = float(weight) / ((float(height))/100 * (float(height))/100)
+        # hitung bmi dan convert ke integer
+        bmi = int(int(weight) / ((int(height))/100 * (int(height))/100))
         user = request.user
         
         # handle for anonymous user
         if request.user.is_authenticated:
-            data = BmiCalculator.objects.create(user=user, weight=weight, height=height, bmi=bmi, date=datetime.today())
+            data = BmiCalculator.objects.create(user=user, weight=weight, height=height, bmi=bmi, date=datetime.today(), author=request.user.username)
             data.save()
             return JsonResponse({
                 "pk" : data.pk,
@@ -69,12 +72,13 @@ def add_calculate_ajax(request):
                     "bmi" : data.bmi,
                     "date" : data.date,
                     "status" : data.status,
+                    "author" : data.author,
                 },
             },
             status=200
             )
         else:
-            data = BmiCalculator.objects.create(weight=weight, height=height, bmi=bmi, date=datetime.today())
+            data = BmiCalculator.objects.create(weight=weight, height=height, bmi=bmi, date=datetime.today(), author="Anonymous")
             return JsonResponse({
             
                 "pk" : data.pk,
@@ -84,53 +88,56 @@ def add_calculate_ajax(request):
                     "bmi" : data.bmi,
                     "date" : data.date,
                     "status" : data.status,
-                },
-            },
-            status=200
-            )
-
-# add calculate from flutter
-def add_calculate_flutter(request):
-    if request.method == "POST":
-        newCalculate = json.loads(request.body)
-        weight = newCalculate['weight']
-        height = newCalculate['height']
-        bmi = float(weight) / ((float(height))/100 * (float(height))/100)
-        user = request.user
-        
-        # handle for anonymous user
-        if request.user.is_authenticated:
-            newCalculate = BmiCalculator(user=user, weight=weight, height=height, bmi=bmi, date=datetime.today())
-            newCalculate.save()
-            return JsonResponse({
-                "pk" : newCalculate.pk,
-                "fields" : {
-                    "weight" : newCalculate.weight,
-                    "height" : newCalculate.height,
-                    "bmi" : newCalculate.bmi,
-                    "date" : newCalculate.date,
-                    "status" : newCalculate.status,
-                },
-            },
-            status=200
-            )
-        else:
-            newCalculate = BmiCalculator(weight=weight, height=height, bmi=bmi, date=datetime.today())
-            newCalculate.save()
-            return JsonResponse({
-                "pk" : newCalculate.pk,
-                "fields" : {
-                    "weight" : newCalculate.weight,
-                    "height" : newCalculate.height,
-                    "bmi" : newCalculate.bmi,
-                    "date" : newCalculate.date,
-                    "status" : newCalculate.status,
+                    "author" : data.author,
                 },
             },
             status=200
             )
        
-
+@csrf_exempt
+def add_calculate_flutter(request):
+    if request.method == "POST":
+        newCalculate = json.loads(request.body)
+        weight = newCalculate['weight']
+        height = newCalculate['height']
+        bmi = int(int(weight) / ((int(height))/100 * (int(height))/100))
+        bmi = newCalculate['bmi']
+        
+        user = user.objects.get(pk=newCalculate['user'])
+        
+        # handle for anonymous user
+        if request.user.is_authenticated:
+            newCalculate = BmiCalculator(user=user, weight=weight, height=height, bmi=bmi, date=datetime.today(), author=request.user.username)
+            newCalculate.save()
+            return JsonResponse({
+                "pk" : newCalculate.pk,
+                "fields" : {
+                    "weight" : newCalculate.weight,
+                    "height" : newCalculate.height,
+                    "bmi" : newCalculate.bmi,
+                    "date" : newCalculate.date,
+                    "status" : newCalculate.status,
+                    "author" : newCalculate.author,
+                },
+            },
+            status=200
+            )
+        else:
+            newCalculate = BmiCalculator(weight=weight, height=height, bmi=bmi, date=datetime.today(), author="Anonymous")
+            newCalculate.save()
+            return JsonResponse({
+                "pk" : newCalculate.pk,
+                "fields" : {
+                    "weight" : newCalculate.weight,
+                    "height" : newCalculate.height,
+                    "bmi" : newCalculate.bmi,
+                    "date" : newCalculate.date,
+                    "status" : newCalculate.status,
+                    "author" : newCalculate.author,
+                },
+            },
+            status=200
+            )
 
 
 

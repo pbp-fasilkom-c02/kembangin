@@ -4,9 +4,10 @@ from main.models import User
 class BmiCalculator(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     date = models.DateField(auto_now_add=True)
-    weight = models.FloatField()
-    height = models.FloatField()
-    bmi = models.FloatField(default=0)
+    weight = models.IntegerField()
+    height = models.IntegerField()
+    bmi = models.IntegerField(default=0)
     status = models.BooleanField(default=False)
+    author = models.CharField(max_length=100, default="Anonymous")
    
     
