@@ -66,7 +66,7 @@ def add_calculate_ajax(request):
         
         # handle for anonymous user
         if request.user.is_authenticated:
-            data = BmiCalculator.objects.create(user=user, weight=weight, height=height, bmi=bmi, date=datetime.today(), author=request.user.username)
+            data = BmiCalculator.objects.create(weight=weight, height=height, bmi=bmi, date=datetime.today(), author=request.user.username)
             data.save()
             return JsonResponse({
                 "pk" : data.pk,
@@ -75,7 +75,7 @@ def add_calculate_ajax(request):
                     "height" : data.height,
                     "bmi" : data.bmi,
                     "date" : data.date,
-                    "author" : data.author,
+                    "author" : user.username,
                 },
             },
             status=200
@@ -90,7 +90,7 @@ def add_calculate_ajax(request):
                     "height" : data.height,
                     "bmi" : data.bmi,
                     "date" : data.date,
-                    "author" : data.author,
+                    "author" : user.username,
                 },
             },
             status=200
