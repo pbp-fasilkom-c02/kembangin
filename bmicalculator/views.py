@@ -104,12 +104,9 @@ def add_calculate_flutter(request):
         height = newCalculate['height']
         bmi = int(int(weight) / ((int(height))/100 * (int(height))/100))
         user = request.user
-        if user.username != "AnonymousUser":
-            newData = BmiCalculator(weight=weight, height=height, bmi=bmi, date=datetime.today(), author=request.user.username)
-            newData.save()
-        else:
-            newData = BmiCalculator(weight=weight, height=height, bmi=bmi, date=datetime.today(), author="Anonymous")
-            newData.save()
+        author = newCalculate['author']
+        newData = BmiCalculator(weight=weight, height=height, bmi=bmi, date=datetime.today(), author= author)
+        newData.save()
         return JsonResponse({"instance": "Bmi Berhasil Dibuat!"}, status=200)
 
 
