@@ -25,29 +25,19 @@ def show_bmicalculator(request):
 def show_json(request):
     # bmicalculator_data = BmiCalculator.objects.filter(user=request.user) 
     # return HttpResponse(serializers.serialize("json", bmicalculator_data), content_type='application/json')
-    # handle for anonymous user
-    if request.user.is_authenticated:   # jika user sudah login
-        bmicalculator_data = BmiCalculator.objects.filter(user=request.user) 
-        return HttpResponse(serializers.serialize("json", bmicalculator_data), content_type='application/json')
-    else:
-        bmicalculator_data = BmiCalculator.objects.filter(user__isnull=True) 
+    # tampilin semua data dari yang login dan yang ga login
+    bmicalculator_data = BmiCalculator.objects.all() 
 
-        return HttpResponse(serializers.serialize("json", bmicalculator_data), content_type='application/json')
+    return HttpResponse(serializers.serialize("json", bmicalculator_data), content_type='application/json')
 
 
 
 def delete_task(request, pk):
-    if request.user.is_authenticated:
-        data = BmiCalculator.objects.get(pk=pk)
-        data.delete()
-        response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
-        return response
-        
-    else:
-        data = BmiCalculator.objects.filter(user__isnull=True, pk=pk)
-        data.delete()
-        response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
-        return response
+    # semua orang bisa delete
+    data = BmiCalculator.objects.get(pk=pk)
+    data.delete()
+    response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
+    return response
      
 def delete_task_flutter(request, pk):
     if request.user.is_authenticated:
