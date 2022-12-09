@@ -104,7 +104,7 @@ def delete_artikel(request, id):
     artikel = Artikel.objects.get(pk=id)
     artikel.delete()
     # response = HttpResponseRedirect(reverse('artikel:show_artikel'))
-    return HttpResponse(status=202)
+    return HttpResponse(status = 200)
 
 
 @login_required(login_url='/login')
