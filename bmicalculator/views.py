@@ -40,16 +40,11 @@ def delete_task(request, pk):
     return response
      
 def delete_task_flutter(request, pk):
-    if request.user.is_authenticated:
-        data = BmiCalculator.objects.get(pk=pk)
-        data.delete()
-        #response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
-        return JsonResponse({"status" : "success"})
-    else:
-        data = BmiCalculator.objects.filter(user__isnull=True, pk=pk)
-        data.delete()
-        #response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
-        return JsonResponse({"status" : "success"})
+    
+    data = BmiCalculator.objects.get(pk=pk)
+    data.delete()
+    #response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
+    return JsonResponse({"status" : "success"})
     
 
 
