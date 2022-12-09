@@ -99,15 +99,12 @@ def create_new_artikel(request):
 
 
 # @login_required(login_url='/login')
-# @csrf_exempt
+@csrf_exempt
 def delete_artikel(request, id):
     artikel = Artikel.objects.get(pk=id)
     artikel.delete()
     # response = HttpResponseRedirect(reverse('artikel:show_artikel'))
-    data = {
-        "status" : "berhasil"
-    }
-    return JsonResponse(data)
+    return HttpResponse(status=202)
 
 
 @login_required(login_url='/login')
