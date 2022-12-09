@@ -65,7 +65,7 @@ def add_calculate_ajax(request):
         user = request.user
         
         # handle for anonymous user
-        if request.user.is_authenticated:
+        if user.username != "AnonymousUser":
             data = BmiCalculator.objects.create(weight=weight, height=height, bmi=bmi, date=datetime.today(), author=request.user.username)
             data.save()
             return JsonResponse({
@@ -79,7 +79,7 @@ def add_calculate_ajax(request):
                 },
             },
             status=200
-            )
+            )    
         else:
             data = BmiCalculator.objects.create(weight=weight, height=height, bmi=bmi, date=datetime.today(), author="Anonymous")
             return JsonResponse({
@@ -103,41 +103,14 @@ def add_calculate_flutter(request):
         weight = newCalculate['weight']
         height = newCalculate['height']
         bmi = int(int(weight) / ((int(height))/100 * (int(height))/100))
-        bmi = newCalculate['bmi']
-        
-        user = user.objects.get(pk=newCalculate['user'])
-        
-        # handle for anonymous user
-        if request.user.is_authenticated:
-            newCalculate = BmiCalculator(user=user, weight=weight, height=height, bmi=bmi, date=datetime.today(), author=request.user.username)
-            newCalculate.save()
-            return JsonResponse({
-                "pk" : newCalculate.pk,
-                "fields" : {
-                    "weight" : newCalculate.weight,
-                    "height" : newCalculate.height,
-                    "bmi" : newCalculate.bmi,
-                    "date" : newCalculate.date,
-                    "author" : newCalculate.author,
-                },
-            },
-            status=200
-            )
+        user = request.user
+        if user.username != "AnonymousUser":
+            newData = BmiCalculator(weight=weight, height=height, bmi=bmi, date=datetime.today(), author=request.user.username)
+            newData.save()
         else:
-            newCalculate = BmiCalculator(weight=weight, height=height, bmi=bmi, date=datetime.today(), author="Anonymous")
-            newCalculate.save()
-            return JsonResponse({
-                "pk" : newCalculate.pk,
-                "fields" : {
-                    "weight" : newCalculate.weight,
-                    "height" : newCalculate.height,
-                    "bmi" : newCalculate.bmi,
-                    "date" : newCalculate.date,
-                    "author" : newCalculate.author,
-                },
-            },
-            status=200
-            )
+            newData = BmiCalculator(weight=weight, height=height, bmi=bmi, date=datetime.today(), author="Anonymous")
+            newData.save()
+        return JsonResponse({"instance": "Bmi Berhasil Dibuat!"}, status=200)
 
 
 
