@@ -15,45 +15,39 @@ def show_reports(request):
 #@login_required(login_url='/login/')
 def show_json(request):
     list_of_reports = []
-    if request.user.username != "":
-        reports = Report.objects.all()
+    reports = Report.objects.all()
 
-        for report in reports:
-            list_of_reports.append({
-                'pk':report.pk,
-                'date':report.date,
-                'name':report.name,
-                'age':report.age,
-                'height':report.height,
-                'weight':report.weight,
-                'eat':report.eat,
-                'drink':report.drink,
-                'progress':report.progress,
-            })
-        return JsonResponse(list_of_reports,safe=False)
-    else:
-        return HttpResponseBadRequest()
+    for report in reports:
+        list_of_reports.append({
+            'pk':report.pk,
+            'date':report.date,
+            'name':report.name,
+            'age':report.age,
+            'height':report.height,
+            'weight':report.weight,
+            'eat':report.eat,
+            'drink':report.drink,
+            'progress':report.progress,
+        })
+    return JsonResponse(list_of_reports,safe=False)
 
 def show_json_by_username(request, username):
     list_of_reports = []
-    if request.user.username != "" and request.user.username == username:
-        reports = Report.objects.filter(user=request.user)
+    reports = Report.objects.filter(user=request.user)
 
-        for report in reports:
-            list_of_reports.append({
-                'pk':report.pk,
-                'date':report.date,
-                'name':report.name,
-                'age':report.age,
-                'height':report.height,
-                'weight':report.weight,
-                'eat':report.eat,
-                'drink':report.drink,
-                'progress':report.progress,
-            })
-        return JsonResponse(list_of_reports,safe=False)
-    else:
-        return HttpResponseBadRequest()        
+    for report in reports:
+        list_of_reports.append({
+            'pk':report.pk,
+            'date':report.date,
+            'name':report.name,
+            'age':report.age,
+            'height':report.height,
+            'weight':report.weight,
+            'eat':report.eat,
+            'drink':report.drink,
+            'progress':report.progress,
+        })
+    return JsonResponse(list_of_reports,safe=False)      
 
 
 #@login_required(login_url='/login/')
