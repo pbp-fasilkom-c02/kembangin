@@ -44,7 +44,7 @@ def delete_task_flutter(request, pk):
     data = BmiCalculator.objects.get(pk=pk)
     data.delete()
     #response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
-    return JsonResponse({"status" : "success"})
+    return JsonResponse({"status" : "success"}, status=200)
     
 
 
