@@ -37,13 +37,17 @@ def delete_task(request, pk):
     data = BmiCalculator.objects.get(pk=pk)
     data.delete()
     response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
+    # print status code
+    print(response.status_code)
     return response
-     
+
+@csrf_exempt
 def delete_task_flutter(request, pk):
     
     data = BmiCalculator.objects.get(pk=pk)
     data.delete()
     #response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
+    
     return JsonResponse({"status" : "success"}, status=200)
     
 
