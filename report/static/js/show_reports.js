@@ -1,5 +1,6 @@
 $(document).ready(function(){
-  $.get("/report-progress/json", function(data) {
+  const username = $(".get-username").attr("name")
+  $.get(`/report-progress/json/${username}`, function(data) {
     for (i=0; i < data.length; i++){
       $("#card-row").append(`
       <div class="card-col col">
