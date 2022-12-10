@@ -32,6 +32,11 @@ $(document).ready(() => {
             <p class="text-xs">Created At:</p>
             <p>${data.fields.date}</p>
           </div>
+          <div class="py-3 px-6 border-t border-gray-300 text-gray-600">
+            <p class="text-xs">Created By:</p>
+            <p>${data.fields.author}</p>
+            
+          </div>
         </div>
       </div>
     `;
