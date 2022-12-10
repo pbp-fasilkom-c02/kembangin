@@ -104,7 +104,7 @@ def delete_artikel(request, id):
     artikel = Artikel.objects.get(pk=id)
     artikel.delete()
     # response = HttpResponseRedirect(reverse('artikel:show_artikel'))
-    return JsonResponse({'status':True,'message':"Artikel berhasil dihapus"})
+    return JsonResponse({'status':True,'message':"Artikel berhasil dihapus"}, status=200)
 
 
 @login_required(login_url='/login')
