@@ -9,13 +9,14 @@ import datetime
 
 def show_reports(request):
     form = ReportForm()
-    return render(request, "report-progress.html", {'form':form})
+    username = request.user.username
+    return render(request, "report-progress.html", {'form':form, 'username':username})
 
 #@login_required(login_url='/login/')
 def show_json(request):
     list_of_reports = []
-    if request.user.is_authenticated:
-        reports = Report.objects.filter(user=request.user)
+    if request.user.username != "":
+        reports = Report.objects.all()
 
         for report in reports:
             list_of_reports.append({
@@ -33,13 +34,35 @@ def show_json(request):
     else:
         return HttpResponseBadRequest()
 
+def show_json_by_username(request, username):
+    list_of_reports = []
+    if request.user.username != "" and request.user.username == username:
+        reports = Report.objects.filter(user=request.user)
+
+        for report in reports:
+            list_of_reports.append({
+                'pk':report.pk,
+                'date':report.date,
+                'name':report.name,
+                'age':report.age,
+                'height':report.height,
+                'weight':report.weight,
+                'eat':report.eat,
+                'drink':report.drink,
+                'progress':report.progress,
+            })
+        return JsonResponse(list_of_reports,safe=False)
+    else:
+        return HttpResponseBadRequest()        
+
+
 #@login_required(login_url='/login/')
 @csrf_exempt
 def add_report(request):
     if request.method == 'POST':
         form = ReportForm(request.POST)
         if form.is_valid():
-            if request.user.is_authenticated:
+            if request.user.username != "":
                 name = form.cleaned_data['name']
                 age = form.cleaned_data['age']
                 height = form.cleaned_data['height']
