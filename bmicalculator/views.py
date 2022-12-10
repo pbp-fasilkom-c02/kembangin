@@ -38,7 +38,8 @@ def delete_task(request, pk):
     data.delete()
     response = HttpResponseRedirect(reverse('bmicalculator:show_bmicalculator'))
     return response
-     
+
+@csrf_exempt
 def delete_task_flutter(request, pk):
     
     data = BmiCalculator.objects.get(pk=pk)
