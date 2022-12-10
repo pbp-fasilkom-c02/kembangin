@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
+from main.models import User
 from report.forms import ReportForm
 from report.models import Report
 from django.core import serializers
@@ -33,7 +34,8 @@ def show_json(request):
 
 def show_json_by_username(request, username):
     list_of_reports = []
-    reports = Report.objects.filter(user=request.user)
+    current_user = User.objects.filter(username=username)[0]
+    reports = Report.objects.filter(user=current_user)
 
     for report in reports:
         list_of_reports.append({
