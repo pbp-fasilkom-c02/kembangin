@@ -31,7 +31,7 @@ def show_json(request):
     return HttpResponse(serializers.serialize("json", bmicalculator_data), content_type='application/json')
 
 
-
+@csrf_exempt
 def delete_task(request, pk):
     # semua orang bisa delete
     data = BmiCalculator.objects.get(pk=pk)
