@@ -96,12 +96,11 @@ def add_report_flutter(request):
         eat = request.POST.get("eat")
         drink = request.POST.get("drink")
         progress = request.POST.get("progress")
-        if name != "" and age != "" and height != "" and weight != "" and eat != "Tingkat Makan Anak" and drink != "Tingkat Minum Anak" and progress != "":
-            report = Report(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, user=User.objects.get(user=request.user))
-            report.save()
-            return JsonResponse({'status':True, 'message':'Catatan berhasil ditambahkan'}, status=200)
-        else:
-            return JsonResponse({'status':False, 'message':'Input tidak valid!'}, status=404)
+        report = Report(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, user=User.objects.get(user=request.user))
+        report.save()
+        return JsonResponse({'status':True, 'message':'Catatan berhasil ditambahkan'}, status=200)
+    else:
+        return JsonResponse({'status':False, 'message':'Input tidak valid!'}, status=404)
         
 
 @login_required(login_url='/login/')
