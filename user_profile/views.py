@@ -73,7 +73,7 @@ def get_normal_user(request, pk):
         "upvote_amount" : profile.upvote_amount,
         "is_logged_user" : request.user == user,
     }
-    return JsonResponse(response)
+    return JsonResponse(response,safe=False)
 
 def change_profile(request, pk):
     if request.method == "POST":
