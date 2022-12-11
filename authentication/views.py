@@ -20,7 +20,8 @@ def login_user(request):
                 "message": "Successfully Logged In!",
                 "user_data": {
                     "username":user.username,
-                    "is_doctor": user.is_doctor
+                    "is_doctor": user.is_doctor,
+                    "id": user.id,
                 },
                 # Insert any extra data if you want to pass data to Flutter
                 }, status=200)
