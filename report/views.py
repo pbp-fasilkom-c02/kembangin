@@ -54,34 +54,32 @@ def show_json_by_username(request, username):
 
 #@login_required(login_url='/login/')
 @csrf_exempt
-def add_report(request):
+def add_report(request, username):
     if request.method == 'POST':
         form = ReportForm(request.POST)
+        current_user = User.objects.filter(username=username)[0]
         if form.is_valid():
-            if request.user.username != "":
-                name = form.cleaned_data['name']
-                age = form.cleaned_data['age']
-                height = form.cleaned_data['height']
-                weight = form.cleaned_data['weight']
-                eat = form.cleaned_data['eat']
-                drink = form.cleaned_data['drink']
-                progress = form.cleaned_data['progress']
-                report = Report.objects.create(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=request.user)
-                reports = {
-                    'status':True,
-                    'pk':report.pk,
-                    'date':report.date,
-                    'name':report.name,
-                    'age':report.age,
-                    'height':report.height,
-                    'weight':report.weight,
-                    'eat':report.eat,
-                    'drink':report.drink,
-                    'progress':report.progress,
-                }
-                return JsonResponse(reports)
-            else:
-                return JsonResponse({'status':False, 'message':'Anda harus login terlebih dahulu'})
+            name = form.cleaned_data['name']
+            age = form.cleaned_data['age']
+            height = form.cleaned_data['height']
+            weight = form.cleaned_data['weight']
+            eat = form.cleaned_data['eat']
+            drink = form.cleaned_data['drink']
+            progress = form.cleaned_data['progress']
+            report = Report.objects.create(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=current_user)
+            reports = {
+                'status':True,
+                'pk':report.pk,
+                'date':report.date,
+                'name':report.name,
+                'age':report.age,
+                'height':report.height,
+                'weight':report.weight,
+                'eat':report.eat,
+                'drink':report.drink,
+                'progress':report.progress,
+            }
+            return JsonResponse(reports)
         else:
             return JsonResponse({'status':False, 'message':"Input tidak valid!"})
     return HttpResponseBadRequest()

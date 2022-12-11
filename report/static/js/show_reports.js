@@ -38,7 +38,7 @@ $(document).ready(function(){
     const drink = $("#report-drink").val()
     const progress = $("#report-progress").val()
     const report = {name:name, age:age, height:height, weight:weight, eat:eat, drink:drink, progress:progress,csrfmiddlewaretoken:'{{ csrf_token }}'}
-    $.ajax({url:"/report-progress/add-report/", data:report, method:"POST"}).done(function (add) {
+    $.ajax({url:`/report-progress/add-report/${username}`, data:report, method:"POST"}).done(function (add) {
       $("#card-row").append(`
       <div class="card-col col">
         <div class="card shadow-xl m-auto h-100 duration-300 hover:scale-105" id="report-${add.pk}">
