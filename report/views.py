@@ -86,7 +86,7 @@ def add_report(request):
             else:
                 return JsonResponse({"message":"Anda harus login terlebih dahulu"}, status=200)
         else:
-            return JsonResponse({"message":"Input tidak valid!"}, status=400)
+            return JsonResponse({"message":"Input tidak valid!"})
     return HttpResponseBadRequest()
 
 @csrf_exempt
@@ -101,12 +101,11 @@ def add_report_flutter(request):
         eat = newReport['eat']
         drink = newReport['drink']
         progress = newReport['progress']
-        if name != "" and age != "" and height != "" and weight != "" and eat != "" and drink != "" and progress != "":
-            newData = Report(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=user)
-            newData.save()
-            return JsonResponse({"message": "Catatan berhasil ditambahkan!"}, status=200)
-        else:
-            return JsonResponse({"message": "Input tidak valid!"}, status=400)
+        newData = Report(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=user)
+        newData.save()
+        return JsonResponse({"message": "Catatan berhasil ditambahkan!"}, status=200)
+        # else:
+        #     return JsonResponse({"message": "Input tidak valid!"})
 
 @login_required(login_url='/login/')
 def delete_report(request, id):
