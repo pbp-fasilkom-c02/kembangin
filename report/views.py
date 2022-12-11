@@ -1,12 +1,10 @@
-import json
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 from main.models import User
 from report.forms import ReportForm
 from report.models import Report
-from django.core import serializers
 import datetime
 
 def show_reports(request):
@@ -96,7 +94,7 @@ def add_report_flutter(request):
         eat = request.POST.get("eat")
         drink = request.POST.get("drink")
         progress = request.POST.get("progress")
-        report = Report(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, user=User.objects.get(user=request.user))
+        report = Report(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=User.objects.get(user=request.user))
         report.save()
         return JsonResponse({'status':True, 'message':'Catatan berhasil ditambahkan'}, status=200)
     else:
