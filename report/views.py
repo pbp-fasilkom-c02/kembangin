@@ -85,9 +85,8 @@ def add_report(request):
     return HttpResponseBadRequest()
 
 @csrf_exempt
-def add_report_flutter(request, username):
+def add_report_flutter(request):
     if request.method == 'POST':
-        current_user = User.objects.filter(username=username)[0]
         name = request.POST.get("name")
         age = request.POST.get("age")
         height = request.POST.get("height")
@@ -95,7 +94,7 @@ def add_report_flutter(request, username):
         eat = request.POST.get("eat")
         drink = request.POST.get("drink")
         progress = request.POST.get("progress")
-        report = Report(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=current_user)
+        report = Report(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=request.user)
         report.save()
         return JsonResponse({'status':True, 'message':'Catatan berhasil ditambahkan'}, status=200)
     else:
