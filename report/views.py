@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
@@ -21,6 +22,7 @@ def show_json(request):
     for report in reports:
         list_of_reports.append({
             'pk':report.pk,
+            'user':report.user.username,
             'date':report.date,
             'name':report.name,
             'age':report.age,
@@ -40,6 +42,7 @@ def show_json_by_username(request, username):
     for report in reports:
         list_of_reports.append({
             'pk':report.pk,
+            'user':current_user.username,
             'date':report.date,
             'name':report.name,
             'age':report.age,
@@ -54,35 +57,56 @@ def show_json_by_username(request, username):
 
 #@login_required(login_url='/login/')
 @csrf_exempt
-def add_report(request, username):
+def add_report(request):
     if request.method == 'POST':
         form = ReportForm(request.POST)
-        current_user = User.objects.filter(username=username)[0]
         if form.is_valid():
-            name = form.cleaned_data['name']
-            age = form.cleaned_data['age']
-            height = form.cleaned_data['height']
-            weight = form.cleaned_data['weight']
-            eat = form.cleaned_data['eat']
-            drink = form.cleaned_data['drink']
-            progress = form.cleaned_data['progress']
-            report = Report.objects.create(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=current_user)
-            reports = {
-                'status':True,
-                'pk':report.pk,
-                'date':report.date,
-                'name':report.name,
-                'age':report.age,
-                'height':report.height,
-                'weight':report.weight,
-                'eat':report.eat,
-                'drink':report.drink,
-                'progress':report.progress,
-            }
-            return JsonResponse(reports)
+            if request.user.username != "":
+                name = form.cleaned_data['name']
+                age = form.cleaned_data['age']
+                height = form.cleaned_data['height']
+                weight = form.cleaned_data['weight']
+                eat = form.cleaned_data['eat']
+                drink = form.cleaned_data['drink']
+                progress = form.cleaned_data['progress']
+                report = Report.objects.create(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=request.user)
+                reports = {
+                    'user':report.user.username,
+                    'pk':report.pk,
+                    'date':report.date,
+                    'name':report.name,
+                    'age':report.age,
+                    'height':report.height,
+                    'weight':report.weight,
+                    'eat':report.eat,
+                    'drink':report.drink,
+                    'progress':report.progress,
+                }
+                return JsonResponse(reports)
+            else:
+                return JsonResponse({"message":"Anda harus login terlebih dahulu"}, status=200)
         else:
-            return JsonResponse({'status':False, 'message':"Input tidak valid!"})
+            return JsonResponse({"message":"Input tidak valid!"}, status=400)
     return HttpResponseBadRequest()
+
+@csrf_exempt
+def add_report_flutter(request):
+    if request.method == 'POST':
+        newReport = json.loads(request.body)
+        user = newReport['user']
+        name = newReport['name']
+        age = newReport['age']
+        height = newReport['height']
+        weight = newReport['weight']
+        eat = newReport['eat']
+        drink = newReport['drink']
+        progress = newReport['progress']
+        if name != "" and age != "" and height != "" and weight != "" and eat != "" and drink != "" and progress != "":
+            newData = Report(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=user)
+            newData.save()
+            return JsonResponse({"message": "Catatan berhasil ditambahkan!"}, status=200)
+        else:
+            return JsonResponse({"message": "Input tidak valid!"}, status=400)
 
 @login_required(login_url='/login/')
 def delete_report(request, id):
