@@ -60,9 +60,6 @@ def get_user(request, pk):
 def get_normal_user(request, pk):
     user = User.objects.get(pk = pk)
     profile = UserProfile.objects.get(user = user)
-    profile.post_amount = count_questions(user)
-    profile.upvote_amount = count_points(user)
-    profile.save()
     response = {
         "user_id" : pk,
         "username" : user.username,
@@ -73,7 +70,7 @@ def get_normal_user(request, pk):
         "upvote_amount" : profile.upvote_amount,
         "is_logged_user" : request.user == user,
     }
-    return JsonResponse(response,safe=False)
+    return JsonResponse(response, safe=False)
 
 def change_profile(request, pk):
     if request.method == "POST":
