@@ -58,22 +58,21 @@ def get_user(request, pk):
 
 # Flutter
 def get_normal_user(request, pk):
-    if(request.method == "GET"):
-        user = User.objects.get(pk = pk)
-        profile = UserProfile.objects.get(user = user)
-        profile.post_amount = count_questions(user)
-        profile.upvote_amount = count_points(user)
-        profile.save()
-        response = {
-            "user_id" : pk,
-            "username" : user.username,
-            "email" : user.email,
-            "post_amount" : profile.post_amount,
-            "is_doctor" : user.is_doctor,
-            "bio" : profile.bio,
-            "upvote_amount" : profile.upvote_amount,
-            "is_logged_user" : request.user == user,
-        }
+    user = User.objects.get(pk = pk)
+    profile = UserProfile.objects.get(user = user)
+    profile.post_amount = count_questions(user)
+    profile.upvote_amount = count_points(user)
+    profile.save()
+    response = {
+        "user_id" : pk,
+        "username" : user.username,
+        "email" : user.email,
+        "post_amount" : profile.post_amount,
+        "is_doctor" : user.is_doctor,
+        "bio" : profile.bio,
+        "upvote_amount" : profile.upvote_amount,
+        "is_logged_user" : request.user == user,
+    }
     return JsonResponse(response)
 
 def change_profile(request, pk):
