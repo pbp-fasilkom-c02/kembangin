@@ -71,7 +71,6 @@ def add_report(request):
             report = Report.objects.create(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=request.user)
             reports = {
                 'status':True,
-                'user':report.user.username,
                 'pk':report.pk,
                 'date':report.date,
                 'name':report.name,
@@ -88,22 +87,42 @@ def add_report(request):
     return HttpResponseBadRequest()
 
 @csrf_exempt
-def add_report_flutter(request):
+def add_report_flutter(request, username):
+    body_unicode = request.body.decode('utf-8')
+    name = body_unicode.replace("name=","")
+    name = name.replace("+"," ")
+    age = body_unicode.replace("age=","")
+    age = age.replace("+"," ")
+    height = body_unicode.replace("height=","")
+    height = height.replace("+"," ")
+    weight = body_unicode.replace("weight=","")
+    weight = weight.replace("+"," ")
+    eat = body_unicode.replace("eat=","")
+    eat = eat.replace("+"," ")
+    drink = body_unicode.replace("drink=","")
+    drink = drink.replace("+"," ")
+    progress = body_unicode.replace("progress=","")
+    progress = progress.replace("+"," ")    
+
     if request.method == 'POST':
-        newReport = json.loads(request.body)
-        user = newReport['user']
-        name = newReport['name']
-        age = newReport['age']
-        height = newReport['height']
-        weight = newReport['weight']
-        eat = newReport['eat']
-        drink = newReport['drink']
-        progress = newReport['progress']
-        newData = Report(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=user)
-        newData.save()
-        return JsonResponse({"message": "Catatan berhasil ditambahkan!"}, status=200)
-        # else:
-        #     return JsonResponse({"message": "Input tidak valid!"})
+        current_user = User.objects.filter(username=username)[0]
+        if name != "" and age != "" and height != "" and weight != "" and eat != "" and drink != "" and progress != "":
+            report = Report.objects.create(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=current_user)
+            reports = {
+                'status':True,
+                'pk':report.pk,
+                'date':report.date,
+                'name':report.name,
+                'age':report.age,
+                'height':report.height,
+                'weight':report.weight,
+                'eat':report.eat,
+                'drink':report.drink,
+                'progress':report.progress,
+            }
+            return JsonResponse(reports)
+        else:
+            return JsonResponse({'status':False, "message":"Input tidak valid!"})
 
 @login_required(login_url='/login/')
 def delete_report(request, id):
