@@ -135,7 +135,7 @@ def update(request, id):
     return redirect('artikel:show_artikel')
 
 
-@login_required(login_url='/login')
+# @login_required(login_url='/login')
 @csrf_exempt
 def handle_vote(request, id, action):
     if request.method == "POST":
@@ -150,7 +150,7 @@ def handle_vote(request, id, action):
             'downvote': artikel.downvote
         }
         return JsonResponse(data)
-    return HttpResponseBadRequest()
+    # return HttpResponseBadRequest()
 
 
 @login_required(login_url='/login')
