@@ -61,32 +61,30 @@ def add_report(request):
     if request.method == 'POST':
         form = ReportForm(request.POST)
         if form.is_valid():
-            if request.user.username != "":
-                name = form.cleaned_data['name']
-                age = form.cleaned_data['age']
-                height = form.cleaned_data['height']
-                weight = form.cleaned_data['weight']
-                eat = form.cleaned_data['eat']
-                drink = form.cleaned_data['drink']
-                progress = form.cleaned_data['progress']
-                report = Report.objects.create(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=request.user)
-                reports = {
-                    'user':report.user.username,
-                    'pk':report.pk,
-                    'date':report.date,
-                    'name':report.name,
-                    'age':report.age,
-                    'height':report.height,
-                    'weight':report.weight,
-                    'eat':report.eat,
-                    'drink':report.drink,
-                    'progress':report.progress,
-                }
-                return JsonResponse(reports)
-            else:
-                return JsonResponse({"message":"Anda harus login terlebih dahulu"}, status=200)
+            name = form.cleaned_data['name']
+            age = form.cleaned_data['age']
+            height = form.cleaned_data['height']
+            weight = form.cleaned_data['weight']
+            eat = form.cleaned_data['eat']
+            drink = form.cleaned_data['drink']
+            progress = form.cleaned_data['progress']
+            report = Report.objects.create(name=name, age=age, height=height, weight=weight, eat=eat, drink=drink, progress=progress, date=datetime.date.today(), user=request.user)
+            reports = {
+                'status':True,
+                'user':report.user.username,
+                'pk':report.pk,
+                'date':report.date,
+                'name':report.name,
+                'age':report.age,
+                'height':report.height,
+                'weight':report.weight,
+                'eat':report.eat,
+                'drink':report.drink,
+                'progress':report.progress,
+            }
+            return JsonResponse(reports)
         else:
-            return JsonResponse({"message":"Input tidak valid!"})
+            return JsonResponse({'status':False, "message":"Input tidak valid!"})
     return HttpResponseBadRequest()
 
 @csrf_exempt
