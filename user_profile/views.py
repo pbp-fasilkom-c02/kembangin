@@ -60,6 +60,10 @@ def get_user(request, pk):
 def get_normal_user(request, pk):
     user = User.objects.get(pk = pk)
     profile = UserProfile.objects.get(user = user)
+    profile = UserProfile.objects.get(user = user)
+    profile.post_amount = count_questions(user)
+    profile.upvote_amount = count_points(user)
+    profile.save()
     response = {
         "user_id" : pk,
         "username" : user.username,
