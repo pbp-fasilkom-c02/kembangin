@@ -191,10 +191,10 @@ def handle_rating_flutter(request, pk):
     if request.method == "POST":
         data = json.loads(request.body)
         author_pk = data["author_pk"]
-        author = User.objects.get(pk = author_pk)
+        author = User.objects.get(pk = int(author_pk))
         response = {}
         doctor = DoctorProfile.objects.get(profile = UserProfile.objects.get(user = User.objects.get(pk = pk)))               
-        rating =  data["rating"]
+        rating =  int(data["rating"])
         comment = data["comment"]
         response.update({"status": "success_create"})
         if (Rating.objects.filter(author=author, doctor=doctor)):
