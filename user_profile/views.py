@@ -208,6 +208,18 @@ def handle_rating_flutter(request, pk):
         return JsonResponse(response)
     return HttpResponseBadRequest()
 
+@csrf_exempt
+def delete_rating_flutter(request, pk):
+    if request.method == "DELETE":
+        response = {}
+        rating = Rating.objects.get(pk = pk)
+        rating.delete() 
+        doctor = rating.doctor
+        rating.delete()
+        doctor.rating_average = count_average_rating(doctor)
+        doctor.save()
+        response.update({"status" : True})
+        return JsonResponse(response)
 
 # Utility
 def count_questions(user):
