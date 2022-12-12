@@ -129,7 +129,6 @@ def delete_rating(request, id):
 def get_normal_user(request, pk):
     user = User.objects.get(pk = pk)
     profile = UserProfile.objects.get(user = user)
-    profile = UserProfile.objects.get(user = user)
     profile.post_amount = count_questions(user)
     profile.upvote_amount = count_points(user)
     profile.save()
@@ -146,30 +145,33 @@ def get_normal_user(request, pk):
     return JsonResponse(response, safe=False)
 
 def get_doctor_user(request, pk):
-        if(request.method == "GET"):
-            user = User.objects.get(pk = pk)
-            profile = UserProfile.objects.get(user = user)
-            response = {}
-            doctor = DoctorProfile.objects.get(profile = profile)
-            doctor.comment_amount = count_replies(user)
-            ratings_list = Rating.objects.filter(doctor = doctor)
-            ratings = []
-            for rating in ratings_list:
-                ratings.append({
-                    "author_username" : rating.author.username,
-                    "author_is_doctor" : rating.author.is_doctor,
-                    "author_pk" : rating.author.pk,
-                    "date" : rating.date,
-                    "rating" : rating.rating,
-                    "comment" : rating.comment,
-                    "id" : rating.id,
-                })
-            response.update({
-                "comment_amount" : doctor.comment_amount,
-                "rating_average" : doctor.rating_average,
-                "ratings" : ratings,
-            })
-            return JsonResponse(response, safe=False)
+    user = User.objects.get(pk = pk)
+    profile = UserProfile.objects.get(user = user)
+    doctor = DoctorProfile.objects.get(profile = profile)
+    doctor.comment_amount = count_replies(user)
+    response = {
+        "comment_amount" : doctor.comment_amount,
+        "rating_average" : doctor.rating_average,}
+    return JsonResponse(response, safe=False)
+            
+
+def get_rating(request, pk):
+    user = User.objects.get(pk = pk)
+    profile = UserProfile.objects.get(user = user)
+    doctor = DoctorProfile.objects.get(profile = profile)
+    ratings_list = Rating.objects.filter(doctor = doctor)
+    ratings = []
+    for rating in ratings_list:
+        ratings.append({
+            "author_username" : rating.author.username,
+            "author_is_doctor" : rating.author.is_doctor,
+            "author_pk" : rating.author.pk,
+            "date" : rating.date,
+            "rating" : rating.rating,
+            "comment" : rating.comment,
+            "id" : rating.id,
+        })
+    return JsonResponse(ratings, safe=False)
 
 @csrf_exempt
 def change_bio_flutter(request, pk):
