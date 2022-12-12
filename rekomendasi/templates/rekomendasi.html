@@ -34,12 +34,13 @@
 <div id="the-content">
     <!-- Modal toggle -->
     {% if user.is_authenticated %}
-    
+
+    {% if user.is_doctor %}
     <button class="bg-red-400 text-white rounded-lg pl-3 md:pl-2 p-2 text-center" type="button"
         data-modal-toggle="authentication-modal">
         Tambah Rekomendasi
     </button>
-
+    {% endif %}
 
     {% if list_rekomendasi is None %}
     <h5>Maaf rekomendasi produk oleh dokter belum tersedia</h5>
