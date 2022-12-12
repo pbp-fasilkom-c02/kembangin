@@ -190,7 +190,8 @@ def change_bio_flutter(request, pk):
 def handle_rating_flutter(request, pk):
     if request.method == "POST":
         data = json.loads(request.body)
-        author = request.user
+        author_pk = data["author_pk"]
+        author = User.objects.get(pk = author_pk)
         response = {}
         doctor = DoctorProfile.objects.get(profile = UserProfile.objects.get(user = User.objects.get(pk = pk)))               
         rating =  data["rating"]
