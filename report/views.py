@@ -101,7 +101,8 @@ def add_report_flutter(request):
         return JsonResponse({'status':False, 'message':'Gagal!'}, status=404)
         
 
-@login_required(login_url='/login/')
+# @login_required(login_url='/login/')
+@csrf_exempt
 def delete_report(request, id):
     if request.method == 'DELETE':
         report = Report.objects.get(pk=id)
