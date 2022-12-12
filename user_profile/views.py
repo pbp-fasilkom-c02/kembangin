@@ -8,7 +8,6 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-
 def show_profile(request, pk):
     context = {
         "id" : pk,
@@ -145,6 +144,32 @@ def get_normal_user(request, pk):
         "is_logged_user" : request.user == user,
     }
     return JsonResponse(response, safe=False)
+
+def get_doctor_user(request, pk):
+        if(request.method == "GET"):
+            user = User.objects.get(pk = pk)
+            profile = UserProfile.objects.get(user = user)
+            response = {}
+            doctor = DoctorProfile.objects.get(profile = profile)
+            doctor.comment_amount = count_replies(user)
+            ratings_list = Rating.objects.filter(doctor = doctor)
+            ratings = []
+            for rating in ratings_list:
+                ratings.append({
+                    "author_username" : rating.author.username,
+                    "author_is_doctor" : rating.author.is_doctor,
+                    "author_pk" : rating.author.pk,
+                    "date" : rating.date,
+                    "rating" : rating.rating,
+                    "comment" : rating.comment,
+                    "id" : rating.id,
+                })
+            response.update({
+                "comment_amount" : doctor.comment_amount,
+                "rating_average" : doctor.rating_average,
+                "ratings" : ratings,
+            })
+            return JsonResponse(response, safe=False)
 
 @csrf_exempt
 def change_bio_flutter(request, pk):
