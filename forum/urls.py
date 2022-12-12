@@ -1,5 +1,5 @@
 from django.urls import path
-from forum.views import add_forum, delete_comment, delete_forum, get_forums_json, handle_vote, show_forum_index, show_forum_detail,get_forum_by_pk, add_comment, delete_forum_flutter, add_comment_flutter, delete_comment_flutter
+from forum.views import add_forum, delete_comment, delete_forum, get_forums_json, handle_vote, show_forum_index, show_forum_detail,get_forum_by_pk, add_comment, delete_forum_flutter, add_comment_flutter, delete_comment_flutter, handle_vote_flutter
 
 
 app_name = 'forum'
@@ -16,5 +16,6 @@ urlpatterns = [
     path('<int:pk>/add-comment-flutter/<str:username>',add_comment_flutter, name="add_comment_flutter"),
     path('<int:pk>/delete-comment/<str:username>',delete_comment_flutter,name='delete_comment_flutter'),
     path('<int:pk>/delete-comment/',delete_comment, name="delete_comment"),
-    path('<int:pk>/vote/<str:action>',handle_vote,name="handle_vote")
+    path('<int:pk>/vote/<str:action>',handle_vote,name="handle_vote"),
+    path('<int:pk>/vote-flutter/<str:action>',handle_vote_flutter,name="handle_vote")
 ]
