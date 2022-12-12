@@ -299,4 +299,21 @@ def handle_vote(request,pk,action):
     
     return HttpResponseBadRequest()
 
+
+@csrf_exempt
+def handle_vote_flutter(request,pk,action):
+    forum = Forum.objects.filter(pk=pk)[0]
+
+    if request.method == "PUT":
+        forum = get_object_or_404(Forum, id = pk)
+        if action == "up":
+            forum.upvote +=1
+        elif action == "down":
+            forum.downvote +=1
+
+        forum.save()
+
+        return JsonResponse({'status':True,'message':"Jumlah vote berhasil diupdate", "upvote":forum.upvote, "downvote":forum.downvote})
+    
+    return HttpResponseBadRequest()
    

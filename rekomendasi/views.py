@@ -15,6 +15,7 @@ import json
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from user_profile.views import show_profile
+from django.http import JsonResponse
 
 # Create your views here.
 # @login_required(login_url='/login')
@@ -26,22 +27,45 @@ def show_rekomendasi(request):
     }
     return render(request, "rekomendasi.html", context)
 
-@login_required(login_url='/login')
+
+# @login_required(login_url='/login')
 @csrf_exempt
 def add_rekomendasi(request):
     if request.method == "POST":
-        data = json.loads(request.POST['data'])
+        print(request.POST['nama_barang'])
+
+        data = request.POST
+
+        # data = json.loads(request.POST['data'])
+        # print(data)
+        # print(data['nama_barang'])
+        
 
         new_rekomendasi = Rekomendasi(nama_barang=data["nama_barang"], harga_barang=data["harga_barang"], deskripsi=data["deskripsi"], url=data["url"], gambar=data["gambar"])
         new_rekomendasi.save()
 
-        return HttpResponse(serializers.serialize("json", [new_rekomendasi]), content_type="application/json")
+        return JsonResponse({
+        "status": True,
+        "message": "Berhasil menambahkan rekomendasi"
+        # Insert any extra data if you want to pass data to Flutter
+        }, status=200)
 
-    return HttpResponse()
+    return JsonResponse({
+        "status": False,
+        "message": "Cek kembali input anda"
+        # Insert any extra data if you want to pass data to Flutter
+        }, status=401)
 
-@login_required(login_url='/login')
+# @login_required(login_url='/login')
+@csrf_exempt
 def show_json(request):
-    rekomendasi = Rekomendasi.objects.filter()
+    # rekomendasi = Rekomendasi.objects.filter()
+    rekomendasi = Rekomendasi.objects.all()
     data = serializers.serialize('json', rekomendasi)
 
+    # return JsonResponse({
+    #     "status": True,
+    #     "message": "Data berhasil diambil",
+        
+    # }, status=200)
     return HttpResponse(data, content_type='application/json')
