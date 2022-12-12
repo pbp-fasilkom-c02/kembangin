@@ -11,4 +11,5 @@ urlpatterns = [
     path("delete_rating/<int:id>", delete_rating, name="delete_rating"),
     path("get_normal_user/<int:pk>", get_normal_user, name="get_normal_user"),
     path("change_bio/<int:pk>", change_bio_flutter, name="change_bio_flutter"),
+    path("get_doctor_user/<int:pk>", get_doctor_user, name="get_doctor_user"),
 ]
