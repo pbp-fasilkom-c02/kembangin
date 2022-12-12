@@ -27,6 +27,7 @@ def show_rekomendasi(request):
     }
     return render(request, "rekomendasi.html", context)
 
+
 # @login_required(login_url='/login')
 @csrf_exempt
 def add_rekomendasi(request):
