@@ -192,25 +192,18 @@ def handle_rating_flutter(request, pk):
         data = json.loads(request.body)
         author = request.user
         response = {}
-        if (author.is_anonymous):
-            return JsonResponse({"status" : "error_login"})
-        elif (author.is_authenticated and author.pk != pk):
-            doctor = DoctorProfile.objects.get(profile = UserProfile.objects.get(user = User.objects.get(pk = pk)))               
-            rating =  data["rating"]
-            comment = data["comment"]
-            response.update({"status": "success_create"})
-            if (Rating.objects.filter(author=author, doctor=doctor)):
-                rating_object = Rating.objects.get(author=author, doctor=doctor)
-                rating_object.delete()
-                response["status"] = "success_edit"
-            rating_object = Rating.objects.create(author=author, doctor=doctor, rating=rating, comment=comment)
-            rating_object.save()
-            doctor.rating_average = count_average_rating(doctor)
-            doctor.save()
-        elif (author.pk == pk):
-            response.update({"status" : "error_same_user"})
-        else:
-            response.update({"status" : "error_general"})
+        doctor = DoctorProfile.objects.get(profile = UserProfile.objects.get(user = User.objects.get(pk = pk)))               
+        rating =  data["rating"]
+        comment = data["comment"]
+        response.update({"status": "success_create"})
+        if (Rating.objects.filter(author=author, doctor=doctor)):
+            rating_object = Rating.objects.get(author=author, doctor=doctor)
+            rating_object.delete()
+            response["status"] = "success_edit"
+        rating_object = Rating.objects.create(author=author, doctor=doctor, rating=rating, comment=comment)
+        rating_object.save()
+        doctor.rating_average = count_average_rating(doctor)
+        doctor.save()
         return JsonResponse(response)
     return HttpResponseBadRequest()
 
