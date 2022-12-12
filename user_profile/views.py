@@ -6,6 +6,8 @@ from forum.models import Forum, ForumReply
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+import json
+
 
 def show_profile(request, pk):
     context = {
@@ -55,26 +57,6 @@ def get_user(request, pk):
                 "ratings" : ratings,
             })
         return JsonResponse(response)
-
-# Flutter
-def get_normal_user(request, pk):
-    user = User.objects.get(pk = pk)
-    profile = UserProfile.objects.get(user = user)
-    profile = UserProfile.objects.get(user = user)
-    profile.post_amount = count_questions(user)
-    profile.upvote_amount = count_points(user)
-    profile.save()
-    response = {
-        "user_id" : pk,
-        "username" : user.username,
-        "email" : user.email,
-        "post_amount" : profile.post_amount,
-        "is_doctor" : user.is_doctor,
-        "bio" : profile.bio,
-        "upvote_amount" : profile.upvote_amount,
-        "is_logged_user" : request.user == user,
-    }
-    return JsonResponse(response, safe=False)
 
 def change_profile(request, pk):
     if request.method == "POST":
@@ -145,8 +127,37 @@ def delete_rating(request, id):
         return JsonResponse(response)
 
 # Flutter
+def get_normal_user(request, pk):
+    user = User.objects.get(pk = pk)
+    profile = UserProfile.objects.get(user = user)
+    profile = UserProfile.objects.get(user = user)
+    profile.post_amount = count_questions(user)
+    profile.upvote_amount = count_points(user)
+    profile.save()
+    response = {
+        "user_id" : pk,
+        "username" : user.username,
+        "email" : user.email,
+        "post_amount" : profile.post_amount,
+        "is_doctor" : user.is_doctor,
+        "bio" : profile.bio,
+        "upvote_amount" : profile.upvote_amount,
+        "is_logged_user" : request.user == user,
+    }
+    return JsonResponse(response, safe=False)
 
-
+@csrf_exempt
+def change_bio_flutter(request, pk):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        user = User.objects.get(id = pk)
+        profile = UserProfile.objects.get(user = user)
+        new_bio = data["bio"]
+        profile.bio = new_bio
+        profile.save()
+        return JsonResponse({"status" : True})
+    return HttpResponseBadRequest()
+        
 # Utility
 def count_questions(user):
     return Forum.objects.filter(author = user).count()
