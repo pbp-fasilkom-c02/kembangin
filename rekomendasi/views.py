@@ -27,7 +27,7 @@ def show_rekomendasi(request):
     }
     return render(request, "rekomendasi.html", context)
 
-# @login_required(login_url='/login')
+@login_required(login_url='/login')
 @csrf_exempt
 def add_rekomendasi(request):
     if request.method == "POST":
@@ -55,16 +55,10 @@ def add_rekomendasi(request):
         # Insert any extra data if you want to pass data to Flutter
         }, status=401)
 
-# @login_required(login_url='/login')
-@csrf_exempt
+@login_required(login_url='/login')
 def show_json(request):
     # rekomendasi = Rekomendasi.objects.filter()
     rekomendasi = Rekomendasi.objects.all()
     data = serializers.serialize('json', rekomendasi)
 
-    # return JsonResponse({
-    #     "status": True,
-    #     "message": "Data berhasil diambil",
-        
-    # }, status=200)
     return HttpResponse(data, content_type='application/json')

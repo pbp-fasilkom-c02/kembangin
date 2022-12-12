@@ -4,8 +4,10 @@ from django.http import HttpResponse,HttpResponseBadRequest
 from django.shortcuts import render,get_object_or_404
 from forum.models import Forum, ForumReply
 from forum.forms import ForumForm, ReplyForm
+from main.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+import json
 import datetime
 
 
@@ -27,7 +29,8 @@ def get_forum_by_pk(request,pk):
                 'comment': reply.comment,
                 'author': reply.author.username,
                 'created_at': reply.created_at,
-                'pk':reply.pk
+                'pk':reply.pk,
+                'author_pk': reply.author.pk
             })
     
     data = {
@@ -39,7 +42,8 @@ def get_forum_by_pk(request,pk):
             'pk': forum.pk,
             'replies': replies,
             'upvote': forum.upvote,
-            'downvote': forum.downvote
+            'downvote': forum.downvote,
+            'author_pk': forum.author.pk
         }
     
     return JsonResponse(data)
@@ -56,7 +60,8 @@ def get_forums_json(request):
                 'comment': reply.comment,
                 'author': reply.author.username,
                 'created_at': reply.created_at,
-                'pk':reply.pk
+                'pk':reply.pk,
+                'author_pk': reply.author.pk
             })
         list_of_forums.append({
             'question': forum.question,
@@ -67,7 +72,8 @@ def get_forums_json(request):
             'pk': forum.pk,
             'replies': replies,
             'upvote': forum.upvote,
-            'downvote': forum.downvote
+            'downvote': forum.downvote,
+            'author_pk': forum.author.pk
         })
     return JsonResponse(list_of_forums,safe=False)
 
@@ -81,7 +87,6 @@ def add_forum(request):
     if request.method == "POST":
         form = ForumForm(request.POST)
         if form.is_valid():
-
             if request.user.username != "":
 
                 question = form.cleaned_data["question"]
@@ -89,6 +94,7 @@ def add_forum(request):
                 forum = Forum.objects.create(question=question,description=description,created_at=datetime.datetime.now(),author=request.user)
 
                 data = {
+                "status":True,
                 "pk": forum.pk,
                 "question": forum.question,
                 "description": forum.description,
@@ -97,13 +103,15 @@ def add_forum(request):
                 "created_at": forum.created_at,
                 'upvote': forum.upvote,
                 'downvote': forum.downvote,
-                'replies': []
+                'replies': [],
+                'author_pk': forum.author.pk
                 }
-                
-
                 return JsonResponse(data)
             else:
-                return JsonResponse({'status':"error", 'message':'Anda harus login terlebih dahulu'})
+                return JsonResponse({'status':False, 'message':'Anda harus login terlebih dahulu'})
+        else:
+            return JsonResponse({'status':False, 'message':"Input tidak valid!"})
+
 
 
     return HttpResponseBadRequest()
@@ -122,20 +130,62 @@ def add_comment(request,pk):
                 reply = ForumReply.objects.create(comment=comment,forum=forum, created_at=datetime.datetime.now(), author=request.user)
                 
                 data = {
+                "status":True,
                 "pk": reply.pk,
                 "comment": reply.comment,
                 "author": reply.author.username,
-                "created_at": reply.created_at
+                "created_at": reply.created_at,
+                "author_pk": reply.author.pk
                 }
                 return JsonResponse(data)
             else:
                 response = {
-                    'status': 'error',
+                    'status': False,
                     'message': 'Kamu bukan dokter sehingga tidak bisa memberi komentar'
                 }
                 return JsonResponse(response)
-
+        return JsonResponse({'status':False, 'message':"Input tidak valid!"})
     return HttpResponseBadRequest()
+
+
+@csrf_exempt
+def add_comment_flutter(request,pk, username):
+    body_unicode = request.body.decode('utf-8')
+    # body = json.loads(body_unicode)
+    # print(body_unicode)
+    comment = body_unicode.replace("comment=","")
+    comment = comment.replace("+"," ")
+    print(comment)
+    # comment = body['comment']
+    # comment="ha"
+    if request.method == "POST":
+        # form = ReplyForm(request.POST)
+        current_user = User.objects.filter(username=username)[0]
+        if comment != "":
+        # print(content)
+            if current_user.is_doctor:
+                forum = Forum.objects.filter(pk=pk)[0]
+            
+                
+                reply = ForumReply.objects.create(comment=comment,forum=forum, created_at=datetime.datetime.now(), author=current_user)
+                
+                data = {
+                "status":True,
+                "pk": reply.pk,
+                "comment": reply.comment,
+                "author": reply.author.username,
+                "created_at": reply.created_at,
+                "author_pk": reply.author.pk
+                }
+                return JsonResponse(data)
+            else:
+                response = {
+                    'status': False,
+                    'message': 'Kamu bukan dokter sehingga tidak bisa memberi komentar'
+                }
+                return JsonResponse(response)
+        return JsonResponse({'status':False, 'message':"Input tidak valid!"})
+    # return HttpResponseBadRequest()
 
 @csrf_exempt
 def delete_forum(request,id):
@@ -147,13 +197,15 @@ def delete_forum(request,id):
         
         if post.author.username != request.user.username:
             response = {
-                'status': 'error',
+                'status': False,
                 'message': 'Kamu tidak bisa menghapus post orang lain!'
             }
             return JsonResponse(response)
-        post.delete()
+        else:
 
-    return HttpResponse(status=202)
+            post.delete()
+
+            return JsonResponse({'status':False,'message':"Forum berhasil dihapus"})
 
 
 @login_required(login_url='/login')
@@ -165,13 +217,48 @@ def delete_comment(request,pk):
         
         if reply.author.username != request.user.username:
             response = {
-                'status': 'error',
+                'status': False,
                 'message': 'Kamu tidak bisa menghapus komentar orang lain!'
             }
             return JsonResponse(response)
-        reply.delete()
+        else:
+            reply.delete()
+            return JsonResponse({'status':True,'message':"Forum berhasil dihapus"})
+  
 
-    return HttpResponse(status=202)
+@csrf_exempt
+def delete_comment_flutter(request,pk, username):
+
+    if request.method == "DELETE":
+        reply = get_object_or_404(ForumReply, id = pk)
+        
+        if reply.author.username != username:
+            response = {
+                'status': False,
+                'message': 'Kamu tidak bisa menghapus komentar orang lain!'
+            }
+            return JsonResponse(response)
+        else:
+            reply.delete()
+            return JsonResponse({'status':True,'message':"Forum berhasil dihapus"})
+
+
+@csrf_exempt
+def delete_forum_flutter(request,id, current_username):
+
+      if request.method == "DELETE":
+        post = get_object_or_404(Forum, id = id)
+        
+        if post.author.username != current_username:
+            response = {
+                'status': False,
+                'message': 'Kamu tidak bisa menghapus post orang lain!'
+            }
+            return JsonResponse(response)
+        else:
+            post.delete()
+            return JsonResponse({'status':True,'message':"Forum berhasil dihapus"})
+
 
 @login_required(login_url='/login')
 @csrf_exempt
@@ -192,7 +279,8 @@ def handle_vote(request,pk,action):
                 'comment': reply.comment,
                 'author': reply.author.username,
                 'created_at': reply.created_at,
-                'pk':reply.pk
+                'pk':reply.pk,
+                'author_pk': reply.author.pk
             }) 
         data = {
             'question': forum.question,
@@ -203,11 +291,29 @@ def handle_vote(request,pk,action):
             'pk': forum.pk,
             'replies': replies,
             'upvote': forum.upvote,
-            'downvote': forum.downvote
+            'downvote': forum.downvote,
+            'author_pk': forum.author.pk
         }
 
         return JsonResponse(data)
     
     return HttpResponseBadRequest()
 
+
+@csrf_exempt
+def handle_vote_flutter(request,pk,action):
+    forum = Forum.objects.filter(pk=pk)[0]
+
+    if request.method == "PUT":
+        forum = get_object_or_404(Forum, id = pk)
+        if action == "up":
+            forum.upvote +=1
+        elif action == "down":
+            forum.downvote +=1
+
+        forum.save()
+
+        return JsonResponse({'status':True,'message':"Jumlah vote berhasil diupdate", "upvote":forum.upvote, "downvote":forum.downvote})
+    
+    return HttpResponseBadRequest()
    

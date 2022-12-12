@@ -1,0 +1,98 @@
+{% extends 'base.html' %} 
+{% block meta %} 
+<title>Kembangin | BMI Calculator</title>
+{% endblock meta %}
+{% block content %}  {% load bmicalculator_customtags %}
+{% load static %}
+<script src="{% static 'js/bmicalculator_uptodate.js' %}"></script>   
+
+{% comment %} MODAL {% endcomment %}
+<div class="flex flex-col items-center justify-center pt-4"> 
+  <table class="border-separate border-spacing-2 border border-slate-500">  
+    <th class="text-gray-700 text-sm mb-4">Under Weight : Less than 18.5</th>
+    <th class="text-gray-700 text-sm mb-4">Normal Weight : 18.5 - 24.9</th>
+    <th class="text-gray-700 text-sm mb-4">Over Weight : Greater than 24.9</th>
+  </table>
+  <div class="mb-2 sm:mb-0">
+    <h1 class="text-2xl font-bold">Welcome back, <span class="text-pink-500">{{ nama }}!</span></h1>
+  </div>
+</div>
+<div
+  id="create-data-modal"
+  class="w-full fixed flex justify-center w-full z-10 min-h-screen items-center bg-black bg-opacity-50 hidden"
+>
+  <div class="mt-7 bg-white rounded-xl shadow-lg">
+    <div class="p-4 sm:p-7 bg-red-200">
+      <div class="flex flex-col items-center justify-center gap-5">
+        <h1 class="text-3xl font-bold">Hitung BMI</h1>
+        <form method="post" id="create-data-form">
+          {% csrf_token %}
+          <div class="gap-5 text-left grid grid-cols-3 grid-rows-3">
+            <label for={{form.weight}}>Berat (kg):</label>
+            <input
+              type="text"
+              name="weight"
+              id="weight"
+              placeholder="Isi dalam satuan Kilogram"
+              required
+              class="col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+            /> 
+
+            <label for={{form.height}}>Tinggi (cm):</label>
+            <input
+              type="text"
+              name="height"
+              id="height"
+              placeholder="Isi dalam satuan Meter"
+              required
+              class="col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+            /> 
+
+            <input
+              data-mdb-ripple="true"
+              data-mdb-ripple-color="light"
+              class="col-span-3 text-white hover:shadow-lg hover:shadow-blue-500/50 transition-all bg-gradient-to-r from-pink-500 to-pink-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+              type="submit"
+              value="Calculate"
+            />
+          </div>
+        </form>
+        <a
+          href="{% url 'bmicalculator:show_bmicalculator' %}"
+          class="font-bold text-red-600 underline hover:no-underline"
+          id="close-modal"
+          >Close</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="space-y-5 md:space-y-10 pt-10 max-w-[80%] mx-auto min-h-screen text-center">
+  <button
+    type="button"
+    class="inline-block mx-auto hover:shadow-lg hover:shadow-blue-500/50 px-6 pt-2.5 pb-2 transition duration-150 ease-in-out flex align-center gap-2 items-center text-white bg-gradient-to-r from-pink-500 to-red-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 rounded-lg px-5 py-2.5"
+    id="create-data"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="w-6 h-6"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+    <p>Hitung BMI</p>
+  </button>
+
+  <div class="flex flex-wrap gap-20 justify-center pb-20" id="bmicalculator"></div>
+</div>
+
+
+{% endblock content %}

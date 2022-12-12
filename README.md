@@ -1,6 +1,6 @@
 ## Kembangin
 
-[![Deploy](https://github.com/pbp-fasilkom-c02/kembangin/actions/workflows/dpl.yml/badge.svg)](https://github.com/pbp-fasilkom-c02/kembangin/actions/workflows/dpl.yml)
+
 
 Sebuah aplikasi yang berguna bagi pengguna untuk mendapatkan informasi dan kebutuhan kesehatan seakurat mungkin.
 

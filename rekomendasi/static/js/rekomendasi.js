@@ -1,3 +1,8 @@
+const useToast = (toastTrigger, loginRequired) => {
+    const toast = loginRequired ? new bootstrap.Toast($('#liveToastLoginReq')[0]) : new bootstrap.Toast($('#liveToast')[0])
+    toast.show()
+}
+
 $(document).ready(function () {
     // Get Cards
     loadRekomendasi();
@@ -32,6 +37,7 @@ $(document).ready(function () {
             },
 
             error: function (xhr, resp, text) {
+                // useToast(true, true)
                 console.log("xhr", xhr)
                 console.log("resp", resp)
                 console.log("text", text)
@@ -110,7 +116,7 @@ function loadRekomendasi() {
             row1.appendChild(row2)
         })
 
-        document.body.append(row1)
+        document.getElementById("the-content").appendChild(row1)
     })
 
 }

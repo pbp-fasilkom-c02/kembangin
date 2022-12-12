@@ -1,5 +1,5 @@
-const useToast = (toastTrigger, loginRequired) => {
-    const toast = loginRequired ? new bootstrap.Toast($('#liveToastLoginReq')[0]) : new bootstrap.Toast($('#liveToast')[0])
+const useToast = (toastTrigger, loginRequired, invalid) => {
+    const toast = loginRequired ? new bootstrap.Toast($('#liveToastLoginReq')[0]) : invalid ? new bootstrap.Toast($('#liveToastInvalid')[0]) : new bootstrap.Toast($('#liveToast')[0])
     toast.show()
 }
 const forumPost = (post) => `<div id='${post.pk}-post' class="animate-slide-in-fwd-center">
@@ -22,7 +22,7 @@ const forumPost = (post) => `<div id='${post.pk}-post' class="animate-slide-in-f
             ${post.created_at.split('T')[0]}  
         </div>
         <div class="text-sm">
-            Dibuat oleh <span class="font-bold">${post.is_doctor ? "dr. " : ""}${post.author}</span>
+            Dibuat oleh <a class="font-bold" href="/user_profile/${post.author_pk}">${post.is_doctor ? "dr. " : ""}${post.author}</a>
         </div>
         <div class="flex gap-4 mt-2">
             <div class="flex gap-2">
@@ -65,7 +65,7 @@ const deletePost = (post) => {
 
                 if (response.status == "error") {
 
-                    useToast(true, false)
+                    useToast(true, false, false)
                 }
                 else {
                     $(`#${post.pk}-post`).addClass("animate-slide-out-blurred-right")
@@ -95,7 +95,10 @@ $(document).ready(function () {
 
         $.post('/forum/add', forum, function (res) {
             if (res.status == "error") {
-                useToast(true, true)
+                useToast(true, true, false)
+            }
+            else if (res.status == "invalid") {
+                useToast(true, false, true)
             }
             else {
                 addPost(res)
