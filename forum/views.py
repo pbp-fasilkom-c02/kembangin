@@ -313,7 +313,7 @@ def handle_vote_flutter(request,pk,action):
 
         forum.save()
 
-        return JsonResponse({'status':True,'message':"Jumlah vote berhasil diupdate"})
+        return JsonResponse({'status':True,'message':"Jumlah vote berhasil diupdate", "upvote":forum.upvote, "downvote":forum.downvote})
     
     return HttpResponseBadRequest()
    
